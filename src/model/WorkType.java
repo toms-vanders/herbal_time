@@ -19,18 +19,16 @@ public class WorkType {
         this.wSiteID = wSiteID;
     }
 
-    public Integer getwTypeID() {
+    public Integer getWorkTypeID() {
         return wTypeID;
     }
-
-    public void setwTypeID(Integer wTypeID) {
+    public void setWorkTypeID(Integer wTypeID) {
         this.wTypeID = wTypeID;
     }
 
     public String getDescOfJob() {
         return descOfJob;
     }
-
     public void setDescOfJob(String descOfJob) {
         this.descOfJob = descOfJob;
     }
@@ -38,7 +36,6 @@ public class WorkType {
     public String getTypeOfProduce() {
         return typeOfProduce;
     }
-
     public void setTypeOfProduce(String typeOfProduce) {
         this.typeOfProduce = typeOfProduce;
     }
@@ -46,7 +43,6 @@ public class WorkType {
     public String getSalaryType() {
         return salaryType;
     }
-
     public void setSalaryType(String salaryType) {
         this.salaryType = salaryType;
     }
@@ -54,16 +50,14 @@ public class WorkType {
     public double getPay() {
         return pay;
     }
-
     public void setPay(double pay) {
         this.pay = pay;
     }
 
-    public Integer getwSiteID() {
+    public Integer getWorkSiteID() {
         return wSiteID;
     }
-
-    public void setwSiteID(Integer wSiteID) {
+    public void setWorkSiteID(Integer wSiteID) {
         this.wSiteID = wSiteID;
     }
 

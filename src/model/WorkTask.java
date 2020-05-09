@@ -10,10 +10,10 @@ public class WorkTask {
     private LocalDate dateEnd;
     private String status;
     private Integer wTypeID;
-    private String passportNum;
+    private String cpr;
 
     public WorkTask(Integer wTaskID, double hoursWorked, double quantity, LocalDate dateStart, LocalDate dateEnd,
-                    String status, Integer wTypeID, String passportNum) {
+                    String status, Integer wTypeID, String cpr) {
         this.wTaskID = wTaskID;
         this.hoursWorked = hoursWorked;
         this.quantity = quantity;
@@ -21,72 +21,32 @@ public class WorkTask {
         this.dateEnd = dateEnd;
         this.status = status;
         this.wTypeID = wTypeID;
-        this.passportNum = passportNum;
+        this.cpr = cpr;
     }
 
-    public Integer getwTaskID() {
-        return wTaskID;
-    }
+    public Integer getWorkTaskID() { return wTaskID; }
+    public void setWorkTaskID(Integer wTaskID) { this.wTaskID = wTaskID; }
 
-    public void setwTaskID(Integer wTaskID) {
-        this.wTaskID = wTaskID;
-    }
+    public double getHoursWorked() { return hoursWorked; }
+    public void setHoursWorked(double hoursWorked) { this.hoursWorked = hoursWorked; }
 
-    public double getHoursWorked() {
-        return hoursWorked;
-    }
+    public double getQuantity() { return quantity; }
+    public void setQuantity(double quantity) { this.quantity = quantity; }
 
-    public void setHoursWorked(double hoursWorked) {
-        this.hoursWorked = hoursWorked;
-    }
+    public LocalDate getDateStart() { return dateStart; }
+    public void setDateStart(LocalDate dateStart) { this.dateStart = dateStart; }
 
-    public double getQuantity() {
-        return quantity;
-    }
+    public LocalDate getDateEnd() { return dateEnd; }
+    public void setDateEnd(LocalDate dateEnd) { this.dateEnd = dateEnd; }
 
-    public void setQuantity(double quantity) {
-        this.quantity = quantity;
-    }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
-    public LocalDate getDateStart() {
-        return dateStart;
-    }
+    public Integer getWorkTypeID() { return wTypeID; }
+    public void setWorkTypeID(Integer wTypeID) { this.wTypeID = wTypeID; }
 
-    public void setDateStart(LocalDate dateStart) {
-        this.dateStart = dateStart;
-    }
-
-    public LocalDate getDateEnd() {
-        return dateEnd;
-    }
-
-    public void setDateEnd(LocalDate dateEnd) {
-        this.dateEnd = dateEnd;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public Integer getwTypeID() {
-        return wTypeID;
-    }
-
-    public void setwTypeID(Integer wTypeID) {
-        this.wTypeID = wTypeID;
-    }
-
-    public String getPassportNum() {
-        return passportNum;
-    }
-
-    public void setPassportNum(String passportNum) {
-        this.passportNum = passportNum;
-    }
+    public String getCpr() { return cpr; }
+    public void setCpr(String cpr) { this.cpr = cpr; }
 
     @Override
     public String toString() {
@@ -98,7 +58,7 @@ public class WorkTask {
                 ", dateEnd=" + dateEnd +
                 ", status='" + status + '\'' +
                 ", wTypeID=" + wTypeID +
-                ", passportNum='" + passportNum + '\'' +
+                ", cpr='" + cpr + '\'' +
                 '}';
     }
 }

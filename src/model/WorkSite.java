@@ -10,10 +10,10 @@ public class WorkSite {
     private String country;
     private String typeOfJob;
     private double pricePerWorker;
-    private Integer clientID;
+    private Integer clientCvr;
 
     public WorkSite(Integer wSiteID, String description, String streetNum, String streetName, Integer zip,
-                    String country, String typeOfJob, double pricePerWorker, Integer clientID) {
+                    String country, String typeOfJob, double pricePerWorker, Integer clientCvr) {
         this.wSiteID = wSiteID;
         this.description = description;
         this.streetNum = streetNum;
@@ -22,21 +22,19 @@ public class WorkSite {
         this.country = country;
         this.typeOfJob = typeOfJob;
         this.pricePerWorker = pricePerWorker;
-        this.clientID = clientID;
+        this.clientCvr = clientCvr;
     }
 
-    public Integer getwSiteID() {
+    public Integer getWorkSiteID() {
         return wSiteID;
     }
-
-    public void setwSiteID(Integer wSiteID) {
+    public void setWorkSiteID(Integer wSiteID) {
         this.wSiteID = wSiteID;
     }
 
     public String getDescription() {
         return description;
     }
-
     public void setDescription(String description) {
         this.description = description;
     }
@@ -44,7 +42,6 @@ public class WorkSite {
     public String getStreetNum() {
         return streetNum;
     }
-
     public void setStreetNum(String streetNum) {
         this.streetNum = streetNum;
     }
@@ -52,7 +49,6 @@ public class WorkSite {
     public String getStreetName() {
         return streetName;
     }
-
     public void setStreetName(String streetName) {
         this.streetName = streetName;
     }
@@ -60,7 +56,6 @@ public class WorkSite {
     public Integer getZip() {
         return zip;
     }
-
     public void setZip(Integer zip) {
         this.zip = zip;
     }
@@ -68,7 +63,6 @@ public class WorkSite {
     public String getCountry() {
         return country;
     }
-
     public void setCountry(String country) {
         this.country = country;
     }
@@ -76,7 +70,6 @@ public class WorkSite {
     public String getTypeOfJob() {
         return typeOfJob;
     }
-
     public void setTypeOfJob(String typeOfJob) {
         this.typeOfJob = typeOfJob;
     }
@@ -84,17 +77,15 @@ public class WorkSite {
     public double getPricePerWorker() {
         return pricePerWorker;
     }
-
     public void setPricePerWorker(double pricePerWorker) {
         this.pricePerWorker = pricePerWorker;
     }
 
-    public Integer getClientID() {
-        return clientID;
+    public Integer getClientCvr() {
+        return clientCvr;
     }
-
-    public void setClientID(Integer clientID) {
-        this.clientID = clientID;
+    public void setClientCvr(Integer clientCvr) {
+        this.clientCvr = clientCvr;
     }
 
     @Override
@@ -108,7 +99,7 @@ public class WorkSite {
                 ", country='" + country + '\'' +
                 ", typeOfJob='" + typeOfJob + '\'' +
                 ", pricePerWorker=" + pricePerWorker +
-                ", clientID=" + clientID +
+                ", clientCvr=" + clientCvr +
                 '}';
     }
 }
