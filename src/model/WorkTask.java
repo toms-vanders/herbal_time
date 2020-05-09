@@ -3,17 +3,17 @@ package model;
 import java.time.LocalDate;
 
 public class WorkTask {
-    private Integer wTaskID;
+    private int wTaskID;
     private double hoursWorked;
     private double quantity;
     private LocalDate dateStart;
     private LocalDate dateEnd;
     private String status;
-    private Integer wTypeID;
-    private String cpr;
+    private int wTypeID;
+    private String workerCpr;
 
-    public WorkTask(Integer wTaskID, double hoursWorked, double quantity, LocalDate dateStart, LocalDate dateEnd,
-                    String status, Integer wTypeID, String cpr) {
+    public WorkTask(int wTaskID, double hoursWorked, double quantity, LocalDate dateStart, LocalDate dateEnd,
+                    String status, int wTypeID, String workerCpr) {
         this.wTaskID = wTaskID;
         this.hoursWorked = hoursWorked;
         this.quantity = quantity;
@@ -21,11 +21,11 @@ public class WorkTask {
         this.dateEnd = dateEnd;
         this.status = status;
         this.wTypeID = wTypeID;
-        this.cpr = cpr;
+        this.workerCpr = workerCpr;
     }
 
-    public Integer getWorkTaskID() { return wTaskID; }
-    public void setWorkTaskID(Integer wTaskID) { this.wTaskID = wTaskID; }
+    public int getWorkTaskID() { return wTaskID; }
+    public void setWorkTaskID(int wTaskID) { this.wTaskID = wTaskID; }
 
     public double getHoursWorked() { return hoursWorked; }
     public void setHoursWorked(double hoursWorked) { this.hoursWorked = hoursWorked; }
@@ -42,11 +42,11 @@ public class WorkTask {
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
 
-    public Integer getWorkTypeID() { return wTypeID; }
-    public void setWorkTypeID(Integer wTypeID) { this.wTypeID = wTypeID; }
+    public int getWorkTypeID() { return wTypeID; }
+    public void setWorkTypeID(int wTypeID) { this.wTypeID = wTypeID; }
 
-    public String getCpr() { return cpr; }
-    public void setCpr(String cpr) { this.cpr = cpr; }
+    public String getCpr() { return workerCpr; }
+    public void setCpr(String cpr) { this.workerCpr = workerCpr; }
 
     @Override
     public String toString() {
@@ -58,7 +58,7 @@ public class WorkTask {
                 ", dateEnd=" + dateEnd +
                 ", status='" + status + '\'' +
                 ", wTypeID=" + wTypeID +
-                ", cpr='" + cpr + '\'' +
+                ", cpr='" + workerCpr + '\'' +
                 '}';
     }
 }

@@ -10,12 +10,12 @@ public class SeasonalWorker extends Person{
     private String ssn;
     private boolean workedBefore;
     private String leadBy;
-    private String wSiteID;
+    private int wSiteID;
 
     public SeasonalWorker(String cpr, String fname, String lname, LocalDate dob, char sex, String email,
                           String phoneNum, String streetNum, String streetName, Integer zip, String country,
                           String passportNum, String swift, String iban, String ssn, boolean workedBefore,
-                          String leadBy, String wSiteID) {
+                          String leadBy, int wSiteID) {
         super(cpr, fname, lname, dob, sex, email, phoneNum, streetNum, streetName, zip, country);
         this.passportNum = passportNum;
         this.swift = swift;
@@ -44,8 +44,8 @@ public class SeasonalWorker extends Person{
     public String getLeadBy() { return leadBy; }
     public void setLeadBy(String leadBy) { this.leadBy = leadBy; }
 
-    public String getWorkSiteID() { return wSiteID; }
-    public void setWorkSiteID(String wSiteID) { this.wSiteID = wSiteID; }
+    public int getWorkSiteID() { return wSiteID; }
+    public void setWorkSiteID(int wSiteID) { this.wSiteID = wSiteID; }
 
     @Override
     public String toString() {

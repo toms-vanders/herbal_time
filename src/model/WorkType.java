@@ -2,15 +2,15 @@ package model;
 
 public class WorkType {
 
-    private Integer wTypeID;
+    private int wTypeID;
     private String descOfJob;
     private String typeOfProduce;
     private String salaryType;
     private double pay;
-    private Integer wSiteID;
+    private int wSiteID;
 
-    public WorkType(Integer wTypeID, String descOfJob, String typeOfProduce, String salaryType,
-                    double pay, Integer wSiteID) {
+    public WorkType(int wTypeID, String descOfJob, String typeOfProduce, String salaryType,
+                    double pay, int wSiteID) {
         this.wTypeID = wTypeID;
         this.descOfJob = descOfJob;
         this.typeOfProduce = typeOfProduce;
@@ -19,10 +19,10 @@ public class WorkType {
         this.wSiteID = wSiteID;
     }
 
-    public Integer getWorkTypeID() {
+    public int getWorkTypeID() {
         return wTypeID;
     }
-    public void setWorkTypeID(Integer wTypeID) {
+    public void setWorkTypeID(int wTypeID) {
         this.wTypeID = wTypeID;
     }
 
@@ -54,10 +54,10 @@ public class WorkType {
         this.pay = pay;
     }
 
-    public Integer getWorkSiteID() {
+    public int getWorkSiteID() {
         return wSiteID;
     }
-    public void setWorkSiteID(Integer wSiteID) {
+    public void setWorkSiteID(int wSiteID) {
         this.wSiteID = wSiteID;
     }
 
