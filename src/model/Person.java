@@ -11,13 +11,14 @@ public abstract class Person {
     private char sex;
     private String email;
     private String phoneNum;
-    private String streetNum;
     private String streetName;
+    private String streetNum;
     private Integer zip;
+    private String countryCode;
     private String country;
 
     public Person(String cpr, String fname, String lname, LocalDate dob, char sex, String email, String phoneNum,
-                  String streetNum, String streetName, Integer zip, String country) {
+                  String streetName, String streetNum, Integer zip, String countryCode, String country) {
         this.cpr = cpr;
         this.fname = fname;
         this.lname = lname;
@@ -25,9 +26,10 @@ public abstract class Person {
         this.sex = sex;
         this.email = email;
         this.phoneNum = phoneNum;
-        this.streetNum = streetNum;
         this.streetName = streetName;
+        this.streetNum = streetNum;
         this.zip = zip;
+        this.countryCode = countryCode;
         this.country = country;
     }
 
@@ -64,6 +66,9 @@ public abstract class Person {
     public String getCountry() { return country; }
     public void setCountry(String country) { this.country = country; }
 
+    public String getCountryCode() { return countryCode; }
+    public void setCountryCode(String countryCode) { this.countryCode = countryCode; }
+
     @Override
     public String toString() {
         return "Person{" +
@@ -74,9 +79,10 @@ public abstract class Person {
                 ", sex=" + sex +
                 ", email='" + email + '\'' +
                 ", phoneNum='" + phoneNum + '\'' +
-                ", streetNum='" + streetNum + '\'' +
                 ", streetName='" + streetName + '\'' +
+                ", streetNum='" + streetNum + '\'' +
                 ", zip=" + zip +
+                ", countryCode='" + countryCode + '\'' +
                 ", country='" + country + '\'' +
                 '}';
     }

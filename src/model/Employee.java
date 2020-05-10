@@ -9,9 +9,9 @@ public class Employee extends Person {
     private BigDecimal salary;
 
     public Employee(String cpr, String fname, String lname, LocalDate dob, char sex, String email, String phoneNum,
-                    String streetNum, String streetName, Integer zip, String country, Integer regNum,
-                    Integer kontoNum, BigDecimal salary) {
-        super(cpr, fname, lname, dob, sex, email, phoneNum, streetNum, streetName, zip, country);
+                    String streetName, String streetNum, Integer zip, String countryCode, String country,
+                    Integer regNum, Integer kontoNum, BigDecimal salary) {
+        super(cpr, fname, lname, dob, sex, email, phoneNum, streetName, streetNum, zip, countryCode, country);
         this.regNum = regNum;
         this.kontoNum = kontoNum;
         this.salary = salary;

@@ -13,10 +13,10 @@ public class SeasonalWorker extends Person{
     private int wSiteID;
 
     public SeasonalWorker(String cpr, String fname, String lname, LocalDate dob, char sex, String email,
-                          String phoneNum, String streetNum, String streetName, Integer zip, String country,
-                          String passportNum, String swift, String iban, String ssn, boolean workedBefore,
-                          String leadBy, int wSiteID) {
-        super(cpr, fname, lname, dob, sex, email, phoneNum, streetNum, streetName, zip, country);
+                          String phoneNum, String streetName, String streetNum, Integer zip, String countryCode,
+                          String country, String passportNum, String swift, String iban, String ssn,
+                          boolean workedBefore, String leadBy, int wSiteID) {
+        super(cpr, fname, lname, dob, sex, email, phoneNum, streetName, streetNum, zip, countryCode, country);
         this.passportNum = passportNum;
         this.swift = swift;
         this.iban = iban;

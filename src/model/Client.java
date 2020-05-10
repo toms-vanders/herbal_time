@@ -8,22 +8,24 @@ public class Client {
     private String name;
     private String email;
     private String phoneNum;
-    private String streetNum;
     private String streetName;
+    private String streetNum;
     private Integer zip;
+    private String countryCode;
     private String country;
     private LocalDate dateStart;
     private LocalDate dateEnd;
 
-    public Client(String cvr, String name, String email, String phoneNum, String streetNum, String streetName,
-                  Integer zip, String country, LocalDate dateStart, LocalDate dateEnd) {
+    public Client(String cvr, String name, String email, String phoneNum, String streetName, String streetNum,
+                  Integer zip, String countryCode, String country, LocalDate dateStart, LocalDate dateEnd) {
         this.cvr = cvr;
         this.name = name;
         this.email = email;
         this.phoneNum = phoneNum;
-        this.streetNum = streetNum;
         this.streetName = streetName;
+        this.streetNum = streetNum;
         this.zip = zip;
+        this.countryCode = countryCode;
         this.country = country;
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
@@ -59,6 +61,9 @@ public class Client {
     public LocalDate getDateEnd() { return dateEnd; }
     public void setDateEnd(LocalDate dateEnd) { this.dateEnd = dateEnd; }
 
+    public String getCountryCode() { return countryCode; }
+    public void setCountryCode(String countryCode) { this.countryCode = countryCode; }
+
     @Override
     public String toString() {
         return "Client{" +
@@ -66,9 +71,10 @@ public class Client {
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", phoneNum='" + phoneNum + '\'' +
-                ", streetNum='" + streetNum + '\'' +
                 ", streetName='" + streetName + '\'' +
+                ", streetNum='" + streetNum + '\'' +
                 ", zip=" + zip +
+                ", countryCode='" + countryCode + '\'' +
                 ", country='" + country + '\'' +
                 ", dateStart=" + dateStart +
                 ", dateEnd=" + dateEnd +

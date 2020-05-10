@@ -4,22 +4,24 @@ public class WorkSite {
 
     private Integer wSiteID;
     private String description;
-    private String streetNum;
     private String streetName;
+    private String streetNum;
     private Integer zip;
     private String country;
+    private String countryCode;
     private String typeOfJob;
     private double pricePerWorker;
     private Integer clientCvr;
 
-    public WorkSite(Integer wSiteID, String description, String streetNum, String streetName, Integer zip,
-                    String country, String typeOfJob, double pricePerWorker, Integer clientCvr) {
+    public WorkSite(Integer wSiteID, String description, String streetName, String streetNum, Integer zip,
+                    String country, String countryCode, String typeOfJob, double pricePerWorker, Integer clientCvr) {
         this.wSiteID = wSiteID;
         this.description = description;
-        this.streetNum = streetNum;
         this.streetName = streetName;
+        this.streetNum = streetNum;
         this.zip = zip;
         this.country = country;
+        this.countryCode = countryCode;
         this.typeOfJob = typeOfJob;
         this.pricePerWorker = pricePerWorker;
         this.clientCvr = clientCvr;
@@ -88,15 +90,19 @@ public class WorkSite {
         this.clientCvr = clientCvr;
     }
 
+    public String getCountryCode() { return countryCode; }
+    public void setCountryCode(String countryCode) { this.countryCode = countryCode; }
+
     @Override
     public String toString() {
         return "WorkSite{" +
                 "wSiteID=" + wSiteID +
                 ", description='" + description + '\'' +
-                ", streetNum='" + streetNum + '\'' +
                 ", streetName='" + streetName + '\'' +
+                ", streetNum='" + streetNum + '\'' +
                 ", zip=" + zip +
                 ", country='" + country + '\'' +
+                ", countryCode='" + countryCode + '\'' +
                 ", typeOfJob='" + typeOfJob + '\'' +
                 ", pricePerWorker=" + pricePerWorker +
                 ", clientCvr=" + clientCvr +
