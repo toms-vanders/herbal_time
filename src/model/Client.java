@@ -16,6 +16,9 @@ public class Client {
     private LocalDate dateStart;
     private LocalDate dateEnd;
 
+// Empty constructor, used in ClientDB
+    public Client() {}
+
     public Client(String cvr, String name, String email, String phoneNum, String streetName, String streetNum,
                   Integer zip, String countryCode, String country, LocalDate dateStart, LocalDate dateEnd) {
         this.cvr = cvr;
