@@ -55,11 +55,9 @@ public class ClientDB  implements ClientDBIF {
 
     @Override
     public List<Client> findAll(boolean fullAssociation, Type type) throws DataAccessException {
-        ResultSet rs = null;
+        ResultSet rs;
         try {
             rs = this.PSfindAll.executeQuery();
-//            PSfindAll.close();
-//            this.PSfindAll.close();
         } catch (SQLException e) {
             throw new DataAccessException("resultset error", e);
         }
@@ -74,7 +72,7 @@ public class ClientDB  implements ClientDBIF {
     @Override
     public Boolean insertClient(Client newClient, Type type) throws DataAccessException {
         ResultSet rs = null;
-        Integer generatedKey = null;
+        Integer generatedKey = null; //todo - return the row ID of client Inserted
         try {
             System.out.println("Attempting to insert a Client to the DB.");
             // cvr, name, email, phoneNum, streetName, streetNum, zip, countryCode, country, dateStart, dateEnd
@@ -92,16 +90,16 @@ public class ClientDB  implements ClientDBIF {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new DataAccessException("insert client error",e);
+            throw new DataAccessException("There was a problem with the client being inserted into DB.",e);
         }
         try {
             System.out.println("1");
             System.out.println(PSinsertClient.toString());
-            PSinsertClient.executeQuery();
+            PSinsertClient.execute();
 
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new DataAccessException("isnert client error when getting result set.", e);
+            throw new DataAccessException("There was a problem with inserting client into DB.", e);
         }
 
         return null;
@@ -111,7 +109,6 @@ public class ClientDB  implements ClientDBIF {
         List<Client> res = new ArrayList<>();
         try {
             while(rs.next()) {
-                System.out.println("ResultSet is not closed");
                 Client currentClient = buildObject(rs,fullAssociation,type);
                 System.out.println(currentClient.getCountry());
                 System.out.println(currentClient.toString());
@@ -146,7 +143,7 @@ public class ClientDB  implements ClientDBIF {
                 throw new DataAccessException("Could not determine type.", new Exception());
             }
         } catch (SQLException e) {
-            throw new DataAccessException("ClientDB error.", e);
+            throw new DataAccessException("buildObject: Error.", e);
         }
 
         return currentClient;

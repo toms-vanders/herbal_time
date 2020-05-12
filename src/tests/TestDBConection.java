@@ -35,7 +35,7 @@ public class TestDBConection {
         Random rnd = new Random();
         int cvr_random = 10000000 + rnd.nextInt(90000000);
         System.out.println("Random CVR is -> "+cvr_random);
-        Client testClient = new Client(Integer.toString(cvr_random), "Rema 1000", "slavery@rema1000.dk", "+4512325262", "Saltumvej", "42", "9220", "DK", "Denmark", start, end);
+        Client testClient = new Client(Integer.toString(cvr_random), "Føtex", "forced_labor@foetex.dk", "+4512325162", "Slotsgade", "8", "9000", "DK", "Denmark", start, end);
         cDB.insertClient(testClient,Client.class);
     }
 
