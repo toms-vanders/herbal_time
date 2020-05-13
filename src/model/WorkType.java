@@ -1,4 +1,4 @@
-package model;
+package Model;
 
 public class WorkType {
 
@@ -8,6 +8,17 @@ public class WorkType {
     private String salaryType;
     private double pay;
     private int wSiteID;
+
+    public WorkType() {};
+
+    public WorkType(String descOfJob, String typeOfProduce, String salaryType,
+                    double pay, int wSiteID) {
+        this.descOfJob = descOfJob;
+        this.typeOfProduce = typeOfProduce;
+        this.salaryType = salaryType;
+        this.pay = pay;
+        this.wSiteID = wSiteID;
+    }
 
     public WorkType(int wTypeID, String descOfJob, String typeOfProduce, String salaryType,
                     double pay, int wSiteID) {
@@ -63,13 +74,21 @@ public class WorkType {
 
     @Override
     public String toString() {
-        return "WorkType{" +
-                "wTypeID=" + wTypeID +
-                ", descOfJob='" + descOfJob + '\'' +
-                ", typeOfProduce='" + typeOfProduce + '\'' +
-                ", salaryType='" + salaryType + '\'' +
-                ", pay=" + pay +
-                ", wSiteID=" + wSiteID +
-                '}';
+        String s1 = "WorkTypeID: " + wTypeID + "\n";
+        String s2 = "descOfJob: " + descOfJob + "\n";
+        String s3 = "typeOfProduce: " + typeOfProduce + "\n";
+        String s4 = "salaryType: " + salaryType + "\n";
+        String s5 = "pay: " + pay + "\n";
+        String s6 = "wSiteID: " + wSiteID + "\n";
+        return s1+s2+s3+s4+s5+s6;
+//        return "WorkType" +
+//                "wTypeID=" + wTypeID +
+//                ", descOfJob='" + descOfJob + '\'' +
+//                ", typeOfProduce='" + typeOfProduce + '\'' +
+//                ", salaryType='" + salaryType + '\'' +
+//                ", pay=" + pay +
+//                ", wSiteID=" + wSiteID +
+//                '}';
+
     }
 }

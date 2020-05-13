@@ -1,20 +1,17 @@
-package db;
+package DB;
 
-import controller.DataAccessException;
-import model.Client;
+import Controller.DataAccessException;
+import Model.Client;
 
-import javax.xml.crypto.Data;
-import javax.xml.transform.Result;
 import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClientDB  implements ClientDBIF {
+public class ClientDB implements ClientDBIF {
     /**
      * notes ->
      * Started writing this class based on ws_persistence -mikulas
@@ -96,12 +93,17 @@ public class ClientDB  implements ClientDBIF {
             System.out.println("1");
             System.out.println(PSinsertClient.toString());
             PSinsertClient.execute();
-
         } catch (SQLException e) {
             e.printStackTrace();
             throw new DataAccessException("There was a problem with inserting client into DB.", e);
         }
 
+        return null;
+    }
+
+    // clientCVR is the CVR of client to be changed
+    @Override
+    public Boolean updateClient(int clientCVR, Client newClient, Type type) throws DataAccessException {
         return null;
     }
 

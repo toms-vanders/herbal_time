@@ -1,4 +1,4 @@
-package db;
+package DB;
 
-public class WorkSiteDB implements WorkTaskDBIF{
+public class WorkSiteDB implements WorkSiteDBIF{
 }

@@ -1,0 +1,67 @@
+package tests;
+
+import controller.DataAccessException;
+import DB.DBConnection;
+import DB.WorkTypeDB;
+import model.WorkType;
+import org.junit.jupiter.api.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.List;
+
+public class TestWorkType {
+    private static DBConnection dbConnection;
+
+    private static final String deleteWorkType = "DELETE FROM WorkType WHERE typeOfProduce = \'test\'";
+
+    @BeforeEach
+    public void testDBWorkType() {
+        System.out.println("Initiating DB Connection");
+        dbConnection = DBConnection.getInstance();
+        System.out.println(dbConnection.toString() + "\n");
+    }
+
+    public void createNewWorkTask() throws DataAccessException {
+        WorkType wt = new WorkType("cotton picking", "test", "Amount", 100, 1);
+        WorkTypeDB wtDB = new WorkTypeDB();
+        wtDB.insertWorkType(1, wt, WorkType.class);
+    }
+
+    @Test
+    public void testGetAllWorkTypesFromWorkSite() throws DataAccessException {
+        createNewWorkTask();
+        WorkTypeDB wtDB = new WorkTypeDB();
+        List<WorkType> res1 = wtDB.findAll(1, false, WorkType.class);
+        for (WorkType wt : res1) {
+            System.out.println(wt.toString());
+        }
+    }
+
+    @AfterAll
+    static void cleanUp() throws DataAccessException {
+        PreparedStatement ps = null;
+        Integer affectedRows = 0;
+        Connection con = dbConnection.getConnection();
+        try {
+            ps = con.prepareStatement(deleteWorkType);
+        } catch (SQLException e) {
+            throw new DataAccessException("Issue cleaning up after the tests (preparing statement).", e);
+        }
+
+        try {
+            affectedRows += ps.executeUpdate();
+            System.out.println("cleanUp() affected rows: " + affectedRows);
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Issue cleaning up after the tests (executing update).", e);
+        }
+
+
+
+        Assertions.assertEquals(1, affectedRows);
+    }
+
+
+}

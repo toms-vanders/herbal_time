@@ -160,3 +160,18 @@ fabric.properties
 .idea/**/markdown-navigator/
 
 # End of https://www.gitignore.io/api/eclipse,intellij
+herbal_time.iml
+
+.floo
+
+.idea/modules.xml
+
+.flooignore
+
+.ideaDataSources/
+
+*.meta
+
+herbaltimev0004.iml
+
+herbaltimev0004.ipr
