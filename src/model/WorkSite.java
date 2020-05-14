@@ -3,19 +3,37 @@ package Model;
 public class WorkSite {
 
     private Integer wSiteID;
+    private String name;
     private String description;
     private String streetName;
     private String streetNum;
-    private Integer zip;
+    private String zip;
     private String country;
     private String countryCode;
     private String typeOfJob;
     private double pricePerWorker;
-    private Integer clientCvr;
+    private String clientCvr;
 
-    public WorkSite(Integer wSiteID, String description, String streetName, String streetNum, Integer zip,
-                    String country, String countryCode, String typeOfJob, double pricePerWorker, Integer clientCvr) {
+    public WorkSite() { }
+
+    public WorkSite(String name, String description, String streetName, String streetNum, String zip,
+                    String country, String countryCode, String typeOfJob, double pricePerWorker, String clientCvr) {
+        this.name = name;
+        this.description = description;
+        this.streetName = streetName;
+        this.streetNum = streetNum;
+        this.zip = zip;
+        this.country = country;
+        this.countryCode = countryCode;
+        this.typeOfJob = typeOfJob;
+        this.pricePerWorker = pricePerWorker;
+        this.clientCvr = clientCvr;
+    }
+
+    public WorkSite(Integer wSiteID, String name, String description, String streetName, String streetNum, String zip,
+                    String country, String countryCode, String typeOfJob, double pricePerWorker, String clientCvr) {
         this.wSiteID = wSiteID;
+        this.name = name;
         this.description = description;
         this.streetName = streetName;
         this.streetNum = streetNum;
@@ -33,6 +51,9 @@ public class WorkSite {
     public void setWorkSiteID(Integer wSiteID) {
         this.wSiteID = wSiteID;
     }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
     public String getDescription() {
         return description;
@@ -55,10 +76,10 @@ public class WorkSite {
         this.streetName = streetName;
     }
 
-    public Integer getZip() {
+    public String getZip() {
         return zip;
     }
-    public void setZip(Integer zip) {
+    public void setZip(String zip) {
         this.zip = zip;
     }
 
@@ -83,10 +104,10 @@ public class WorkSite {
         this.pricePerWorker = pricePerWorker;
     }
 
-    public Integer getClientCvr() {
+    public String getClientCvr() {
         return clientCvr;
     }
-    public void setClientCvr(Integer clientCvr) {
+    public void setClientCvr(String clientCvr) {
         this.clientCvr = clientCvr;
     }
 
@@ -95,17 +116,30 @@ public class WorkSite {
 
     @Override
     public String toString() {
-        return "WorkSite{" +
-                "wSiteID=" + wSiteID +
-                ", description='" + description + '\'' +
-                ", streetName='" + streetName + '\'' +
-                ", streetNum='" + streetNum + '\'' +
-                ", zip=" + zip +
-                ", country='" + country + '\'' +
-                ", countryCode='" + countryCode + '\'' +
-                ", typeOfJob='" + typeOfJob + '\'' +
-                ", pricePerWorker=" + pricePerWorker +
-                ", clientCvr=" + clientCvr +
-                '}';
+        String s1 = "WorkSiteID: " + wSiteID + "\n";
+        String s2 = "description: " + description + "\n";
+        String s3 = "streetName: " + streetName + "\n";
+        String s4 = "streetNum: " + streetNum + "\n";
+        String s5 = "zip: " + zip + "\n";
+        String s6 = "country: " + country + "\n";
+        String s7 = "countryCode: " + countryCode + "\n";
+        String s8 = "typeOfJob: " + typeOfJob + "\n";
+        String s9 = "pricePerWorker: " + pricePerWorker + "\n";
+        String s10 = "clientCvr: " + clientCvr + "\n";
+
+        return s1+s2+s3+s4+s5+s6+s7+s8+s9+s10;
+
+//                "WorkSite{" +
+//                "wSiteID=" + wSiteID +
+//                ", description='" + description + '\'' +
+//                ", streetName='" + streetName + '\'' +
+//                ", streetNum='" + streetNum + '\'' +
+//                ", zip=" + zip +
+//                ", country='" + country + '\'' +
+//                ", countryCode='" + countryCode + '\'' +
+//                ", typeOfJob='" + typeOfJob + '\'' +
+//                ", pricePerWorker=" + pricePerWorker +
+//                ", clientCvr=" + clientCvr +
+//                '}';
     }
 }

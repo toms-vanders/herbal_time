@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface WorkTypeDBIF {
     List<WorkType> findAll(Integer workSiteID, boolean fullAssociation, Type type) throws DataAccessException;
-    Boolean insertWorkType(Integer workSiteID, WorkType newWorkType, Type type) throws DataAccessException;
+    Boolean insertWorkType(Integer workSiteID, WorkType newWorkType) throws DataAccessException;
 }

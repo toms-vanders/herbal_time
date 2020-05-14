@@ -14,13 +14,13 @@ import java.util.List;
 public class WorkTypeDB implements WorkTypeDBIF {
 
     /**
-     * Pre-made queries for the program
+     * Query skeletons for the program
      */
     private static final String findAll = "SELECT * FROM WorkType where workSiteID = ?";
     private static final String insertWorkType = "INSERT INTO WorkType VALUES(?,?,?,?,?)";
 
     /**
-     * Prepared statement declaration for the above queries
+     * PreparedStatement declaration for the above queries
      */
 
     private PreparedStatement PSfindAll;
@@ -45,27 +45,45 @@ public class WorkTypeDB implements WorkTypeDBIF {
         }
     }
 
+    /**
+     * Queries database for all work types within work site.
+     *
+     * @param workSiteID ID of work site
+     * @param fullAssociation specifies whether to build results with the objects the foreign keys point to or not
+     * @param type type of object in the code the query looks for in the database
+     * @return if found - an ArrayList of work types within the work site; otherwise an empty ArrayList
+     * @throws DataAccessException
+     */
     @Override
     public List<WorkType> findAll(Integer workSiteID, boolean fullAssociation, Type type) throws DataAccessException {
-        List<WorkType> res = new ArrayList<WorkType>();
+        List<WorkType> res;
         ResultSet rs;
         try {
             PSfindAll.setInt(1, workSiteID);
         } catch (SQLException e) {
-            throw new DataAccessException("Issue setting up the parameters when loading work types.", e);
+            throw new DataAccessException("Issue with setting up query parameters when loading work types.", e);
         }
+
         try {
             rs = PSfindAll.executeQuery();
         } catch (SQLException e) {
-            throw new DataAccessException("Issue loading work types from the database (executeQuery)", e);
+            throw new DataAccessException("Issue with retrieving work types from the database (executeQuery)", e);
         }
         res = buildObjects(rs, fullAssociation, type);
         return res;
     }
 
+    /**
+     * Inserts work type into database and associates it with work site
+     *
+     * @param workSiteID ID of worksite
+     * @param newWorkType WorkType object to be added to database
+     * @return true if insertion was successful, otherwise - false
+     * @throws DataAccessException
+     */
     @Override
-    public Boolean insertWorkType(Integer workSiteID, WorkType newWorkType, Type type) throws DataAccessException {
-        Boolean res = false;
+    public Boolean insertWorkType(Integer workSiteID, WorkType newWorkType) throws DataAccessException {
+        Boolean res;
         try {
             PSinsertWorkType.setString(1, newWorkType.getDescOfJob());
             PSinsertWorkType.setString(2, newWorkType.getTypeOfProduce());
@@ -73,18 +91,28 @@ public class WorkTypeDB implements WorkTypeDBIF {
             PSinsertWorkType.setDouble(4, newWorkType.getPay());
             PSinsertWorkType.setInt(5, workSiteID);
         } catch (SQLException e) {
-            throw new DataAccessException("Issue setting up the parameters when adding new workType", e);
+            throw new DataAccessException("Issue with setting up query parameters when adding new workType", e);
         }
 
         try {
             Integer affectedRows = PSinsertWorkType.executeUpdate();
             res = affectedRows > 0;
         } catch (SQLException e) {
-            throw new DataAccessException("Issue inserting the workType to database", e);
+            throw new DataAccessException("Issue with inserting work type to database", e);
         }
+
         return res;
     }
 
+    /**
+     * Generates and returns WorkType objects based on the ResultSet returned by the query
+     *
+     * @param rs ResultSet object filled with results of a query
+     * @param fullAssociation specifies whether to build results with the objects the foreign keys point to or not
+     * @param type type of the object that is going to be built
+     * @return ArrayList of built objects
+     * @throws DataAccessException
+     */
     private List<WorkType> buildObjects(ResultSet rs, boolean fullAssociation, Type type) throws DataAccessException {
         List<WorkType> res = new ArrayList<>();
         try {
@@ -93,13 +121,24 @@ public class WorkTypeDB implements WorkTypeDBIF {
                 res.add(currentWorkType);
             }
         } catch (SQLException e) {
-            throw new DataAccessException("Issue loading workTypes from the database (in buildObjects)", e);
+            throw new DataAccessException("Issue with loading work types from database (in buildObjects)", e);
         }
         return res;
     }
 
+    /**
+     * Builds a single WorkType object
+     * TODO fullAssociation is unneeded here?
+     * TODO also fullAssociation description is wacky, needs to be fixed for every method that has it
+     *
+     * @param rs ResultSet object filled with results of a query
+     * @param fullAssociation specifies whether to build results with the objects the foreign keys point to or not
+     * @param type type of the object that is going to be built
+     * @return new WorkType object
+     * @throws DataAccessException
+     */
     private WorkType buildObject(ResultSet rs, boolean fullAssociation, Type type) throws DataAccessException {
-        WorkType currentWorkType = null;
+        WorkType currentWorkType;
         try {
             if (type.equals(WorkType.class)) {
                 currentWorkType = new WorkType();
@@ -110,10 +149,10 @@ public class WorkTypeDB implements WorkTypeDBIF {
                 currentWorkType.setPay(rs.getDouble("pay"));
                 currentWorkType.setWorkSiteID(rs.getInt("workSiteID"));
             } else {
-                throw new DataAccessException("Issue could not determine type.", new Exception());
+                throw new DataAccessException("Issue: could not determine type.", new Exception());
             }
         } catch (SQLException e) {
-            throw new DataAccessException("Issue loading workType from the database (in buildObject)", e);
+            throw new DataAccessException("Issue with loading work type from the database (in buildObject)", e);
         }
         return currentWorkType;
     }

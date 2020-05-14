@@ -2,42 +2,43 @@ package Tests;
 
 import Controller.DataAccessException;
 import DB.DBConnection;
-import DB.WorkTypeDB;
-import Model.WorkType;
-import org.junit.jupiter.api.*;
+import DB.WorkSiteDB;
+import Model.WorkSite;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
-public class TestWorkType {
+public class TestWorkSite {
     private static DBConnection dbConnection;
 
-    private static final String deleteWorkType = "DELETE FROM WorkType WHERE typeOfProduce = 'test'";
+    private static final String deleteWorkSite = "DELETE FROM WorkSite where typeOfJob = 'test'";
 
     @BeforeEach
-    public void testDBWorkType() {
+    public void testDBWorkSite() {
         System.out.println("Initiating DB Connection");
         dbConnection = DBConnection.getInstance();
         System.out.println(dbConnection.toString() + "\n");
     }
 
-    public void createNewWorkType() throws DataAccessException {
-        WorkType wt = new WorkType("cotton picking", "test", "Amount", 100, 1);
-        WorkTypeDB wtDB = new WorkTypeDB();
-        wtDB.insertWorkType(1, wt);
-        WorkType wt2 = new WorkType("cotton picking days", "test", "Amount", 100, 1);
-        wtDB.insertWorkType(1, wt2);
+    public void createNewWorkSite() throws DataAccessException {
+        WorkSite ws = new WorkSite("The best work site", "Come work with us, you'll be in good hands", "Egensevej", "155", "9270", "Denmark", "DK", "test", 7250.6, "45678932");
+        WorkSiteDB wsDB = new WorkSiteDB();
+        wsDB.insertWorkSite("45678932", ws);
     }
 
     @Test
-    public void testGetAllWorkTypesFromWorkSite() throws DataAccessException {
-        createNewWorkType();
-        WorkTypeDB wtDB = new WorkTypeDB();
-        List<WorkType> res1 = wtDB.findAll(1, false, WorkType.class);
-        for (WorkType wt : res1) {
-            System.out.println(wt.toString());
+    public void testGetAllWorkSitesFromClient() throws DataAccessException {
+        createNewWorkSite();
+        WorkSiteDB wsDB = new WorkSiteDB();
+        List<WorkSite> res1 = wsDB.findAll("45678932", false, WorkSite.class);
+        for (WorkSite ws : res1) {
+            System.out.println(ws.toString());
         }
     }
 
@@ -47,7 +48,7 @@ public class TestWorkType {
         Integer affectedRows = 0;
         Connection con = dbConnection.getConnection();
         try {
-            ps = con.prepareStatement(deleteWorkType);
+            ps = con.prepareStatement(deleteWorkSite);
         } catch (SQLException e) {
             throw new DataAccessException("Issue cleaning up after the tests (preparing statement).", e);
         }
@@ -61,8 +62,7 @@ public class TestWorkType {
 
 
 
-        Assertions.assertEquals(2, affectedRows);
+        Assertions.assertEquals(1, affectedRows);
     }
-
 
 }

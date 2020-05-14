@@ -1,9 +1,11 @@
-package tests;
-import controller.*;
-import model.*;
+package Tests;
+import Controller.*;
+import Model.*;
 import DB.*;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions.*;
 
+import javax.xml.crypto.Data;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Random;
@@ -13,11 +15,13 @@ import java.util.Random;
 public class TestDBConection {
 
     private DBConnection dbConnection;
+    private Client testGeneratedClient;
+    private Integer randomGeneratedCVR;
 
 
     @BeforeEach
     public void testDBConnection() {
-        System.out.println("Initiaing DB Connection");
+        System.out.println("Initiating DB Connection");
         dbConnection = DBConnection.getInstance();
         System.out.println(dbConnection.toString());
     }
@@ -35,10 +39,10 @@ public class TestDBConection {
         // having to remove the test Client every time, just generate a
         // random CVR everytime :shrug:
         Random rnd = new Random();
-        int cvr_random = 10000000 + rnd.nextInt(90000000);
-        System.out.println("Random CVR is -> "+cvr_random);
-        Client testClient = new Client(Integer.toString(cvr_random), "Føtex", "jobs@foetex.dk", "+4512325162", "Slotsgade", "8", "9000", "DK", "Denmark", start, end);
-        cDB.insertClient(testClient,Client.class);
+        randomGeneratedCVR = 10000000 + rnd.nextInt(90000000);
+        System.out.println("Random CVR is -> "+randomGeneratedCVR);
+        testGeneratedClient = new Client(Integer.toString(randomGeneratedCVR), "Føtex", "jobs@foetex.dk", "+4512325162", "Slotsgade", "8", "9000", "DK", "Denmark", start, end);
+        Assertions.assertEquals(cDB.insertClient(testGeneratedClient,Client.class),1);
     }
 
 
@@ -53,5 +57,32 @@ public class TestDBConection {
     @Order(3)
     public void testCleanup() {
 
+    }
+
+    @Test
+    @Order(4)
+    public void testUpdateClient() throws DataAccessException {
+        LocalDate dateStart = LocalDate.of(2020, 06, 11);
+        Date start = Date.valueOf(dateStart);
+        LocalDate dateEnd = LocalDate.of(2025, 06, 11);
+        Date end = Date.valueOf(dateEnd);
+        ClientDB cDB = new ClientDB();
+        Random rnd = new Random();
+        randomGeneratedCVR = 10000000 + rnd.nextInt(90000000);
+        System.out.println("Random CVR is -> "+randomGeneratedCVR);
+        testGeneratedClient = new Client("35225432", "TEST-"+Integer.toString(randomGeneratedCVR), "jobs@foetex.dk", "+4512325162", "Slotsgade", "8", "9000", "DK", "Denmark", start, end);
+        System.out.println(testGeneratedClient.toString());
+        Assertions.assertEquals(cDB.updateClient("35225432",testGeneratedClient,Client.class), 1);
+    }
+
+    @Test
+    @Order(5)
+    public void testDeleteClient() throws DataAccessException {
+        ClientDB cDB = new ClientDB();
+        Date start = Date.valueOf(LocalDate.of(2020, 06, 11));
+        Date end = Date.valueOf(LocalDate.of(2025, 06, 11));
+//        Client testClientToDelete = new Client("00012345", "TO-BE-DELETED", "test@deleted.dk", "+4500000000", "n/a", "n/a", "9000", "DK", "Denmark", start, end);
+//        cDB.insertClient(testClientToDelete, Client.class);
+        cDB.deleteClient("00012345", Client.class);
     }
 }

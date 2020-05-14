@@ -9,7 +9,7 @@ public class WorkType {
     private double pay;
     private int wSiteID;
 
-    public WorkType() {};
+    public WorkType() {}
 
     public WorkType(String descOfJob, String typeOfProduce, String salaryType,
                     double pay, int wSiteID) {
