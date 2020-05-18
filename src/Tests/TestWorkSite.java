@@ -26,8 +26,11 @@ public class TestWorkSite {
         System.out.println(dbConnection.toString() + "\n");
     }
 
+
     public void createNewWorkSite() throws DataAccessException {
-        WorkSite ws = new WorkSite("The best work site", "Come work with us, you'll be in good hands", "Egensevej", "155", "9270", "Denmark", "DK", "test", 7250.6, "45678932");
+        WorkSite ws = new WorkSite("The best work site", "Come work with us, you'll be in good hands",
+                "Egensevej", "155", "9270", "Denmark", "DK", "test",
+                7250.6);
         WorkSiteDB wsDB = new WorkSiteDB();
         wsDB.insertWorkSite("45678932", ws);
     }
@@ -42,6 +45,7 @@ public class TestWorkSite {
         }
     }
 
+    @Test
     @AfterAll
     static void cleanUp() throws DataAccessException {
         PreparedStatement ps = null;
@@ -59,8 +63,6 @@ public class TestWorkSite {
         } catch (SQLException e) {
             throw new DataAccessException("Issue cleaning up after the tests (executing update).", e);
         }
-
-
 
         Assertions.assertEquals(1, affectedRows);
     }

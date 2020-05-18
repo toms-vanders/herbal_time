@@ -1,8 +1,10 @@
 package DB;
 
 import Controller.DataAccessException;
-import Model.WorkTask;
+import Model.*;
+import DB.WorkTypeDB;
 
+import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,104 +17,132 @@ public class WorkTaskDB implements WorkTaskDBIF {
      * Pre-made queries for the program
      */
     private static final String findAll = "SELECT * FROM WorkTask";
+    private static final String findAllWorkTasksOfWorker = "SELECT * FROM WorkTask WHERE workerCpr = ?";
     private static final String findByID = "SELECT * FROM WorkTask WHERE workTaskID = ?";
-    private static final String insertWorkTask = "INSERT INTO WorkTask VALUES(?,?,?,?,?,?,?,?)";
-    private static final String removeWorkTask = "DELETE FROM WorkTask WHERE workTaskID = ?";
+    private static final String insertWorkTask = "INSERT INTO WorkTask VALUES(?,?,?,?,?,?,?)";
+    private static final String deleteWorkTask = "DELETE FROM WorkTask WHERE workTaskID = ?";
     private static final String updateWorkTask = "UPDATE WorkTask SET "
-            + "hoursWorked = ? "
-            + "quantity = ? "
-            + "dateStart = ? "
-            + "dateEnd = ? "
-            + "taskStatus = ? "
-            + "workTypeID = ? "
-            + "workerCPR = ? "
-            + "WHERE workTaskID = (SELECT workTaskID FROM WorkTask WHERE workTaskID = ?)";
+            + "hoursWorked = ?,"
+            + "quantity = ?,"
+            + "dateStart = ?,"
+            + "dateEnd = ?,"
+            + "taskStatus = ?,"
+            + "workTypeID = ?,"
+//            + "workerCPR = ? "
+            + "WHERE workTaskID = ? ";
 
     /**
      * Prepared statement declaration for the above queries
      */
     private final PreparedStatement PSfindAll;
+    private final PreparedStatement PSfindAllWorkTasksOfWorker;
     private final PreparedStatement PSfindByID;
     private final PreparedStatement PSinsertWorkTask;
     private final PreparedStatement PSupdateWorkTask;
-    private final PreparedStatement PSremoveWorkTask;
+    private final PreparedStatement PSdeleteWorkTask;
+
+    private WorkTypeDB wtDB;
 
     public WorkTaskDB() throws DataAccessException{
         Connection con = DBConnection.getInstance().getConnection();
+        wtDB = new WorkTypeDB();
         try {
             PSfindAll = con.prepareStatement(findAll);
+            PSfindAllWorkTasksOfWorker = con.prepareStatement(findAllWorkTasksOfWorker);
             PSfindByID = con.prepareStatement(findByID);
             PSinsertWorkTask = con.prepareStatement(insertWorkTask);
             PSupdateWorkTask = con.prepareStatement(updateWorkTask);
-            PSremoveWorkTask = con.prepareStatement(removeWorkTask);
+            PSdeleteWorkTask = con.prepareStatement(deleteWorkTask);
         } catch (SQLException e) {
             throw new DataAccessException("WorkTaskDB error.", e);
         }
     }
 
     @Override
-    public List<WorkTask> findAll(boolean fullAssociation) throws DataAccessException {
+    public List<WorkTask> findAllWorkTasksOfWorker(boolean fullAssociation, String workerCpr, Type type) throws DataAccessException {
         ResultSet rs;
         try {
-            rs = this.PSfindAll.executeQuery();
+            PSfindAllWorkTasksOfWorker.setString(1, workerCpr);
+        } catch (SQLException e) {
+            throw new DataAccessException("Issue with setting up query parameters when loading work types.", e);
+        }
+
+        try {
+            rs = PSfindAllWorkTasksOfWorker.executeQuery();
+        } catch (SQLException e) {
+            throw new DataAccessException("Issue with retrieving work types from the database (executeQuery)", e);
+        }
+        return buildObjects(rs,fullAssociation, type);
+    }
+
+    @Override
+    public List<WorkTask> findAll(boolean fullAssociation, Type type) throws DataAccessException {
+        ResultSet rs;
+        try {
+            rs = PSfindAll.executeQuery();
         } catch (SQLException e) {
             throw new DataAccessException("resultset error", e);
         }
-        List<WorkTask> res = buildObjects(rs,fullAssociation);
-        return res;
+        return buildObjects(rs,fullAssociation, type);
     }
 
     @Override
-    public WorkTask findByID(Integer id, boolean fullAssociation) throws DataAccessException {
-        WorkTask res = null;
+    public WorkTask findByID(Integer id, boolean fullAssociation, Type type) throws DataAccessException {
+        ResultSet rs;
+        WorkTask workTask = null;
         try {
-            PSfindByID.setString(1,id.toString());
+            PSfindByID.setInt(1, id);
+        } catch (SQLException e) {
+            throw new DataAccessException("Issue with setting up query parameters when loading work types.", e);
         }
-        catch (SQLException e){
-            throw new DataAccessException("resultset error", e);
+
+        try {
+            rs = PSfindByID.executeQuery();
+            if (rs.next()) {
+                workTask = buildObject(rs, fullAssociation, type);
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("Issue with retrieving work types from the database (executeQuery)", e);
         }
-        return null;
+        return workTask;
     }
 
     @Override
-    public Integer insertWorkTask(WorkTask workTask) throws DataAccessException {
-        Integer genKey = null;
+    public Integer insertWorkTask(WorkTask workTask, String workerCpr) throws DataAccessException {
+        Integer affectedRows;
+//        Integer genKey = null;
         try {
-            PSinsertWorkTask.setString(1,String.valueOf(workTask.getWorkTaskID()));
-            PSinsertWorkTask.setString(2,String.valueOf(workTask.getHoursWorked()));
-            PSinsertWorkTask.setString(3,String.valueOf(workTask.getQuantity()));
-            PSinsertWorkTask.setString(4,workTask.getDateStart().toString());
-            PSinsertWorkTask.setString(5,workTask.getDateEnd().toString());
-            PSinsertWorkTask.setString(6,workTask.getStatus());
-            PSinsertWorkTask.setString(7,String.valueOf(workTask.getWorkTypeID()));
-            PSinsertWorkTask.setString(8,String.valueOf(workTask.getCpr()));
-        }
-        catch (SQLException e){
+            PSinsertWorkTask.setDouble(1, workTask.getHoursWorked());
+            PSinsertWorkTask.setDouble(2, workTask.getQuantity());
+            PSinsertWorkTask.setDate(3, workTask.getDateStart());
+            PSinsertWorkTask.setDate(4, workTask.getDateEnd());
+            PSinsertWorkTask.setString(5, workTask.getStatus());
+            PSinsertWorkTask.setInt(6, workTask.getWorkType().getWorkTypeID());
+            PSinsertWorkTask.setString(7, workerCpr);
+        } catch (SQLException e) {
             throw new DataAccessException("There was a problem with the workTask being inserted into DB.", e);
         }
-        try
-        {
-            PSinsertWorkTask.executeQuery();
-            genKey = PSinsertWorkTask.getGeneratedKeys().getInt(1);
+        try {
+            affectedRows = PSinsertWorkTask.executeUpdate();
+//            genKey = PSinsertWorkTask.getGeneratedKeys().getInt(1);
+        } catch (SQLException e) {
+            throw new DataAccessException("There was a problem with inserting workTask into DB.", e);
         }
-        catch (SQLException e){
-            throw new DataAccessException("There was a problem with inserting workTask into DB.",e);
-        }
-        return genKey;
+        return affectedRows;
     }
 
     @Override
-    public Integer updateWorkTask(WorkTask workTask) throws DataAccessException {
+    public Integer updateWorkTask(WorkTask workTask, Integer workTaskID) throws DataAccessException {
         Integer genKey = null;
         try {
-            PSupdateWorkTask.setString(1,String.valueOf(workTask.getHoursWorked()));
-            PSupdateWorkTask.setString(2,String.valueOf(workTask.getQuantity()));
-            PSupdateWorkTask.setString(3,workTask.getDateStart().toString());
-            PSupdateWorkTask.setString(4,workTask.getDateEnd().toString());
+            PSupdateWorkTask.setDouble(1,workTask.getHoursWorked());
+            PSupdateWorkTask.setDouble(2,workTask.getQuantity());
+            PSupdateWorkTask.setDate(3,workTask.getDateStart());
+            PSupdateWorkTask.setDate(4,workTask.getDateEnd());
             PSupdateWorkTask.setString(5,workTask.getStatus());
-            PSupdateWorkTask.setString(6,String.valueOf(workTask.getWorkTypeID()));
-            PSupdateWorkTask.setString(7,String.valueOf(workTask.getCpr()));
-            PSupdateWorkTask.setString(8,String.valueOf(workTask.getWorkTaskID()));
+            PSinsertWorkTask.setInt(6, workTask.getWorkType().getWorkTypeID());
+//            PSupdateWorkTask.setString(7,workerCpr);
+            PSupdateWorkTask.setInt(7, workTaskID);
         }
         catch (SQLException e) {
             throw new DataAccessException("There was a problem with the workTask being updated in DB.",e);
@@ -130,48 +160,68 @@ public class WorkTaskDB implements WorkTaskDBIF {
     }
 
     @Override
-    public void removeWorkTask(Integer id) throws DataAccessException {
+    public void deleteWorkTask(Integer id) throws DataAccessException {
         try {
-            PSremoveWorkTask.setString(1, id.toString());
+            PSdeleteWorkTask.setInt(1, id);
         }
         catch (SQLException e) {
             throw new DataAccessException("There was a problem with the id of the workTask being deleted from DB.",e);
         }
         try
         {
-            PSremoveWorkTask.executeQuery();
+            PSdeleteWorkTask.executeQuery();
         }
         catch (SQLException e){
             throw new DataAccessException("There was a problem with deleting workTask from DB.",e);
         }
     }
 
-    private List<WorkTask> buildObjects(ResultSet rs, boolean fullAssociation) throws DataAccessException {
+    private List<WorkTask> buildObjects(ResultSet rs, boolean fullAssociation, Type type) throws DataAccessException {
         List<WorkTask> res = new ArrayList<>();
         try {
             while(rs.next()) {
-                WorkTask currentWorkTask = buildObject(rs,fullAssociation);
+                WorkTask currentWorkTask = buildObject(rs, fullAssociation, type);
                 res.add(currentWorkTask);
             }
         } catch (SQLException e) {
-            throw new DataAccessException("buildObjects: problem with resultset", e);
+            throw new DataAccessException("buildObjects: problem with result set", e);
 
         }
         return res;
     }
 
-    private WorkTask buildObject(ResultSet rs, boolean fullAssociation) throws DataAccessException {
-        WorkTask workTask = null;
-        try {
-            workTask = new WorkTask(rs.getInt("workTaskID"),rs.getDouble("hoursWorked"),
-                    rs.getDouble("quantity"), rs.getDate("dateStart").toLocalDate(),
-                    rs.getDate("dateEnd").toLocalDate(),rs.getString("taskStatus"),
-                    rs.getInt("workTypeID"),rs.getString("workerCPR"));
+    private WorkTask buildObject(ResultSet rs, boolean fullAssociation, Type type) throws DataAccessException {
+        WorkTask currentWorkTask = null;
+        WorkTypeDB wTypeDB = new WorkTypeDB();
 
+//        try {
+//            workTask = new WorkTask(rs.getInt("workTaskID"), rs.getDouble("hoursWorked"),
+//                    rs.getDouble("quantity"), rs.getDate("dateStart").toLocalDate(),
+//                    rs.getDate("dateEnd").toLocalDate(), rs.getString("taskStatus"),
+//                    wtDB.findByID(rs.getInt("workTypeID"), false), rs.getString("workerCPR"));
+//        }
+
+        try {
+            if (type.equals(WorkTask.class)) {
+                currentWorkTask = new WorkTask();
+                currentWorkTask.setWorkTaskID(rs.getInt("workTaskID"));
+                currentWorkTask.setHoursWorked(rs.getDouble("hoursWorked"));
+                currentWorkTask.setQuantity(rs.getDouble("quantity"));
+                currentWorkTask.setDateStart(rs.getDate("dateStart"));
+                currentWorkTask.setDateEnd(rs.getDate("dateEnd"));
+                currentWorkTask.setStatus(rs.getString("taskStatus"));
+                currentWorkTask.setWorkType(new WorkType(rs.getInt("workTypeID")));
+            }
+
+            if (fullAssociation) {
+                WorkType workType = wtDB.findByID(currentWorkTask.getWorkType().getWorkTypeID(), false);
+                currentWorkTask.setWorkType(workType);
+            }
         }
         catch (SQLException e) {
             throw new DataAccessException("buildObject: Error.", e);
         }
-        return workTask;
+
+        return currentWorkTask;
     }
 }

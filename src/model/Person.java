@@ -13,12 +13,12 @@ public abstract class Person {
     private String phoneNum;
     private String streetName;
     private String streetNum;
-    private Integer zip;
+    private String zip;
     private String countryCode;
     private String country;
 
     public Person(String cpr, String fname, String lname, LocalDate dob, char sex, String email, String phoneNum,
-                  String streetName, String streetNum, Integer zip, String countryCode, String country) {
+                  String streetName, String streetNum, String zip, String countryCode, String country) {
         this.cpr = cpr;
         this.fname = fname;
         this.lname = lname;
@@ -60,8 +60,8 @@ public abstract class Person {
     public String getStreetName() { return streetName; }
     public void setStreetName(String streetName) { this.streetName = streetName; }
 
-    public Integer getZip() { return zip; }
-    public void setZip(Integer zip) { this.zip = zip; }
+    public String getZip() { return zip; }
+    public void setZip(String zip) { this.zip = zip; }
 
     public String getCountry() { return country; }
     public void setCountry(String country) { this.country = country; }

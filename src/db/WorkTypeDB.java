@@ -16,15 +16,26 @@ public class WorkTypeDB implements WorkTypeDBIF {
     /**
      * Query skeletons for the program
      */
-    private static final String findAll = "SELECT * FROM WorkType where workSiteID = ?";
+    private static final String findAll = "SELECT * FROM WorkType";
+    private static final String findByID = "SELECT * FROM WorkType where workSiteID = ?";
     private static final String insertWorkType = "INSERT INTO WorkType VALUES(?,?,?,?,?)";
+    private static final String updateWorkType = "UPDATE WorkType SET "
+            + "descOfJob = ?,"
+            + "typeOfProduce = ?,"
+            + "salaryType = ?,"
+            + "pay = ?"
+            + " WHERE workTypeID = ?";
+    private static final String deleteWorkType = "DELETE FROM WorkType WHERE workTypeID = ?";
 
     /**
      * PreparedStatement declaration for the above queries
      */
 
     private PreparedStatement PSfindAll;
+    private PreparedStatement PSfindByID;
     private PreparedStatement PSinsertWorkType;
+    private PreparedStatement PSupdateWorkType;
+    private PreparedStatement PSdeleteWorkType;
 
     public WorkTypeDB() throws DataAccessException {
         init();
@@ -39,10 +50,24 @@ public class WorkTypeDB implements WorkTypeDBIF {
         Connection con = DBConnection.getInstance().getConnection();
         try {
             PSfindAll = con.prepareStatement(findAll);
+            PSfindByID = con.prepareStatement(findByID);
             PSinsertWorkType = con.prepareStatement(insertWorkType);
+            PSupdateWorkType = con.prepareStatement(updateWorkType);
+            PSdeleteWorkType = con.prepareStatement(deleteWorkType);
         } catch (SQLException e) {
             throw new DataAccessException("Issue with preparing database statement", e);
         }
+    }
+
+    @Override
+    public List<WorkType> findAll(boolean fullAssociation, Type type) throws DataAccessException {
+        ResultSet rs;
+        try {
+            rs = PSfindAll.executeQuery();
+        } catch (SQLException e) {
+            throw new DataAccessException("Issue with retrieving work types from the database (executeQuery)", e);
+        }
+        return buildObjects(rs, fullAssociation, type);
     }
 
     /**
@@ -55,35 +80,38 @@ public class WorkTypeDB implements WorkTypeDBIF {
      * @throws DataAccessException
      */
     @Override
-    public List<WorkType> findAll(Integer workSiteID, boolean fullAssociation, Type type) throws DataAccessException {
-        List<WorkType> res;
+    public List<WorkType> findAllWorkTypesOfWorkSite(Integer workSiteID, boolean fullAssociation, Type type) throws DataAccessException {
         ResultSet rs;
         try {
-            PSfindAll.setInt(1, workSiteID);
+            PSfindByID.setInt(1, workSiteID);
         } catch (SQLException e) {
             throw new DataAccessException("Issue with setting up query parameters when loading work types.", e);
         }
 
         try {
-            rs = PSfindAll.executeQuery();
+            rs = PSfindByID.executeQuery();
         } catch (SQLException e) {
             throw new DataAccessException("Issue with retrieving work types from the database (executeQuery)", e);
         }
-        res = buildObjects(rs, fullAssociation, type);
-        return res;
+        return buildObjects(rs, fullAssociation, type);
+    }
+
+    @Override
+    public WorkType findByID(Integer id, boolean fullAssociation) throws DataAccessException {
+        return null;
     }
 
     /**
      * Inserts work type into database and associates it with work site
      *
-     * @param workSiteID ID of worksite
+     * @param workSiteID  ID of worksite
      * @param newWorkType WorkType object to be added to database
      * @return true if insertion was successful, otherwise - false
      * @throws DataAccessException
      */
     @Override
-    public Boolean insertWorkType(Integer workSiteID, WorkType newWorkType) throws DataAccessException {
-        Boolean res;
+    public Integer insertWorkType(Integer workSiteID, WorkType newWorkType) throws DataAccessException {
+        Integer affectedRows;
         try {
             PSinsertWorkType.setString(1, newWorkType.getDescOfJob());
             PSinsertWorkType.setString(2, newWorkType.getTypeOfProduce());
@@ -95,13 +123,49 @@ public class WorkTypeDB implements WorkTypeDBIF {
         }
 
         try {
-            Integer affectedRows = PSinsertWorkType.executeUpdate();
-            res = affectedRows > 0;
+            affectedRows = PSinsertWorkType.executeUpdate();
         } catch (SQLException e) {
             throw new DataAccessException("Issue with inserting work type to database", e);
         }
 
-        return res;
+        return affectedRows;
+    }
+
+    @Override
+    public Integer updateWorkType(int workTypeID, WorkType newWorkType, Type type) throws DataAccessException {
+        Integer affectedRows;
+        try {
+            PSupdateWorkType.setString(1,newWorkType.getDescOfJob());
+            PSupdateWorkType.setString(2,newWorkType.getTypeOfProduce());
+            PSupdateWorkType.setString(3,newWorkType.getSalaryType());
+            PSupdateWorkType.setDouble(4,newWorkType.getPay());
+            PSupdateWorkType.setInt(5,workTypeID);
+        } catch (SQLException e) {
+            throw new DataAccessException("Issue with setting up query parameters when updating WorkType", e);
+        }
+        try {
+            affectedRows = PSupdateWorkType.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataAccessException("Issue with updating work type to database", e);
+        }
+        return affectedRows;
+    }
+
+    @Override
+    public Integer deleteWorkType(int workTypeID) throws DataAccessException {
+        Integer affectedRows;
+        try {
+            PSdeleteWorkType.setInt(1, workTypeID);
+        } catch (SQLException e) {
+            throw new DataAccessException("Issue with setting up query parameters when deleting workType", e);
+        }
+
+        try {
+            affectedRows = PSdeleteWorkType.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataAccessException("Issue with deleting work type from database", e);
+        }
+        return affectedRows;
     }
 
     /**
@@ -147,7 +211,11 @@ public class WorkTypeDB implements WorkTypeDBIF {
                 currentWorkType.setTypeOfProduce(rs.getString("typeOfProduce"));
                 currentWorkType.setSalaryType(rs.getString("salaryType"));
                 currentWorkType.setPay(rs.getDouble("pay"));
-                currentWorkType.setWorkSiteID(rs.getInt("workSiteID"));
+//                currentWorkType.setWorkSiteID(rs.getInt("workSiteID"));
+
+                if (fullAssociation) {
+                    //todo
+                }
             } else {
                 throw new DataAccessException("Issue: could not determine type.", new Exception());
             }

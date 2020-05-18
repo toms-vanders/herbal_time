@@ -38,12 +38,12 @@ public class IntegrationTests {
     public void testGetAllWorkTypeFromWorkSite() throws DataAccessException {
         WorkTypeDB wtDB = new WorkTypeDB();
 
-        List<WorkType> res1 = wtDB.findAll(3, false, WorkType.class);
+        List<WorkType> res1 = wtDB.findAllWorkTypesOfWorkSite(3, false, WorkType.class);
         Assertions.assertFalse(res1.isEmpty(), "There no work types associated with the work site 3");
         for (WorkType wt : res1) {
             System.out.println(wt.toString());
         }
-        List<WorkType> res2 = wtDB.findAll(9999, false, WorkType.class);
+        List<WorkType> res2 = wtDB.findAllWorkTypesOfWorkSite(9999, false, WorkType.class);
         Assertions.assertTrue(res2.isEmpty(), "There are some work types associated with the work site 9999");
     }
 
@@ -74,14 +74,18 @@ public class IntegrationTests {
                 testClient1PhoneNum, testClient1StreetName, testClient1StreetNum, testClient1ZIP, testClient1CC,
                 test1ClientCountry, testClient1start, testClient1end);
         Integer affectedRows = cDB.insertClient(testClient1, Client.class);
-        if (affectedRows <= 0) {
-            System.err.println("! ERROR: Adding test article Client(CVR: + " + testClient1CVR + ") failed.");
-        } else if (affectedRows == 1) {
-            System.out.println("Successfully added test article Client(CVR: " + testClient1CVR + ")");
-        } else if (affectedRows == 2) {
-            System.out.println("Successfully added test articles: 1. Client(CVR: " + testClient1CVR +
-                    "), 2. ZipCity(ZIP: " + testClient1ZIP + ", Country Code: " + testClient1CC + ").");
-        }
+
+
+        // This could be moved to the ClientDB. And other xyzDB classes should follow this way also.
+//        if (affectedRows <= 0) {
+//            System.err.println("! ERROR: Adding test article Client(CVR: + " + testClient1CVR + ") failed.");
+//        } else if (affectedRows == 1) {
+//            System.out.println("Successfully added test article Client(CVR: " + testClient1CVR + ")");
+//        } else if (affectedRows == 2) {
+//            System.out.println("Successfully added test articles: 1. Client(CVR: " + testClient1CVR +
+//                    "), 2. ZipCity(ZIP: " + testClient1ZIP + ", Country Code: " + testClient1CC + ").");
+//        }
+
 
         Client testClient1Check = cDB.findClientByCVR(testClient1CVR, false, Client.class);
         Assertions.assertEquals(testClient1CVR, testClient1Check.getCvr(), "CVR invalid");
@@ -99,8 +103,23 @@ public class IntegrationTests {
 
         String testWorkSite1Name = "integrationTest1234";
         String testWorkSite1Description = "description of test work site integrationTest1234";
+        String testWorkSite1StreetName = "streetName of test work site integrationTest1234";
+        String testWorkSite1StreetNum = "streetNum of test work site integrationTest1234";
+        String testWorkSite1Zip = "zip of test work site integrationTest1234";
+        String testWorkSite1CC = "countryCode of test work site integrationTest1234";
+        String testWorkSite1Country = "country of test work site integrationTest1234";
+        String testWorkSite1TypeOfJob = "typeOfJob of test work site integrationTest1234";
+        Double testWorkSite1PricePerWorker = 2459.0;
+        String testWorkSite1CVR = testClient1CVR;
 
-        WorkSite testWorkSite1 = new WorkSite();
+        WorkSite testWorkSite1 = new WorkSite(testWorkSite1Name, testWorkSite1Description, testWorkSite1StreetName,
+                testWorkSite1StreetNum, testWorkSite1Zip, testWorkSite1CC, testWorkSite1Country, testWorkSite1TypeOfJob,
+                testWorkSite1PricePerWorker);
+
+        affectedRows = null;
+
+        affectedRows = wsDB.insertWorkSite(testWorkSite1CVR, testWorkSite1);
+
 
         //brb
 

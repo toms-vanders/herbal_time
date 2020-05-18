@@ -24,10 +24,10 @@ public class TestWorkType {
     }
 
     public void createNewWorkType() throws DataAccessException {
-        WorkType wt = new WorkType("cotton picking", "test", "Amount", 100, 1);
+        WorkType wt = new WorkType("cotton picking", "test", "Amount", 100);
         WorkTypeDB wtDB = new WorkTypeDB();
         wtDB.insertWorkType(1, wt);
-        WorkType wt2 = new WorkType("cotton picking days", "test", "Amount", 100, 1);
+        WorkType wt2 = new WorkType("cotton picking days", "test", "Amount", 100);
         wtDB.insertWorkType(1, wt2);
     }
 
@@ -35,7 +35,7 @@ public class TestWorkType {
     public void testGetAllWorkTypesFromWorkSite() throws DataAccessException {
         createNewWorkType();
         WorkTypeDB wtDB = new WorkTypeDB();
-        List<WorkType> res1 = wtDB.findAll(1, false, WorkType.class);
+        List<WorkType> res1 = wtDB.findAllWorkTypesOfWorkSite(1, false, WorkType.class);
         for (WorkType wt : res1) {
             System.out.println(wt.toString());
         }
@@ -58,8 +58,6 @@ public class TestWorkType {
         } catch (SQLException e) {
             throw new DataAccessException("Issue cleaning up after the tests (executing update).", e);
         }
-
-
 
         Assertions.assertEquals(2, affectedRows);
     }

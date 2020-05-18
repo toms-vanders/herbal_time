@@ -5,7 +5,10 @@ import Model.*;
 import java.util.List;
 
 public interface WorkTaskCtrIF {
-    List<WorkTask> findallWorkTasks() throws DataAccessException;
-    int insertWorkTask(WorkTask newWorkTask) throws DataAccessException;
-    int updateWorkTask(String workTaskID, WorkTask newWorkTask) throws DataAccessException;
+    List<WorkTask> findAllWorkTasks() throws DataAccessException;
+    List<WorkTask> findAllWorkTasksOfWorker(String workerCpr) throws DataAccessException;
+    WorkTask findWorkTasks(Integer id) throws DataAccessException;
+    int insertWorkTask(WorkTask newWorkTask, String workerCpr) throws DataAccessException;
+    int updateWorkTask(WorkTask newWorkTask, Integer workTaskID) throws DataAccessException;
+    void deleteWorkTask(Integer id) throws DataAccessException;
 }

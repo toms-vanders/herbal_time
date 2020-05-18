@@ -9,10 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientDB implements ClientDBIF {
-    /**
-     * notes ->
-     * Started writing this class based on ws_persistence -mikulas
-     */
 
     /**
      * Pre-made queries for the program
@@ -48,6 +44,7 @@ public class ClientDB implements ClientDBIF {
     public ClientDB() throws DataAccessException{
         init();
     }
+
     /**
      * Initialize DB connection and prepare SQL statements
      *
@@ -76,8 +73,7 @@ public class ClientDB implements ClientDBIF {
         } catch (SQLException e) {
             throw new DataAccessException("Error with fetching all Clients from DB.", e);
         }
-        List<Client> res = buildObjects(rs,fullAssociation,type);
-        return res;
+        return buildObjects(rs,fullAssociation,type);
     }
 
     @Override
@@ -89,13 +85,10 @@ public class ClientDB implements ClientDBIF {
         } catch (SQLException e) {
             throw new DataAccessException("There was an error finding the Client by their CVR number.", e);
         }
-        return buildObject(rs, false, Client.class);
+        return buildObject(rs, fullAssociation, type);
 
     }
 
-    /**
-     * @return true if inserted correctly, otherwise false
-     */
     @Override
     public int insertClient(Client newClient, Type type) throws DataAccessException {
         Integer affectedRows;
@@ -112,7 +105,6 @@ public class ClientDB implements ClientDBIF {
             PSinsertClient.setString(9, newClient.getCountry());
             PSinsertClient.setDate(10, newClient.getDateStart());
             PSinsertClient.setDate(11, newClient.getDateEnd());
-
         } catch (SQLException e) {
             e.printStackTrace();
             throw new DataAccessException("There was a problem with the client being inserted into DB.",e);
@@ -124,7 +116,6 @@ public class ClientDB implements ClientDBIF {
             e.printStackTrace();
             throw new DataAccessException("There was a problem with inserting client into DB.", e);
         }
-
         return affectedRows;
     }
 
@@ -181,7 +172,6 @@ public class ClientDB implements ClientDBIF {
             }
         } catch (SQLException e) {
             throw new DataAccessException("buildObjects: There was an Error with building the List.", e);
-
         }
         return res;
     }
@@ -189,11 +179,7 @@ public class ClientDB implements ClientDBIF {
 
     private Client buildObject(ResultSet rs, boolean fullAssociation, Type type) throws DataAccessException {
         Client currentClient = null;
-        try {
-            rs.next();
-        } catch (SQLException e) {
-            throw new DataAccessException("buildObject: There was an Error with the ResultSet.", e);
-        }
+
         try {
             if (type.equals(Client.class)) {
                 currentClient = new Client();
@@ -209,6 +195,10 @@ public class ClientDB implements ClientDBIF {
                 currentClient.setCountry(rs.getString("Country"));
                 currentClient.setDateStart(rs.getDate("dateStart"));
                 currentClient.setDateEnd(rs.getDate("dateEnd"));
+
+                if (fullAssociation) {
+                    //todo
+                }
             } else {
                 throw new DataAccessException("Could not determine type.", new Exception());
             }

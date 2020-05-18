@@ -7,27 +7,31 @@ public class WorkType {
     private String typeOfProduce;
     private String salaryType;
     private double pay;
-    private int wSiteID;
+//    private int wSiteID;
 
-    public WorkType() {}
+    public WorkType() { }
+
+    public WorkType(int wTypeID) {
+        this.wTypeID = wTypeID;
+    }
 
     public WorkType(String descOfJob, String typeOfProduce, String salaryType,
-                    double pay, int wSiteID) {
+                    double pay) {
         this.descOfJob = descOfJob;
         this.typeOfProduce = typeOfProduce;
         this.salaryType = salaryType;
         this.pay = pay;
-        this.wSiteID = wSiteID;
+//        this.wSiteID = wSiteID;
     }
 
     public WorkType(int wTypeID, String descOfJob, String typeOfProduce, String salaryType,
-                    double pay, int wSiteID) {
+                    double pay) {
         this.wTypeID = wTypeID;
         this.descOfJob = descOfJob;
         this.typeOfProduce = typeOfProduce;
         this.salaryType = salaryType;
         this.pay = pay;
-        this.wSiteID = wSiteID;
+//        this.wSiteID = wSiteID;
     }
 
     public int getWorkTypeID() {
@@ -65,22 +69,26 @@ public class WorkType {
         this.pay = pay;
     }
 
-    public int getWorkSiteID() {
-        return wSiteID;
-    }
-    public void setWorkSiteID(int wSiteID) {
-        this.wSiteID = wSiteID;
-    }
+//    public int getWorkSiteID() {
+//        return wSiteID;
+//    }
+//    public void setWorkSiteID(int wSiteID) {
+//        this.wSiteID = wSiteID;
+//    }
 
     @Override
     public String toString() {
+        // Note: wSiteID is no longer a property of WorkType
+
         String s1 = "WorkTypeID: " + wTypeID + "\n";
         String s2 = "descOfJob: " + descOfJob + "\n";
         String s3 = "typeOfProduce: " + typeOfProduce + "\n";
         String s4 = "salaryType: " + salaryType + "\n";
         String s5 = "pay: " + pay + "\n";
-        String s6 = "wSiteID: " + wSiteID + "\n";
-        return s1+s2+s3+s4+s5+s6;
+//        String s6 = "wSiteID: " + wSiteID + "\n";
+
+
+
 //        return "WorkType" +
 //                "wTypeID=" + wTypeID +
 //                ", descOfJob='" + descOfJob + '\'' +
@@ -89,6 +97,6 @@ public class WorkType {
 //                ", pay=" + pay +
 //                ", wSiteID=" + wSiteID +
 //                '}';
-
+        return s1+s2+s3+s4+s5;
     }
 }

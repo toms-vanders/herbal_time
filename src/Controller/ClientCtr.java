@@ -3,6 +3,7 @@ package Controller;
 import DB.ClientDB;
 import Model.Client;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class ClientCtr implements ClientCtrIF{
@@ -30,6 +31,15 @@ public class ClientCtr implements ClientCtrIF{
         try {
             return clientDB.updateClient(clientCVR,newClient, Client.class);
         } catch(DataAccessException e) {
+            throw new DataAccessException("ClientCtr error.", e);
+        }
+    }
+
+    @Override
+    public int deleteClient(String clientCVR) throws DataAccessException {
+        try {
+            return clientDB.deleteClient(clientCVR, Client.class);
+        } catch (DataAccessException e) {
             throw new DataAccessException("ClientCtr error.", e);
         }
     }

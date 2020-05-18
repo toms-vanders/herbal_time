@@ -2,6 +2,7 @@ package Model;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class Client {
 
@@ -16,9 +17,12 @@ public class Client {
     private String country;
     private Date dateStart;
     private Date dateEnd;
+    private ArrayList<WorkSite> workSites;
 
 // Empty constructor, used in ClientDB
-    public Client() {}
+    public Client() {
+        workSites = new ArrayList<>();
+    }
 
     public Client(String cvr, String name, String email, String phoneNum, String streetName, String streetNum,
                   String zip, String countryCode, String country, Date dateStart, Date dateEnd) {
@@ -33,6 +37,7 @@ public class Client {
         this.country = country;
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
+        workSites = new ArrayList<>();
     }
 
     public String getCvr() { return cvr; }
@@ -67,6 +72,9 @@ public class Client {
 
     public String getCountryCode() { return countryCode; }
     public void setCountryCode(String countryCode) { this.countryCode = countryCode; }
+
+    public ArrayList<WorkSite> getWorkSites() { return workSites; }
+    public void setWorkSites(ArrayList<WorkSite> workSites) { this.workSites = workSites; }
 
     @Override
     public String toString() {

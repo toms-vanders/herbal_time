@@ -1,6 +1,7 @@
 package Model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class SeasonalWorker extends Person{
 
@@ -9,13 +10,15 @@ public class SeasonalWorker extends Person{
     private String iban;
     private String ssn;
     private boolean workedBefore;
-    private String leadBy;
-    private int wSiteID;
+    //    private String leadBy;
+    private SeasonalWorker leadBy;
+//    private int wSiteID;
+    private ArrayList<WorkTask> workTasks;
 
     public SeasonalWorker(String cpr, String fname, String lname, LocalDate dob, char sex, String email,
-                          String phoneNum, String streetName, String streetNum, Integer zip, String countryCode,
+                          String phoneNum, String streetName, String streetNum, String zip, String countryCode,
                           String country, String passportNum, String swift, String iban, String ssn,
-                          boolean workedBefore, String leadBy, int wSiteID) {
+                          boolean workedBefore, SeasonalWorker leadBy) {
         super(cpr, fname, lname, dob, sex, email, phoneNum, streetName, streetNum, zip, countryCode, country);
         this.passportNum = passportNum;
         this.swift = swift;
@@ -23,7 +26,19 @@ public class SeasonalWorker extends Person{
         this.ssn = ssn;
         this.workedBefore = workedBefore;
         this.leadBy = leadBy;
-        this.wSiteID = wSiteID;
+        workTasks = new ArrayList<>();
+//        this.wSiteID = wSiteID;
+    }
+
+    /**
+     * essentially an empty constructor, only makes the Person aspects of SeasonalWorker
+     */
+    public SeasonalWorker(String cpr, String fname, String lname, LocalDate dob, char sex, String email,
+                          String phoneNum, String streetName, String streetNum, String zip, String countryCode,
+                          String country) {
+        super(cpr, fname, lname, dob, sex, email, phoneNum, streetName, streetNum, zip, countryCode, country);
+        workTasks = new ArrayList<>();
+        leadBy = null;
     }
 
     public String getPassportNum() { return passportNum; }
@@ -41,22 +56,29 @@ public class SeasonalWorker extends Person{
     public boolean isWorkedBefore() { return workedBefore; }
     public void setWorkedBefore(boolean workedBefore) { this.workedBefore = workedBefore; }
 
-    public String getLeadBy() { return leadBy; }
-    public void setLeadBy(String leadBy) { this.leadBy = leadBy; }
+//    public String getLeadBy() { return leadBy; }
+//    public void setLeadBy(String leadBy) { this.leadBy = leadBy; }
 
-    public int getWorkSiteID() { return wSiteID; }
-    public void setWorkSiteID(int wSiteID) { this.wSiteID = wSiteID; }
+//    public int getWorkSiteID() { return wSiteID; }
+//    public void setWorkSiteID(int wSiteID) { this.wSiteID = wSiteID; }
+
+    public ArrayList<WorkTask> getWorkTasks() { return workTasks; }
+    public void setWorkTasks(ArrayList<WorkTask> workTasks) { this.workTasks = workTasks; }
+
+    public SeasonalWorker getLeadBy() { return leadBy; }
+    public void setLeadBy(SeasonalWorker leadBy) { this.leadBy = leadBy; }
 
     @Override
     public String toString() {
+        // Note: wSiteID is no longer a property of SeasonalWorker
         return "SeasonalWorker{" +
                 "passportNum='" + passportNum + '\'' +
                 ", swift='" + swift + '\'' +
                 ", iban='" + iban + '\'' +
                 ", ssn='" + ssn + '\'' +
                 ", workedBefore=" + workedBefore +
-                ", leadBy='" + leadBy + '\'' +
-                ", wSiteID='" + wSiteID + '\'' +
+//                ", leadBy='" + leadBy + '\'' +
+//                ", wSiteID='" + wSiteID + '\'' +
                 '}';
     }
 }

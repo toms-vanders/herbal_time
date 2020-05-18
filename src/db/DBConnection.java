@@ -12,10 +12,10 @@ public class DBConnection {
      * Configure database connection parameters
      */
     private static final String driverClass = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-    private static final String dbName = "dmaj0919_1081491";
+    private static final String dbName = "dmaj0919_1081496";
     private static final String serverAddress = "hildur.ucn.dk";
     private static final int serverPort = 1433;
-    private static final String userName = "dmaj0919_1081491";
+    private static final String userName = "dmaj0919_1081496";
     private static final String password = "Password1!";
 
     private DBConnection() {

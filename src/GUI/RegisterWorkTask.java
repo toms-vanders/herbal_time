@@ -1,5 +1,6 @@
 package GUI;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class RegisterWorkTask extends javax.swing.JPanel {
@@ -86,7 +87,7 @@ public class RegisterWorkTask extends javax.swing.JPanel {
         endDateLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         endDateLabel.setForeground(new java.awt.Color(249, 249, 249));
 
-        endDatePicker.setBackground(new java.awt.Color(120, 168, 252));
+        endDatePicker.setBackground(new Color(120, 168, 252));
 
         quantityLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons8_trolley_32px.png"))); // NOI18N
         quantityLabel.setText("Quantity");

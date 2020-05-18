@@ -1,5 +1,7 @@
 package Model;
 
+import java.util.ArrayList;
+
 public class WorkSite {
 
     private Integer wSiteID;
@@ -12,12 +14,17 @@ public class WorkSite {
     private String countryCode;
     private String typeOfJob;
     private double pricePerWorker;
-    private String clientCvr;
+//    private String clientCvr;
+    private ArrayList<WorkType> workTypes;
+    private ArrayList<SeasonalWorker> seasonalWorkers;
 
-    public WorkSite() { }
+    public WorkSite() {
+        this.workTypes = new ArrayList<>();
+        this.seasonalWorkers = new ArrayList<>();
+    }
 
     public WorkSite(String name, String description, String streetName, String streetNum, String zip,
-                    String country, String countryCode, String typeOfJob, double pricePerWorker, String clientCvr) {
+                    String country, String countryCode, String typeOfJob, double pricePerWorker) {
         this.name = name;
         this.description = description;
         this.streetName = streetName;
@@ -27,11 +34,13 @@ public class WorkSite {
         this.countryCode = countryCode;
         this.typeOfJob = typeOfJob;
         this.pricePerWorker = pricePerWorker;
-        this.clientCvr = clientCvr;
+//        this.clientCvr = clientCvr;
+        this.workTypes = new ArrayList<>();
+        this.seasonalWorkers = new ArrayList<>();
     }
 
     public WorkSite(Integer wSiteID, String name, String description, String streetName, String streetNum, String zip,
-                    String country, String countryCode, String typeOfJob, double pricePerWorker, String clientCvr) {
+                    String country, String countryCode, String typeOfJob, double pricePerWorker) {
         this.wSiteID = wSiteID;
         this.name = name;
         this.description = description;
@@ -42,7 +51,9 @@ public class WorkSite {
         this.countryCode = countryCode;
         this.typeOfJob = typeOfJob;
         this.pricePerWorker = pricePerWorker;
-        this.clientCvr = clientCvr;
+//        this.clientCvr = clientCvr;
+        this.workTypes = new ArrayList<>();
+        this.seasonalWorkers = new ArrayList<>();
     }
 
     public Integer getWorkSiteID() {
@@ -104,18 +115,27 @@ public class WorkSite {
         this.pricePerWorker = pricePerWorker;
     }
 
-    public String getClientCvr() {
-        return clientCvr;
-    }
-    public void setClientCvr(String clientCvr) {
-        this.clientCvr = clientCvr;
-    }
+//    public String getClientCvr() {
+//        return clientCvr;
+//    }
+//    public void setClientCvr(String clientCvr) {
+//        this.clientCvr = clientCvr;
+//    }
 
     public String getCountryCode() { return countryCode; }
     public void setCountryCode(String countryCode) { this.countryCode = countryCode; }
 
+    public ArrayList<WorkType> getWorkTypes() { return workTypes; }
+    public void setWorkTypes(ArrayList<WorkType> workTypes) { this.workTypes = workTypes; }
+
+    public ArrayList<SeasonalWorker> getSeasonalWorkers() { return seasonalWorkers; }
+    public void setSeasonalWorkers(ArrayList<SeasonalWorker> seasonalWorkers) {
+        this.seasonalWorkers = seasonalWorkers;
+    }
+
     @Override
     public String toString() {
+        // Note: clientCvr is no longer a property of WorkSite
         String s1 = "WorkSiteID: " + wSiteID + "\n";
         String s2 = "description: " + description + "\n";
         String s3 = "streetName: " + streetName + "\n";
@@ -125,9 +145,9 @@ public class WorkSite {
         String s7 = "countryCode: " + countryCode + "\n";
         String s8 = "typeOfJob: " + typeOfJob + "\n";
         String s9 = "pricePerWorker: " + pricePerWorker + "\n";
-        String s10 = "clientCvr: " + clientCvr + "\n";
+//        String s10 = "clientCvr: " + clientCvr + "\n";
 
-        return s1+s2+s3+s4+s5+s6+s7+s8+s9+s10;
+        return s1+s2+s3+s4+s5+s6+s7+s8+s9;
 
 //                "WorkSite{" +
 //                "wSiteID=" + wSiteID +

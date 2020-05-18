@@ -17,14 +17,34 @@ public class WorkSiteDB implements WorkSiteDBIF {
      * Query skeletons for the program
      */
     private static final String findAll = "SELECT * FROM WorkSite WHERE cvr = ?";
+    private static final String findByID = "SELECT * FROM WorkSite WHERE workSiteID = ?";
     private static final String insertWorkSite = "INSERT INTO WorkSite VALUES (?,?,?,?,?,?,?,?,?,?)";
-
+    private static final String updateWorkSite = "UPDATE WorkSite SET "
+            + "siteName = ?,"
+            + "siteDescription = ?,"
+            + "streetName = ?,"
+            + "streetNum = ?,"
+            + "zip = ?,"
+            + "countryCode = ?,"
+            + "country = ?,"
+            + "typeOfJob = ?,"
+            + "pricePerWorker = ?,"
+//            + "cvr = ? "
+            + "WHERE workSiteID = ?";
+    private static final String deleteWorkSite = "DELETE FROM Worksite WHERE workSiteID = ?";
+    private static final String findWorkSitesOfClient = ""; // todo - this one is just a suggestion we might not need it
+                                                            // I think findAll currently does this ^
+                                                            // yes it doesn, just needs to be renamed
     /**
      * PreparedStatement declarations for the above queries
      */
 
     private PreparedStatement PSfindAll;
+    private PreparedStatement PSfindByID;
     private PreparedStatement PSinsertWorkSite;
+    private PreparedStatement PSupdateWorkSite;
+    private PreparedStatement PSdeleteWorkSite;
+    private PreparedStatement PSfindWorkSitesOfClient;
 
     public WorkSiteDB() throws DataAccessException {
         init();
@@ -34,7 +54,11 @@ public class WorkSiteDB implements WorkSiteDBIF {
         Connection con = DBConnection.getInstance().getConnection();
         try {
             PSfindAll = con.prepareStatement(findAll);
+            PSfindByID = con.prepareStatement(findByID);
             PSinsertWorkSite = con.prepareStatement(insertWorkSite);
+            PSupdateWorkSite = con.prepareStatement(updateWorkSite);
+            PSdeleteWorkSite = con.prepareStatement(deleteWorkSite);
+            PSfindWorkSitesOfClient = con.prepareStatement(findWorkSitesOfClient);
         } catch (SQLException e) {
             throw new DataAccessException("Issue with preparing database statements", e);
         }
@@ -62,23 +86,42 @@ public class WorkSiteDB implements WorkSiteDBIF {
         try {
             rs = PSfindAll.executeQuery();
         } catch (SQLException e) {
-            throw new DataAccessException("Issue with retrieving work sites from the database (executeQuery", e);
+            throw new DataAccessException("Issue with retrieving work sites from the database (executeQuery)", e);
         }
         res = buildObjects(rs, fullAssociation, type);
         return res;
     }
 
+    @Override
+    public WorkSite findByID(int workSiteID, boolean fullAssociation, Type type) throws DataAccessException {
+        WorkSite res;
+        ResultSet rs;
+        try {
+            PSfindByID.setInt(1, workSiteID);
+        } catch (SQLException e) {
+            throw new DataAccessException("WorkSiteDB, findByID prepare error.", e);
+        }
+        try {
+            rs = PSfindByID.executeQuery();
+        } catch (SQLException e) {
+            throw new DataAccessException("WorkSiteDB, findByID execute error.", e);
+        }
+        res = buildObject(rs, fullAssociation, type);
+        return res;
+    }
+
+
     /**
      * Inserts work site into database and associates it with client
      *
-     * @param cvr CVR of client
+     * @param cvr         CVR of client
      * @param newWorkSite WorkSite object to be added to database
      * @return true if insertion was successful, otherwise - false
      * @throws DataAccessException
      */
     @Override
-    public Boolean insertWorkSite(String cvr, WorkSite newWorkSite) throws DataAccessException {
-        Boolean res;
+    public Integer insertWorkSite(String cvr, WorkSite newWorkSite) throws DataAccessException {
+        Integer affectedRows;
         try {
             PSinsertWorkSite.setString(1, newWorkSite.getName());
             PSinsertWorkSite.setString(2, newWorkSite.getDescription());
@@ -95,13 +138,60 @@ public class WorkSiteDB implements WorkSiteDBIF {
         }
 
         try {
-            Integer affectedRows = PSinsertWorkSite.executeUpdate();
-            res = affectedRows > 0;
+            affectedRows = PSinsertWorkSite.executeUpdate();
         } catch (SQLException e) {
             throw new DataAccessException("Issue with inserting work type to database", e);
-      }
+        }
+        return affectedRows;
+    }
 
-        return res;
+    @Override
+    public Integer updateWorkSite(int workSiteID, WorkSite newWorkSite, Type type) throws DataAccessException {
+        Integer affectedRows;
+        try {
+            PSupdateWorkSite.setString(1, newWorkSite.getName());
+            PSupdateWorkSite.setString(2, newWorkSite.getDescription());
+            PSupdateWorkSite.setString(3, newWorkSite.getStreetName());
+            PSupdateWorkSite.setString(4, newWorkSite.getStreetNum());
+            PSupdateWorkSite.setString(5, newWorkSite.getZip());
+            PSupdateWorkSite.setString(6, newWorkSite.getCountryCode());
+            PSupdateWorkSite.setString(7, newWorkSite.getCountry());
+            PSupdateWorkSite.setString(8, newWorkSite.getTypeOfJob());
+            PSupdateWorkSite.setDouble(9, newWorkSite.getPricePerWorker());
+//            PSupdateWorkSite.setString(10, newWorkSite.()); // todo - no getCVR method?
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Issue with setting up query parameters when adding new work site", e);
+        }
+
+        try {
+            affectedRows = PSinsertWorkSite.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataAccessException("Issue with inserting work type to database", e);
+        }
+        return affectedRows;
+    }
+
+    @Override
+    public Integer deleteWorkSite(int workSiteID) throws DataAccessException {
+        Integer affectedRows;
+        try {
+            PSdeleteWorkSite.setInt(1, workSiteID);
+        } catch (SQLException e) {
+            throw new DataAccessException("Issue with setting up query parameters when deleting a work site", e);
+        }
+
+        try {
+            affectedRows = PSdeleteWorkSite.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataAccessException("Issue with deleting work site from database", e);
+        }
+        return affectedRows;
+    }
+
+    @Override
+    public Integer findWorkSitesOfClient() throws DataAccessException {
+        return null;
     }
 
     /**
@@ -150,7 +240,11 @@ public class WorkSiteDB implements WorkSiteDBIF {
                 currentWorkSite.setCountry(rs.getString("country"));
                 currentWorkSite.setTypeOfJob(rs.getString("typeOfJob"));
                 currentWorkSite.setPricePerWorker(rs.getDouble("pricePerWorker"));
-                currentWorkSite.setClientCvr(rs.getString("cvr"));
+//                currentWorkSite.setClientCvr(rs.getString("cvr"));
+
+                if (fullAssociation) {
+
+                }
             } else {
                 throw new DataAccessException("Issue: could not determine type.", new Exception());
             }
