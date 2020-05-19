@@ -194,7 +194,7 @@
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Users"/>
+                <Property name="text" type="java.lang.String" value="Employees"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -266,7 +266,7 @@
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Profile"/>
+                <Property name="text" type="java.lang.String" value="Work sites"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -412,17 +412,21 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="tech.aensland.herbaltimegui.loginScreen" name="loginScreen1">
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new tech.aensland.herbaltimegui.loginScreen(this)"/>
-      </AuxValues>
+    <Component class="tech.aensland.herbaltimegui.dashboard" name="dashboard2">
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="200" y="90" width="-1" height="720"/>
+          <AbsoluteConstraints x="200" y="90" width="-1" height="-1"/>
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="tech.aensland.herbaltimegui.dashboard" name="dashboard2">
+    <Component class="tech.aensland.herbaltimegui.loginScreen" name="loginScreen2">
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+          <AbsoluteConstraints x="200" y="90" width="-1" height="-1"/>
+        </Constraint>
+      </Constraints>
+    </Component>
+    <Component class="tech.aensland.herbaltimegui.workSiteDashboard" name="workSiteDashboard1">
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
           <AbsoluteConstraints x="200" y="90" width="-1" height="-1"/>

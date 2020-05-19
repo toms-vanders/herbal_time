@@ -1,14 +1,14 @@
 package Model;
 
-import java.time.LocalDate;
+import java.sql.Date;
 
 public abstract class Person {
 
     private String cpr;
     private String fname;
     private String lname;
-    private LocalDate dob;
-    private char sex;
+    private Date dob;
+    private Character sex;
     private String email;
     private String phoneNum;
     private String streetName;
@@ -17,7 +17,7 @@ public abstract class Person {
     private String countryCode;
     private String country;
 
-    public Person(String cpr, String fname, String lname, LocalDate dob, char sex, String email, String phoneNum,
+    public Person(String cpr, String fname, String lname, Date dob, Character sex, String email, String phoneNum,
                   String streetName, String streetNum, String zip, String countryCode, String country) {
         this.cpr = cpr;
         this.fname = fname;
@@ -42,11 +42,11 @@ public abstract class Person {
     public String getLname() { return lname; }
     public void setLname(String lname) { this.lname = lname; }
 
-    public LocalDate getDob() { return dob; }
-    public void setDob(LocalDate dob) { this.dob = dob; }
+    public Date getDob() { return dob; }
+    public void setDob(Date dob) { this.dob = dob; }
 
-    public char getSex() { return sex; }
-    public void setSex(char sex) { this.sex = sex; }
+    public Character getSex() { return sex; }
+    public void setSex(Character sex) { this.sex = sex; }
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }

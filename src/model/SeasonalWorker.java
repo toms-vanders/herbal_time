@@ -1,5 +1,6 @@
 package Model;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -15,7 +16,12 @@ public class SeasonalWorker extends Person{
 //    private int wSiteID;
     private ArrayList<WorkTask> workTasks;
 
-    public SeasonalWorker(String cpr, String fname, String lname, LocalDate dob, char sex, String email,
+    public SeasonalWorker(String cpr) {
+        super(cpr, null, null, null, null, null, null, null,
+                null, null, null, null);
+    }
+
+    public SeasonalWorker(String cpr, String fname, String lname, Date dob, char sex, String email,
                           String phoneNum, String streetName, String streetNum, String zip, String countryCode,
                           String country, String passportNum, String swift, String iban, String ssn,
                           boolean workedBefore, SeasonalWorker leadBy) {
@@ -33,7 +39,7 @@ public class SeasonalWorker extends Person{
     /**
      * essentially an empty constructor, only makes the Person aspects of SeasonalWorker
      */
-    public SeasonalWorker(String cpr, String fname, String lname, LocalDate dob, char sex, String email,
+    public SeasonalWorker(String cpr, String fname, String lname, Date dob, char sex, String email,
                           String phoneNum, String streetName, String streetNum, String zip, String countryCode,
                           String country) {
         super(cpr, fname, lname, dob, sex, email, phoneNum, streetName, streetNum, zip, countryCode, country);
@@ -71,14 +77,28 @@ public class SeasonalWorker extends Person{
     @Override
     public String toString() {
         // Note: wSiteID is no longer a property of SeasonalWorker
-        return "SeasonalWorker{" +
+        return "{Person: (" +
+                "cpr='" + getCpr() + '\'' +
+                ", fname='" + getFname() + '\'' +
+                ", lname='" + getLname() + '\'' +
+                ", dob=" + getDob() +
+                ", sex=" + getSex() +
+                ", email='" + getEmail() + '\'' +
+                ", phoneNum='" + getPhoneNum() + '\'' +
+                ", streetName='" + getStreetName() + '\'' +
+                ", streetNum='" + getStreetNum() + '\'' +
+                ", zip=" + getZip() +
+                ", countryCode='" + getCountryCode() + '\'' +
+                ", country='" + getCountry() + '\'' +
+                "), " +
+                "SeasonalWorker: (" +
                 "passportNum='" + passportNum + '\'' +
                 ", swift='" + swift + '\'' +
                 ", iban='" + iban + '\'' +
                 ", ssn='" + ssn + '\'' +
                 ", workedBefore=" + workedBefore +
-//                ", leadBy='" + leadBy + '\'' +
+                ", leadBy='" + getLeadBy().getCpr() + '\'' +
 //                ", wSiteID='" + wSiteID + '\'' +
-                '}';
+                ")}";
     }
 }

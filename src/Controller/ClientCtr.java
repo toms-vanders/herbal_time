@@ -3,16 +3,27 @@ package Controller;
 import DB.ClientDB;
 import Model.Client;
 
+import java.lang.reflect.Type;
 import java.sql.SQLException;
 import java.util.List;
 
-public class ClientCtr implements ClientCtrIF{
+public class ClientCtr implements ClientCtrIF {
 
     ClientDB clientDB;
 
     public List<Client> findAllClients() throws DataAccessException {
         try {
             return clientDB.findAll(false,Client.class);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            throw new DataAccessException("ClientCtr error.", e);
+        }
+    }//
+
+    @Override
+    public Client findClientByCVR(String cvr, boolean fullAssociation, Type type) throws DataAccessException {
+        try {
+            return clientDB.findClientByCVR(cvr, fullAssociation, type);
         } catch (DataAccessException e) {
             e.printStackTrace();
             throw new DataAccessException("ClientCtr error.", e);

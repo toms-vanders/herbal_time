@@ -16,8 +16,9 @@ public class WorkSiteDB implements WorkSiteDBIF {
     /**
      * Query skeletons for the program
      */
-    private static final String findAll = "SELECT * FROM WorkSite WHERE cvr = ?";
+    private static final String findAll = "SELECT * FROM WorkSite";
     private static final String findByID = "SELECT * FROM WorkSite WHERE workSiteID = ?";
+    private static final String findWorkSitesOfClient = "SELECT * FROM WorkSite WHERE cvr = ?";
     private static final String insertWorkSite = "INSERT INTO WorkSite VALUES (?,?,?,?,?,?,?,?,?,?)";
     private static final String updateWorkSite = "UPDATE WorkSite SET "
             + "siteName = ?,"
@@ -32,9 +33,6 @@ public class WorkSiteDB implements WorkSiteDBIF {
 //            + "cvr = ? "
             + "WHERE workSiteID = ?";
     private static final String deleteWorkSite = "DELETE FROM Worksite WHERE workSiteID = ?";
-    private static final String findWorkSitesOfClient = ""; // todo - this one is just a suggestion we might not need it
-                                                            // I think findAll currently does this ^
-                                                            // yes it doesn, just needs to be renamed
     /**
      * PreparedStatement declarations for the above queries
      */
@@ -64,6 +62,29 @@ public class WorkSiteDB implements WorkSiteDBIF {
         }
     }
 
+
+    /**
+     * Queries database for all work sites
+     *
+     * @param fullAssociation specifies whether to build results with the objects the foreign keys point to or not
+     * @param type type of object in the code the query looks for in the database
+     * @return if found - an ArrayList of all work sites in the database, otherwise an empty ArrayList
+     * @throws DataAccessException
+     */
+    @Override
+    public List<WorkSite> findAll(boolean fullAssociation, Type type) throws DataAccessException {
+        List<WorkSite> res;
+        ResultSet rs;
+
+        try {
+            rs = PSfindAll.executeQuery();
+        } catch (SQLException e) {
+            throw new DataAccessException("Issue with retrieving work sites from the database (executeQuery)", e);
+        }
+        res = buildObjects(rs, fullAssociation, type);
+        return res;
+    }
+
     /**
      * Queries database for all work sites of a client
      *
@@ -74,17 +95,17 @@ public class WorkSiteDB implements WorkSiteDBIF {
      * @throws DataAccessException
      */
     @Override
-    public List<WorkSite> findAll(String cvr, boolean fullAssociation, Type type) throws DataAccessException {
+    public List<WorkSite> findWorkSitesOfClient(String cvr, boolean fullAssociation, Type type) throws DataAccessException {
         List<WorkSite> res;
         ResultSet rs;
         try {
-            PSfindAll.setString(1, cvr);
+            PSfindWorkSitesOfClient.setString(1, cvr);
         } catch (SQLException e) {
             throw new DataAccessException("Issue with setting query parameters when loading work types", e);
         }
 
         try {
-            rs = PSfindAll.executeQuery();
+            rs = PSfindWorkSitesOfClient.executeQuery();
         } catch (SQLException e) {
             throw new DataAccessException("Issue with retrieving work sites from the database (executeQuery)", e);
         }
@@ -140,7 +161,7 @@ public class WorkSiteDB implements WorkSiteDBIF {
         try {
             affectedRows = PSinsertWorkSite.executeUpdate();
         } catch (SQLException e) {
-            throw new DataAccessException("Issue with inserting work type to database", e);
+            throw new DataAccessException("Issue with inserting work site to database", e);
         }
         return affectedRows;
     }
@@ -187,11 +208,6 @@ public class WorkSiteDB implements WorkSiteDBIF {
             throw new DataAccessException("Issue with deleting work site from database", e);
         }
         return affectedRows;
-    }
-
-    @Override
-    public Integer findWorkSitesOfClient() throws DataAccessException {
-        return null;
     }
 
     /**

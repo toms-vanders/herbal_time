@@ -85,8 +85,13 @@ public class ClientDB implements ClientDBIF {
         } catch (SQLException e) {
             throw new DataAccessException("There was an error finding the Client by their CVR number.", e);
         }
-        return buildObject(rs, fullAssociation, type);
 
+        try {
+            rs.next();
+        } catch (SQLException e) {
+            throw new DataAccessException("Issue setting cursor at the first row in resultSet", e);
+        }
+        return buildObject(rs, fullAssociation, type);
     }
 
     @Override

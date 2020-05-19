@@ -17,7 +17,11 @@ public class SeasonalWorkerDB implements SeasonalWorkerIF {
     /**
      * Pre-made queries for the program
      */
-    private static final String findAll = "SELECT * FROM SeasonalWorker";
+    private static final String findAll = "SELECT ps.cpr, ps.fname, ps.lname, ps.dateOfBirth, ps.sex, ps.email, " +
+            "ps.phoneNum, ps.streetName, ps.streetNum, ps.zip, ps.countryCode, ps.country, sw.cpr, sw.passportNum, " +
+            "sw.swift, sw.iban, sw.ssn, sw.workedBefore, sw.leadBy, sw.wSiteID " +
+            "FROM SeasonalWorker sw JOIN PERSON ps ON sw.cpr = ps.cpr";
+
     private static final String findSeasonalWorkerByCVR = "SELECT * FROM SeasonalWorker WHERE cpr = ?";
     private static final String insertSeasonalWorker = "INSERT INTO SeasonalWorker VALUES(?,?,?,?,?,?,?,?,?,?,?)";
     private static final String updateSeasonalWorker = "UPDATE SeasonalWorker SET "
@@ -136,28 +140,33 @@ public class SeasonalWorkerDB implements SeasonalWorkerIF {
 
     private SeasonalWorker buildObject(ResultSet rs, boolean fullAssociation, Type type) throws DataAccessException {
         SeasonalWorker currentSeasonalWorker = null;
-        try {
-            rs.next();
-        } catch (SQLException e) {
-            throw new DataAccessException("buildObject: There was an Error with the ResultSet.", e);
-        }
+//        try {
+//            rs.next();
+//        } catch (SQLException e) {
+//            throw new DataAccessException("buildObject: There was an Error with the ResultSet.", e);
+//        }
         try {
             if (type.equals(SeasonalWorker.class)) {
                 currentSeasonalWorker = new SeasonalWorker(rs.getString("cpr"), rs.getString("fname"),
-                        rs.getString("lname"), rs.getDate("dob").toLocalDate(),
+                        rs.getString("lname"), rs.getDate("dateOfBirth"),
                         rs.getString("sex").charAt(0), rs.getString("email"),
                         rs.getString("phoneNum"), rs.getString("streetName"),
                         rs.getString("streetNum"), rs.getString("zip"),
                         rs.getString("countryCode"), rs.getString("country"));
 
                 //SeasonalWorker
-                currentSeasonalWorker.setCpr(rs.getString("cpr"));
+//                currentSeasonalWorker.setCpr(rs.getString("cpr"));
                 currentSeasonalWorker.setPassportNum(rs.getString("passportNum"));
                 currentSeasonalWorker.setSwift(rs.getString("swift"));
                 currentSeasonalWorker.setIban(rs.getString("iban"));
                 currentSeasonalWorker.setSsn(rs.getString("ssn"));
                 currentSeasonalWorker.setWorkedBefore(rs.getBoolean("workedBefore"));
-                currentSeasonalWorker.setLeadBy(findSeasonalWorkerByCPR(rs.getString("leadBy"), false, SeasonalWorker.class));
+                currentSeasonalWorker.setLeadBy(new SeasonalWorker(rs.getString("leadBy")));
+
+                if (fullAssociation) {
+                    currentSeasonalWorker.setLeadBy(findSeasonalWorkerByCPR(rs.getString("leadBy"),
+                            false, SeasonalWorker.class));
+                }
 //                currentSeasonalWorker.setWorkSiteID(rs.getInt("wSiteID"));
             } else {
                 throw new DataAccessException("Could not determine type.", new Exception());

@@ -1,6 +1,7 @@
 package Model;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.time.LocalDate;
 
 public class Employee extends Person {
@@ -8,7 +9,7 @@ public class Employee extends Person {
     private Integer kontoNum;
     private BigDecimal salary;
 
-    public Employee(String cpr, String fname, String lname, LocalDate dob, char sex, String email, String phoneNum,
+    public Employee(String cpr, String fname, String lname, Date dob, char sex, String email, String phoneNum,
                     String streetName, String streetNum, String zip, String countryCode, String country,
                     Integer regNum, Integer kontoNum, BigDecimal salary) {
         super(cpr, fname, lname, dob, sex, email, phoneNum, streetName, streetNum, zip, countryCode, country);

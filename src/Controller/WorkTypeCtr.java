@@ -4,6 +4,7 @@ import Model.*;
 import DB.*;
 
 import javax.xml.crypto.Data;
+import java.lang.reflect.Type;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -15,6 +16,15 @@ public class WorkTypeCtr implements WorkTypeCtrIF{
     public List<WorkType> findAllWorkTypesOfWorkSite(int workSiteID) throws DataAccessException {
         try {
             return workTypeDB.findAllWorkTypesOfWorkSite(workSiteID, false, WorkSite.class);
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Error with WorkTypeCtr.", e);
+        }
+    }
+
+    @Override
+    public WorkType findWorkTypeByID(int worktypeID, boolean fullAssociation, Type type) throws DataAccessException {
+        try {
+            return workTypeDB.findWorkTypeByID(worktypeID, fullAssociation, type);
         } catch (DataAccessException e) {
             throw new DataAccessException("Error with WorkTypeCtr.", e);
         }
@@ -37,4 +47,15 @@ public class WorkTypeCtr implements WorkTypeCtrIF{
             throw new DataAccessException("Error with WorkTypeCtr.", e);
         }
     }
+
+    @Override
+    public int deleteWorkType(int workTypeID) throws DataAccessException {
+        try {
+            return workTypeDB.deleteWorkType(workTypeID);
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Error with WorkTypeCtr.", e);
+        }
+    }
+
+
 }

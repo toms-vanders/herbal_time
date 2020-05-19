@@ -36,16 +36,25 @@ public class TestWorkSite {
     }
 
     @Test
-    public void testGetAllWorkSitesFromClient() throws DataAccessException {
+    public void testGetAllWorkSites() throws DataAccessException {
         createNewWorkSite();
         WorkSiteDB wsDB = new WorkSiteDB();
-        List<WorkSite> res1 = wsDB.findAll("45678932", false, WorkSite.class);
+        List<WorkSite> res1 = wsDB.findAll(false, WorkSite.class);
         for (WorkSite ws : res1) {
             System.out.println(ws.toString());
         }
     }
 
     @Test
+    public void testGetAllWorkSitesFromClient() throws DataAccessException {
+        createNewWorkSite();
+        WorkSiteDB wsDB = new WorkSiteDB();
+        List<WorkSite> res1 = wsDB.findWorkSitesOfClient("45678932", false, WorkSite.class);
+        for (WorkSite ws : res1) {
+            System.out.println(ws.toString());
+        }
+    }
+
     @AfterAll
     static void cleanUp() throws DataAccessException {
         PreparedStatement ps = null;

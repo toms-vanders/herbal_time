@@ -17,7 +17,8 @@ public class WorkTypeDB implements WorkTypeDBIF {
      * Query skeletons for the program
      */
     private static final String findAll = "SELECT * FROM WorkType";
-    private static final String findByID = "SELECT * FROM WorkType where workSiteID = ?";
+    private static final String findByID = "SELECT * FROM WorkType where workTypeID = ?";
+    private static final String findByWorkSite = "SELECT * FROM WorkType where workSiteID = ?";
     private static final String insertWorkType = "INSERT INTO WorkType VALUES(?,?,?,?,?)";
     private static final String updateWorkType = "UPDATE WorkType SET "
             + "descOfJob = ?,"
@@ -36,6 +37,7 @@ public class WorkTypeDB implements WorkTypeDBIF {
     private PreparedStatement PSinsertWorkType;
     private PreparedStatement PSupdateWorkType;
     private PreparedStatement PSdeleteWorkType;
+    private PreparedStatement PSfindByWorkSite;
 
     public WorkTypeDB() throws DataAccessException {
         init();
@@ -54,6 +56,7 @@ public class WorkTypeDB implements WorkTypeDBIF {
             PSinsertWorkType = con.prepareStatement(insertWorkType);
             PSupdateWorkType = con.prepareStatement(updateWorkType);
             PSdeleteWorkType = con.prepareStatement(deleteWorkType);
+            PSfindByWorkSite = con.prepareStatement(findByWorkSite);
         } catch (SQLException e) {
             throw new DataAccessException("Issue with preparing database statement", e);
         }
@@ -83,7 +86,24 @@ public class WorkTypeDB implements WorkTypeDBIF {
     public List<WorkType> findAllWorkTypesOfWorkSite(Integer workSiteID, boolean fullAssociation, Type type) throws DataAccessException {
         ResultSet rs;
         try {
-            PSfindByID.setInt(1, workSiteID);
+            PSfindByWorkSite.setInt(1, workSiteID);
+        } catch (SQLException e) {
+            throw new DataAccessException("Issue with setting up query parameters when loading work types.", e);
+        }
+
+        try {
+            rs = PSfindByWorkSite.executeQuery();
+        } catch (SQLException e) {
+            throw new DataAccessException("Issue with retrieving work types from the database (executeQuery)", e);
+        }
+        return buildObjects(rs, fullAssociation, type);
+    }
+
+    @Override
+    public WorkType findWorkTypeByID(int workTypeID, boolean fullAssociation, Type type) throws DataAccessException {
+        ResultSet rs;
+        try {
+            PSfindByID.setInt(1, workTypeID);
         } catch (SQLException e) {
             throw new DataAccessException("Issue with setting up query parameters when loading work types.", e);
         }
@@ -93,12 +113,7 @@ public class WorkTypeDB implements WorkTypeDBIF {
         } catch (SQLException e) {
             throw new DataAccessException("Issue with retrieving work types from the database (executeQuery)", e);
         }
-        return buildObjects(rs, fullAssociation, type);
-    }
-
-    @Override
-    public WorkType findByID(Integer id, boolean fullAssociation) throws DataAccessException {
-        return null;
+        return buildObject(rs, fullAssociation, type);
     }
 
     /**
