@@ -7,9 +7,17 @@ import javax.xml.crypto.Data;
 import java.util.List;
 
 public class SeasonalWorkerCtr implements SeasonalWorkerCtrIF{
-    
-    SeasonalWorkerDB seasonalWorkerDB;
-    
+
+    SeasonalWorkerIF seasonalWorkerDB;
+
+    public SeasonalWorkerCtr() throws DataAccessException {
+        try {
+            seasonalWorkerDB = new SeasonalWorkerDB();
+        }catch (DataAccessException e){
+            throw new DataAccessException("Unable to obtain seasonal worker database instance.", e);
+        }
+    }
+
     @Override
     public List<SeasonalWorker> findAllSeasonalWorkers() throws DataAccessException {
         try {

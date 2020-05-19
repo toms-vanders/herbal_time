@@ -93,7 +93,7 @@ public class SeasonalWorkerDB implements SeasonalWorkerIF {
 
     @Override
     public int insertSeasonalWorker(SeasonalWorker newSeasonalWorker, Integer workSiteID, Type type) throws DataAccessException {
-        Integer affectedRows;
+        int affectedRows;
         try {
             PSinsertSeasonalWorker.setString(1, newSeasonalWorker.getCpr());
             PSinsertSeasonalWorker.setString(2, newSeasonalWorker.getPassportNum());

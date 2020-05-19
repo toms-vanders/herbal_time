@@ -5,6 +5,8 @@
  */
 package GUI;
 
+import javax.swing.*;
+
 /**
  *
  * @author dmich
@@ -425,6 +427,7 @@ public class paymentSlipsScreen extends javax.swing.JFrame {
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
+        setIconImage(new ImageIcon(getClass().getResource("/icons8_potted_plant_50px_1.png")).getImage());
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -487,7 +490,7 @@ public class paymentSlipsScreen extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }

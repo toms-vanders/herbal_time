@@ -40,7 +40,7 @@ public class RegisterWorkTask extends javax.swing.JPanel {
         endDateLabel = new javax.swing.JLabel();
         endDatePicker = new com.github.lgooddatepicker.components.DateTimePicker();
         quantityLabel = new javax.swing.JLabel();
-        quanitySpinner = new javax.swing.JSpinner();
+        quantitySpinner = new javax.swing.JSpinner();
         quantityPicker = new javax.swing.JComboBox<>();
         statusLabel = new javax.swing.JLabel();
         statusPicker = new javax.swing.JComboBox<>();
@@ -149,7 +149,7 @@ public class RegisterWorkTask extends javax.swing.JPanel {
                         .addGap(150, 150, 150)
                         .addComponent(quantityLabel)
                         .addGap(30, 30, 30)
-                        .addComponent(quanitySpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(quantitySpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(5, 5, 5)
                         .addComponent(quantityPicker, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(registerTaskPaneLayout.createSequentialGroup()
@@ -191,7 +191,7 @@ public class RegisterWorkTask extends javax.swing.JPanel {
                 .addGap(50, 50, 50)
                 .addGroup(registerTaskPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(quantityLabel)
-                    .addComponent(quanitySpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(quantitySpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(quantityPicker, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(50, 50, 50)
                 .addGroup(registerTaskPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -219,7 +219,7 @@ public class RegisterWorkTask extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> locationList;
     private javax.swing.JLabel produceLabel;
     private javax.swing.JComboBox<String> produceList;
-    private javax.swing.JSpinner quanitySpinner;
+    private javax.swing.JSpinner quantitySpinner;
     private javax.swing.JLabel quantityLabel;
     private javax.swing.JComboBox<String> quantityPicker;
     private javax.swing.JButton registerBtn;

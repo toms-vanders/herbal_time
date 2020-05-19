@@ -1,140 +1,193 @@
 package GUI;
 
+import Controller.DataAccessException;
+import Controller.SeasonalWorkerCtr;
+import Controller.SeasonalWorkerCtrIF;
+import Model.SeasonalWorker;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class workersScreen extends javax.swing.JFrame {
+public class workersScreen extends JFrame {
 
-    public workersScreen() {
+    public workersScreen() throws DataAccessException {
         initComponents();
     }
 
-    private void initComponents() {
+    private void initComponents() throws DataAccessException {
 
-        mainContainer = new JPanel();
-        topBar = new javax.swing.JPanel();
-        maximizeBtn = new javax.swing.JLabel();
-        exitBtn = new javax.swing.JLabel();
-        minimizeBtn = new javax.swing.JLabel();
-        frameTitle = new javax.swing.JLabel();
-        addBtn = new javax.swing.JButton();
-        scrollablePanel = new javax.swing.JScrollPane();
-        removeBtn = new javax.swing.JButton();
-        removeBtn1 = new javax.swing.JButton();
-        removeBtn2 = new javax.swing.JButton();
+        try {
+            seasonalWorkerController = new SeasonalWorkerCtr();
+        }catch(DataAccessException e){
+            throw new DataAccessException("Unable to obtain seasonal worker controller instance.",e);
+        }
+        seasonalWorkers = new ArrayList<>();
+        try{
+            seasonalWorkers = new ArrayList<>(seasonalWorkerController.findAllSeasonalWorkers());
+        }catch (DataAccessException e){
+            throw new DataAccessException("Unable to retrieve list of seasonal workers.", e);
+        }
+        MAX_WORKERS = seasonalWorkers.size();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        defaultFont = new Font("Dialog", Font.BOLD, 24);
+
+        JPanel mainContainer = new JPanel();
+        JPanel topBar = new JPanel();
+        JLabel maximizeBtn = new JLabel();
+        JLabel exitBtn = new JLabel();
+        JLabel minimizeBtn = new JLabel();
+        JLabel frameTitle = new JLabel();
+        JButton addBtn = new JButton();
+        JScrollPane scrollablePanel = new JScrollPane();
+        JFrame current = this;
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
 
-        mainContainer.setBackground(new java.awt.Color(71, 120, 197));
+        mainContainer.setBackground(new Color(71, 120, 197));
+        topBar.setBackground(new Color(120, 168, 252));
+        topBar.addMouseMotionListener(new MouseMotionAdapter() {
+            public void mouseDragged(MouseEvent evt) {
+                topBarMouseDragged(evt);
+            }
+        });
+        topBar.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent evt) {
+                topBarMousePressed(evt);
+            }
+        });
 
-        topBar.setBackground(new java.awt.Color(120, 168, 252));
 
-        maximizeBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons8_maximize_button_32px.png"))); // NOI18N
+        minimizeBtn.setIcon(new ImageIcon(getClass().getResource("/icons8_minimize_window_32px_1.png")));
+        minimizeBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                current.setExtendedState(JFrame.ICONIFIED);
+            }
+        });
+        maximizeBtn.setIcon(new ImageIcon(getClass().getResource("/icons8_maximize_button_32px.png")));
+        maximizeBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                current.setExtendedState(JFrame.NORMAL);
+            }
+        });
+        exitBtn.setIcon(new ImageIcon(getClass().getResource("/icons8_close_window_32px.png")));
+        exitBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                current.dispose();
+            }
+        });
 
-        exitBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons8_close_window_32px.png"))); // NOI18N
+        addBtn.setBackground(new Color(71, 120, 197));
+        addBtn.setText("Add");
+        //TODO: add button action listener
+        addBtn.addActionListener(e -> {});
 
-        minimizeBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons8_minimize_window_32px_1.png"))); // NOI18N
-
-        frameTitle.setFont(new java.awt.Font("Dialog", Font.BOLD, 24));
+        frameTitle.setFont(defaultFont);
         frameTitle.setText("CS Works");
 
-        javax.swing.GroupLayout topBarLayout = new javax.swing.GroupLayout(topBar);
+        GroupLayout topBarLayout = new GroupLayout(topBar);
         topBar.setLayout(topBarLayout);
         topBarLayout.setHorizontalGroup(
-                topBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, topBarLayout.createSequentialGroup()
+                topBarLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(GroupLayout.Alignment.TRAILING, topBarLayout.createSequentialGroup()
                                 .addContainerGap()
                                 .addComponent(frameTitle)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(minimizeBtn)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(maximizeBtn)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(exitBtn)
                                 .addContainerGap())
         );
         topBarLayout.setVerticalGroup(
-                topBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, topBarLayout.createSequentialGroup()
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(topBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                topBarLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(GroupLayout.Alignment.TRAILING, topBarLayout.createSequentialGroup()
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(topBarLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                                         .addComponent(frameTitle)
-                                        .addGroup(topBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(topBarLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                 .addComponent(minimizeBtn)
                                                 .addComponent(exitBtn)
                                                 .addComponent(maximizeBtn)))
                                 .addContainerGap())
         );
 
-        addBtn.setBackground(new java.awt.Color(71, 120, 197));
-        addBtn.setText("Add");
-        addBtn.addActionListener(this::addBtnActionPerformed);
-
-        scrollablePanel.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
-        removeBtn.addActionListener(this::removeBtnActionPerformed);
-        removeBtn1.addActionListener(this::removeBtn1ActionPerformed);
-        removeBtn2.addActionListener(this::removeBtn2ActionPerformed);
+        scrollablePanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         listContainer = createListContainer();
-        listContainer.setBackground(new Color(71, 120, 197));
+
         scrollablePanel.setViewportView(listContainer);
 
-        javax.swing.GroupLayout mainContainerLayout = new javax.swing.GroupLayout(mainContainer);
+        GroupLayout mainContainerLayout = new GroupLayout(mainContainer);
         mainContainer.setLayout(mainContainerLayout);
         mainContainerLayout.setHorizontalGroup(
-                mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(topBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(topBar, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(mainContainerLayout.createSequentialGroup()
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(addBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(addBtn, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
                                 .addGap(588, 588, 588))
                         .addGroup(mainContainerLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(scrollablePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 782, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(scrollablePanel, GroupLayout.PREFERRED_SIZE, 782, GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         mainContainerLayout.setVerticalGroup(
-                mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(mainContainerLayout.createSequentialGroup()
-                                .addComponent(topBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(scrollablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(addBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(topBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(scrollablePanel, GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(addBtn, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap())
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(mainContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(mainContainer, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(mainContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(mainContainer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
+        setIconImage(new ImageIcon(getClass().getResource("/icons8_potted_plant_50px_1.png")).getImage());
+        setResizable(false);
         pack();
+        setLocationRelativeTo(null);
     }
 
-    private void setElementComponents(JPanel listElement, JLabel profilePicture,JLabel personName,JButton editBtn,JButton removeBtn) {
-        listElement.setBackground(new java.awt.Color(23, 35, 51));
+    private void setElementComponents(JPanel listElement, JLabel profilePicture,JLabel personName, String name,JButton editBtn,JButton removeBtn) {
+        listElement.setBackground(new Color(23, 35, 51));
 
         profilePicture.setIcon(new ImageIcon(getClass().getResource("/icons8_github_96px.png"))); // NOI18N
 
-        personName.setFont(new Font("Dialog", Font.BOLD, 24)); // NOI18N
-        personName.setText("John Doe");
+        personName.setFont(defaultFont); // NOI18N
+        personName.setText(name);
 
-        editBtn.setBackground(new java.awt.Color(23, 35, 51));
+        editBtn.setBackground(new Color(23, 35, 51));
         editBtn.setIcon(new ImageIcon(getClass().getResource("/icons8_edit_32px.png"))); // NOI18N
         editBtn.setText("Edit");
+        //TODO: edit button action listener
+        editBtn.addActionListener(e -> {});
 
-        removeBtn.setBackground(new java.awt.Color(23, 35, 51));
+        removeBtn.setBackground(new Color(23, 35, 51));
         removeBtn.setIcon(new ImageIcon(getClass().getResource("/icons8_trash_can_32px.png"))); // NOI18N
         removeBtn.setText("Remove");
+        //TODO: remove button action listener
+        removeBtn.addActionListener((e -> {}));
     }
 
     private JPanel createListContainer(){
@@ -142,26 +195,27 @@ public class workersScreen extends javax.swing.JFrame {
         listContainer = new JPanel();
         listContainerLayout = new GroupLayout(listContainer);
         listContainer.setLayout(listContainerLayout);
+        listContainer.setBackground(new Color(71, 120, 197));
         listContainerLayout.setAutoCreateGaps(true);
         listContainerLayout.setAutoCreateContainerGaps(true);
 
-        parallelGroup = listContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING);
+        parallelGroup = listContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING);
         listContainerLayout.setHorizontalGroup(listContainerLayout.createSequentialGroup().addGroup(parallelGroup));
 
         sequentialGroup = listContainerLayout.createSequentialGroup();
         listContainerLayout.setVerticalGroup(sequentialGroup);
 
-        for(int i = 0; i < 3; i++){
+        for(int i = 0; i < MAX_WORKERS; i++){
             JPanel elementToAdd = new JPanel();
             JLabel profilePicture = new JLabel();
             JLabel personName = new JLabel();
             JButton editBtn = new JButton();
             JButton removeBtn = new JButton();
-            setElementComponents(elementToAdd, profilePicture, personName, editBtn, removeBtn);
+            String name = seasonalWorkers.get(i).getFname() + " " + seasonalWorkers.get(i).getLname();
+            setElementComponents(elementToAdd, profilePicture, personName, name, editBtn, removeBtn);
             setElementGroupsPosition(elementToAdd, profilePicture, personName, editBtn, removeBtn);
             addElementToList(elementToAdd);
         }
-
         return listContainer;
     }
 
@@ -183,7 +237,7 @@ public class workersScreen extends javax.swing.JFrame {
                                 .addComponent(profilePicture, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(personName)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 298, Short.MAX_VALUE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 170, Short.MAX_VALUE)
                                 .addComponent(editBtn, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(removeBtn, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
@@ -207,64 +261,48 @@ public class workersScreen extends javax.swing.JFrame {
         );
     }
 
-    private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+    int xx,xy;
+    private void topBarMouseDragged(MouseEvent evt) {
+        int x = evt.getXOnScreen();
+        int y = evt.getYOnScreen();
+        this.setLocation(x-xx,y-xy);
     }
 
-    private void profilePictureMousePressed(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void removeBtnActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void profilePicture1MousePressed(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void removeBtn1ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void profilePicture2MousePressed(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void removeBtn2ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+    private void topBarMousePressed(MouseEvent evt) {
+        xx = evt.getX();
+        xy = evt.getY();
     }
 
     public static void main(String[] args) {
 
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Windows".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(workersScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            Logger.getLogger(workersScreen.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        EventQueue.invokeLater(() -> new workersScreen().setVisible(true));
+        EventQueue.invokeLater(() -> {
+            try {
+                new workersScreen().setVisible(true);
+            } catch (DataAccessException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
-    private javax.swing.JButton addBtn;
-    private javax.swing.JLabel exitBtn;
-    private javax.swing.JLabel frameTitle;
-    private javax.swing.JPanel listContainer;
-    private javax.swing.JPanel mainContainer;
-    private javax.swing.JLabel maximizeBtn;
-    private javax.swing.JLabel minimizeBtn;
-    private javax.swing.JButton removeBtn;
-    private javax.swing.JButton removeBtn1;
-    private javax.swing.JButton removeBtn2;
-    private javax.swing.JScrollPane scrollablePanel;
-    private javax.swing.JPanel topBar;
+    private Font defaultFont;
+    private JPanel listContainer;
 
     private GroupLayout listContainerLayout;
     private GroupLayout.ParallelGroup parallelGroup;
     private GroupLayout.SequentialGroup sequentialGroup;
+
+    private SeasonalWorkerCtrIF seasonalWorkerController;
+    private static Integer MAX_WORKERS;
+    private ArrayList<SeasonalWorker> seasonalWorkers;
 }

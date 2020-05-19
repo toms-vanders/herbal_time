@@ -27,7 +27,7 @@ public class WorkTaskDB implements WorkTaskDBIF {
             + "dateStart = ?,"
             + "dateEnd = ?,"
             + "taskStatus = ?,"
-            + "workTypeID = ?,"
+            + "workTypeID = ? "
 //            + "workerCPR = ? "
             + "WHERE workTaskID = ? ";
 
@@ -214,7 +214,7 @@ public class WorkTaskDB implements WorkTaskDBIF {
             }
 
             if (fullAssociation) {
-                WorkType workType = wtDB.findByID(currentWorkTask.getWorkType().getWorkTypeID(), false);
+                WorkType workType = wtDB.findWorkTypeByID(currentWorkTask.getWorkType().getWorkTypeID(), false,currentWorkTask.getClass());
                 currentWorkTask.setWorkType(workType);
             }
         }
