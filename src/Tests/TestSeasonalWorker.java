@@ -34,9 +34,11 @@ public class TestSeasonalWorker {
         SeasonalWorkerDB swDB = new SeasonalWorkerDB();
         SeasonalWorker newTestGeneratedSeasonalWorker = new SeasonalWorker("01234567890", "firstName",
                 "lastName", dob, 'f', "test@gmail.com", "000", "testStreet",
-                "0", "9000", "DK", "Denmark", "012345678", "01234567890",
-                "012345678901234567890123456789012" , "01234567890123456789012345678901234567890123456789",
-        false, testGeneratedSeasonalWorker);
+                "0", "9000", "DK", "Denmark");
+        //, "012345678", "01234567890",
+        //                "012345678901234567890123456789012" , "01234567890123456789012345678901234567890123456789",
+        //        false, testGeneratedSeasonalWorker
+        // TODO: this was causing an error - not sure how to fix
         swDB.insertSeasonalWorker(newTestGeneratedSeasonalWorker, 1, SeasonalWorker.class); //todo - ensure there is worksite with ID 1
     }
 

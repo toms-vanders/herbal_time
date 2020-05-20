@@ -5,6 +5,11 @@
  */
 package GUI;
 
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
+
 /**
  *
  * @author dmich
@@ -63,18 +68,13 @@ public class RegisterWorkTask extends javax.swing.JPanel {
 
         cancelBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons8_trash_can_32px.png"))); // NOI18N
         cancelBtn.setText("Cancel");
-        cancelBtn.setBackground(new java.awt.Color(71, 120, 197));
-        cancelBtn.setForeground(new java.awt.Color(60, 63, 65));
 
         registerBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons8_save_32px.png"))); // NOI18N
         registerBtn.setText("Register");
-        registerBtn.setBackground(new java.awt.Color(71, 120, 197));
-        registerBtn.setForeground(new java.awt.Color(60, 63, 65));
-        registerBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                registerBtnActionPerformed(evt);
-            }
-        });
+        registerBtn.addActionListener(this::registerBtnActionPerformed);
+
+        ComponentsConfigure.metroBtnConfig(registerBtn);
+        ComponentsConfigure.metroBtnConfig(cancelBtn);
 
         locationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons8_place_marker_32px.png"))); // NOI18N
         locationLabel.setText("Location");

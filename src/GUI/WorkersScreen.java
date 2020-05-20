@@ -7,16 +7,13 @@ import Model.SeasonalWorker;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class workersScreen extends JFrame {
+public class WorkersScreen extends JFrame {
 
-    public workersScreen() throws DataAccessException {
+    public WorkersScreen() throws DataAccessException {
         initComponents();
     }
 
@@ -35,8 +32,6 @@ public class workersScreen extends JFrame {
         }
         MAX_WORKERS = seasonalWorkers.size();
 
-        defaultFont = new Font("Dialog", Font.BOLD, 24);
-
         JPanel mainContainer = new JPanel();
         JPanel topBar = new JPanel();
         JLabel maximizeBtn = new JLabel();
@@ -45,52 +40,20 @@ public class workersScreen extends JFrame {
         JLabel frameTitle = new JLabel();
         JButton addBtn = new JButton();
         JScrollPane scrollablePanel = new JScrollPane();
-        JFrame current = this;
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
 
         mainContainer.setBackground(new Color(71, 120, 197));
-        topBar.setBackground(new Color(120, 168, 252));
-        topBar.addMouseMotionListener(new MouseMotionAdapter() {
-            public void mouseDragged(MouseEvent evt) {
-                topBarMouseDragged(evt);
-            }
-        });
-        topBar.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent evt) {
-                topBarMousePressed(evt);
-            }
-        });
 
-
-        minimizeBtn.setIcon(new ImageIcon(getClass().getResource("/icons8_minimize_window_32px_1.png")));
-        minimizeBtn.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                current.setExtendedState(JFrame.ICONIFIED);
-            }
-        });
-        maximizeBtn.setIcon(new ImageIcon(getClass().getResource("/icons8_maximize_button_32px.png")));
-        maximizeBtn.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                current.setExtendedState(JFrame.NORMAL);
-            }
-        });
-        exitBtn.setIcon(new ImageIcon(getClass().getResource("/icons8_close_window_32px.png")));
-        exitBtn.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                current.dispose();
-            }
-        });
+        ComponentsConfigure.topBarConfig(topBar,this, new Color(120,168,252));
+        ComponentsConfigure.topBarButtons(minimizeBtn,maximizeBtn,exitBtn,this);
 
         addBtn.setBackground(new Color(71, 120, 197));
         addBtn.setText("Add");
         //TODO: add button action listener
         addBtn.addActionListener(e -> {});
 
-        frameTitle.setFont(defaultFont);
+        frameTitle.setFont(ComponentsConfigure.defaultFont);
         frameTitle.setText("CS Works");
 
         GroupLayout topBarLayout = new GroupLayout(topBar);
@@ -174,18 +137,20 @@ public class workersScreen extends JFrame {
 
         profilePicture.setIcon(new ImageIcon(getClass().getResource("/icons8_github_96px.png"))); // NOI18N
 
-        personName.setFont(defaultFont); // NOI18N
+        personName.setFont(ComponentsConfigure.defaultFont); // NOI18N
         personName.setText(name);
 
         editBtn.setBackground(new Color(23, 35, 51));
         editBtn.setIcon(new ImageIcon(getClass().getResource("/icons8_edit_32px.png"))); // NOI18N
         editBtn.setText("Edit");
+        ComponentsConfigure.metroBtnConfig(editBtn);
         //TODO: edit button action listener
         editBtn.addActionListener(e -> {});
 
         removeBtn.setBackground(new Color(23, 35, 51));
         removeBtn.setIcon(new ImageIcon(getClass().getResource("/icons8_trash_can_32px.png"))); // NOI18N
         removeBtn.setText("Remove");
+        ComponentsConfigure.metroBtnConfig(removeBtn);
         //TODO: remove button action listener
         removeBtn.addActionListener((e -> {}));
     }
@@ -261,18 +226,6 @@ public class workersScreen extends JFrame {
         );
     }
 
-    int xx,xy;
-    private void topBarMouseDragged(MouseEvent evt) {
-        int x = evt.getXOnScreen();
-        int y = evt.getYOnScreen();
-        this.setLocation(x-xx,y-xy);
-    }
-
-    private void topBarMousePressed(MouseEvent evt) {
-        xx = evt.getX();
-        xy = evt.getY();
-    }
-
     public static void main(String[] args) {
 
         try {
@@ -283,19 +236,22 @@ public class workersScreen extends JFrame {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(workersScreen.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(WorkersScreen.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         EventQueue.invokeLater(() -> {
             try {
-                new workersScreen().setVisible(true);
+                new WorkersScreen().setVisible(true);
             } catch (DataAccessException e) {
                 e.printStackTrace();
             }
         });
     }
 
-    private Font defaultFont;
+    public void start(){
+        main(null);
+    }
+
     private JPanel listContainer;
 
     private GroupLayout listContainerLayout;

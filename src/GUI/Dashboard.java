@@ -126,28 +126,22 @@ public class Dashboard extends JPanel {
         });
         overviewProfile.add(profilePicture, new AbsoluteConstraints(0, 10, 100, 100));
 
-        viewTaskBtn.setBackground(new Color(71, 120, 197));
-        viewTaskBtn.setForeground(new Color(255, 255, 255));
-        viewTaskBtn.setText("View Task");
-        viewTaskBtn.setBorder(null);
-        viewTaskBtn.addActionListener(this::viewTaskList);
-
         readableDayLabel.setForeground(new Color(255, 255, 255));
         readableDayLabel.setText("Wednesday 13");
 
         monthYearLabel.setForeground(new Color(255, 255, 255));
         monthYearLabel.setText("May 2020");
 
-        registerTaskBtn.setBackground(new Color(71, 120, 197));
-        registerTaskBtn.setForeground(new Color(255, 255, 255));
         registerTaskBtn.setText("Register Task");
-        registerTaskBtn.setBorder(null);
         registerTaskBtn.addActionListener(this::registerTaskBtnActionPerformed);
-
+        viewTaskBtn.setText("View Task");
+        viewTaskBtn.addActionListener(this::viewTaskBtnActionPerformed);
         contactLeaderBtn.setText("Contact Leader");
-        contactLeaderBtn.setBackground(new Color(71, 120, 197));
-        contactLeaderBtn.setBorder(null);
-        contactLeaderBtn.setForeground(new Color(255, 255, 255));
+
+
+        ComponentsConfigure.metroBtnConfig(registerTaskBtn);
+        ComponentsConfigure.metroBtnConfig(viewTaskBtn);
+        ComponentsConfigure.metroBtnConfig(contactLeaderBtn);
 
         GroupLayout overviewPaneLayout = new GroupLayout(overviewPane);
         overviewPane.setLayout(overviewPaneLayout);
@@ -221,7 +215,7 @@ public class Dashboard extends JPanel {
         add(jScrollPane1, new AbsoluteConstraints(310, 0, 690, 720));
     }
 
-    private void viewTaskList(ActionEvent actionEvent) {
+    private void viewTaskBtnActionPerformed(ActionEvent actionEvent) {
         jScrollPane1.setVisible(true);
         registerWorkTask.setVisible(false);
     }
@@ -243,7 +237,7 @@ public class Dashboard extends JPanel {
     private void viewRegisterTask(){
         registerWorkTask.setVisible(true);
     }
-     
+
     private JLabel calendarBtn;
     private JButton contactLeaderBtn;
     private JLabel contactsBtn;

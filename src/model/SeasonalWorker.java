@@ -11,7 +11,7 @@ public class SeasonalWorker extends Person{
     private String iban;
     private String ssn;
     private boolean workedBefore;
-    //    private String leadBy;
+//    private String leadBy;
     private SeasonalWorker leadBy;
 //    private int wSiteID;
     private ArrayList<WorkTask> workTasks;
@@ -24,14 +24,14 @@ public class SeasonalWorker extends Person{
     public SeasonalWorker(String cpr, String fname, String lname, Date dob, char sex, String email,
                           String phoneNum, String streetName, String streetNum, String zip, String countryCode,
                           String country, String passportNum, String swift, String iban, String ssn,
-                          boolean workedBefore, SeasonalWorker leadBy) {
+                          boolean workedBefore) {
         super(cpr, fname, lname, dob, sex, email, phoneNum, streetName, streetNum, zip, countryCode, country);
         this.passportNum = passportNum;
         this.swift = swift;
         this.iban = iban;
         this.ssn = ssn;
         this.workedBefore = workedBefore;
-        this.leadBy = leadBy;
+//        this.leadBy = leadBy;
         workTasks = new ArrayList<>();
 //        this.wSiteID = wSiteID;
     }
