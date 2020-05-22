@@ -13,18 +13,26 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MainScreen extends JFrame {
-    private StatusThread sT;
 
     public MainScreen() throws DataAccessException {
         initComponents();
-        sT = new StatusThread();
+        StatusThread sT = new StatusThread();
         sT.start();
         dashboard.setVisible(false);
         workSiteDashboard.setVisible(false);
         createWorkSite.setVisible(false);
     }
-    
+
+    private ImageIcon connectionStatus() {
+//        String statusIcon = true ? "/icons8_connection_status_on_24px.png" : "/icons8_connection_status_off_24px_1.png";
+        String statusIcon = "/icons8_connection_status_off_24px.png";
+        connectionStatusText = "UNCHECKED";
+        return new ImageIcon(getClass().getResource(statusIcon));
+    }
+
     private void initComponents() throws DataAccessException {
+
+        isLogged = false;
 
         JPanel sidePanel = new JPanel();
         sidePanelBtnHome = new JPanel();
@@ -52,8 +60,8 @@ public class MainScreen extends JFrame {
         workersScreen = new WorkersScreen();
         employeeScreen = new EmployeeDatabaseScreen();
         JPanel statusBar = new JPanel();
-        JLabel connectionStatusIcon = new JLabel();
-        JLabel connectionStatusLabel = new JLabel();
+//        JLabel connectionStatusIcon = new JLabel();
+//        JLabel connectionStatusLabel = new JLabel();
         createWorkSite = new CreateWorkSite();
         navigation = new Stack<>();
         navigation.push(loginScreen);
@@ -93,11 +101,9 @@ public class MainScreen extends JFrame {
         sidePanelBtnEmployees.setBackground(new Color(23, 35, 51));
         sidePanelBtnEmployees.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
-                try {
+                if(isLogged) {
                     sidePanelBtnEmployeesMousePressed();
                     employeeScreen.start();
-                } catch (DataAccessException e) {
-                    e.printStackTrace();
                 }
             }
         });
@@ -144,7 +150,9 @@ public class MainScreen extends JFrame {
         sidePanelBtnWorkSites.setBackground(new Color(23, 35, 51));
         sidePanelBtnWorkSites.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
-                sidePanelBtnWorkSitesMousePressed();
+                if(isLogged){
+                    sidePanelBtnWorkSitesMousePressed();
+                }
             }
         });
 
@@ -159,8 +167,10 @@ public class MainScreen extends JFrame {
         sidePanelBtnWorkers.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                sidePanelBtnWorkersMousePressed();
-                workersScreen.start();
+                if(isLogged){
+                    sidePanelBtnWorkersMousePressed();
+                    workersScreen.start();
+                }
             }
         });
         
@@ -173,7 +183,9 @@ public class MainScreen extends JFrame {
         sidePanelBtnSettings.setBackground(new Color(23, 35, 51));
         sidePanelBtnSettings.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
-                sidePanelBtnSettingsMousePressed();
+                if(isLogged){
+                    sidePanelBtnSettingsMousePressed();
+                }
             }
         });
 
@@ -259,7 +271,7 @@ public class MainScreen extends JFrame {
         setView(dashboard);
     }
 
-    private void sidePanelBtnEmployeesMousePressed() throws DataAccessException {
+    private void sidePanelBtnEmployeesMousePressed() {
         setColor(sidePanelBtnEmployees);
         ind1.setOpaque(true);
         resetColor(new JPanel[]{sidePanelBtnHome,sidePanelBtnWorkSites,sidePanelBtnSettings,sidePanelBtnWorkers},new JPanel[]{ind,ind2,ind3,ind4});
@@ -274,12 +286,13 @@ public class MainScreen extends JFrame {
     }
 
     private void sidePanelBtnSettingsMousePressed() {
+        new StatusDialog(this,true,"error","error2");
         setColor(sidePanelBtnSettings);
         ind3.setOpaque(true);
         resetColor(new JPanel[]{sidePanelBtnEmployees,sidePanelBtnWorkSites,sidePanelBtnHome,sidePanelBtnWorkers},new JPanel[]{ind,ind1,ind2,ind4});
     }
     
-    private void sidePanelBtnWorkersMousePressed(){
+    private void sidePanelBtnWorkersMousePressed() {
         setColor(sidePanelBtnWorkers);
         ind4.setOpaque(true);
         resetColor(new JPanel[]{sidePanelBtnEmployees,sidePanelBtnWorkSites,sidePanelBtnHome,sidePanelBtnSettings},new JPanel[]{ind,ind1,ind2,ind3});
@@ -309,58 +322,57 @@ public class MainScreen extends JFrame {
         pane.setBackground(new Color(41,57,80));
     }
 
-    private void resetColor(JPanel[] pane, JPanel[] indicators){
-        for(JPanel panel : pane){
+    private void resetColor(JPanel[] pane, JPanel[] indicators) {
+        for (JPanel panel : pane) {
             panel.setBackground(new Color(23,35,51));
         }
-        for(JPanel indicator : indicators){
+        for (JPanel indicator : indicators) {
             indicator.setOpaque(false);
         }
     }
 
-    public void setView(JPanel view){
-        if(view.equals(loginScreen)){
+    public void setView(JPanel view) {
+
+        if(!isLogged){
+            return;
+        }
+
+        if (view.equals(loginScreen)) {
             navigation.forEach(x -> x.setVisible(false));
             loginScreen.setVisible(true);
         }
-        else if(view.equals(dashboard)){
+        else if (view.equals(dashboard)) {
             navigation.forEach(x -> x.setVisible(false));
             dashboard.setVisible(true);
         }
-        else if(view.equals(workSiteDashboard)){
+        else if (view.equals(workSiteDashboard)) {
             navigation.forEach(x -> x.setVisible(false));
             workSiteDashboard.setVisible(true);
         }
-        else if(view.equals(createWorkSite)){
+        else if (view.equals(createWorkSite)) {
             navigation.forEach(x -> x.setVisible(false));
             createWorkSite.setVisible(true);
         }
     }
 
-    public void login(){
+    public void login() {
+        isLogged = true;
         navigation.push(dashboard);
         setView(dashboard);
     }
 
-    public void logout(){
+    public void logout() {
         navigation.empty();
         navigation.push(loginScreen);
         setView(loginScreen);
+        isLogged = false;
     }
 
-    public void createWorkSite(){
+    public void createWorkSite() {
         navigation.push(createWorkSite);
         setView(createWorkSite);
     }
 
-
-    private ImageIcon connectionStatus() {
-        //TODO: Damian do your magic here for the status
-        String statusIcon = true ? "/icons8_connection_status_on_24px_1.png" : "/icons8_connection_status_off_24px_1.png";
-        connectionStatusText = "connectionStatusToBeSetSomehow";
-        return new ImageIcon(getClass().getResource(statusIcon));
-    }
-    
     private Dashboard dashboard;
     private JPanel ind;
     private JPanel ind1;
@@ -380,4 +392,24 @@ public class MainScreen extends JFrame {
     private CreateWorkSite createWorkSite;
 
     private Stack<JPanel> navigation;
+    private static boolean isLogged;
+
+    // Status
+
+    private static JLabel connectionStatusIcon = new JLabel();
+    private static JLabel connectionStatusLabel = new JLabel();
+
+    public static JLabel getConnectionStatusIcon() {
+        return connectionStatusIcon;
+    }
+    public static void setConnectionStatusIcon(JLabel connectionStatusIcon) {
+        MainScreen.connectionStatusIcon = connectionStatusIcon;
+    }
+
+    public static JLabel getConnectionStatusLabel() {
+        return connectionStatusLabel;
+    }
+    public static void setConnectionStatusLabel(JLabel connectionStatusLabel) {
+        MainScreen.connectionStatusLabel = connectionStatusLabel;
+    }
 }

@@ -13,7 +13,15 @@ import java.util.ArrayList;
 public class EmployeeDatabaseScreen extends JFrame {
 
     public EmployeeDatabaseScreen() throws DataAccessException {
-        initComponents();
+        try {
+            initComponents();
+        } catch (DataAccessException e) {
+            System.err.println("Issue obtaining connection.");
+//            e.printStackTrace();
+            // Alert the user here with e.g JDialog saying there was an issue connecting to the database.
+            // TODO
+            // Add a refresh button.
+        }
     }
 
     private void initComponents() throws DataAccessException {

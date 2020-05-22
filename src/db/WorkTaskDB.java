@@ -63,7 +63,7 @@ public class WorkTaskDB implements WorkTaskDBIF {
     }
 
     @Override
-    public List<WorkTask> findAllWorkTasksOfWorker(boolean fullAssociation, String workerCpr, Type type) throws DataAccessException {
+    public List<WorkTask> findAllWorkTasksOfWorker(boolean fullAssociation, String workerCpr) throws DataAccessException {
         ResultSet rs;
         try {
             PSfindAllWorkTasksOfWorker.setString(1, workerCpr);
@@ -76,22 +76,22 @@ public class WorkTaskDB implements WorkTaskDBIF {
         } catch (SQLException e) {
             throw new DataAccessException("Issue with retrieving work types from the database (executeQuery)", e);
         }
-        return buildObjects(rs,fullAssociation, type);
+        return buildObjects(rs,fullAssociation);
     }
 
     @Override
-    public List<WorkTask> findAll(boolean fullAssociation, Type type) throws DataAccessException {
+    public List<WorkTask> findAll(boolean fullAssociation) throws DataAccessException {
         ResultSet rs;
         try {
             rs = PSfindAll.executeQuery();
         } catch (SQLException e) {
             throw new DataAccessException("resultset error", e);
         }
-        return buildObjects(rs,fullAssociation, type);
+        return buildObjects(rs,fullAssociation);
     }
 
     @Override
-    public WorkTask findByID(Integer id, boolean fullAssociation, Type type) throws DataAccessException {
+    public WorkTask findByID(Integer id, boolean fullAssociation) throws DataAccessException {
         ResultSet rs;
         WorkTask workTask = null;
         try {
@@ -103,7 +103,7 @@ public class WorkTaskDB implements WorkTaskDBIF {
         try {
             rs = PSfindByID.executeQuery();
             if (rs.next()) {
-                workTask = buildObject(rs, fullAssociation, type);
+                workTask = buildObject(rs, fullAssociation);
             }
         } catch (SQLException e) {
             throw new DataAccessException("Issue with retrieving work types from the database (executeQuery)", e);
@@ -180,11 +180,11 @@ public class WorkTaskDB implements WorkTaskDBIF {
         }
     }
 
-    private List<WorkTask> buildObjects(ResultSet rs, boolean fullAssociation, Type type) throws DataAccessException {
+    private List<WorkTask> buildObjects(ResultSet rs, boolean fullAssociation) throws DataAccessException {
         List<WorkTask> res = new ArrayList<>();
         try {
             while(rs.next()) {
-                WorkTask currentWorkTask = buildObject(rs, fullAssociation, type);
+                WorkTask currentWorkTask = buildObject(rs, fullAssociation);
                 res.add(currentWorkTask);
             }
         } catch (SQLException e) {
@@ -194,19 +194,11 @@ public class WorkTaskDB implements WorkTaskDBIF {
         return res;
     }
 
-    private WorkTask buildObject(ResultSet rs, boolean fullAssociation, Type type) throws DataAccessException {
+    private WorkTask buildObject(ResultSet rs, boolean fullAssociation) throws DataAccessException {
         WorkTask currentWorkTask = null;
         WorkTypeDB wTypeDB = new WorkTypeDB();
 
-//        try {
-//            workTask = new WorkTask(rs.getInt("workTaskID"), rs.getDouble("hoursWorked"),
-//                    rs.getDouble("quantity"), rs.getDate("dateStart").toLocalDate(),
-//                    rs.getDate("dateEnd").toLocalDate(), rs.getString("taskStatus"),
-//                    wtDB.findByID(rs.getInt("workTypeID"), false), rs.getString("workerCPR"));
-//        }
-
         try {
-            if (type.equals(WorkTask.class)) {
                 currentWorkTask = new WorkTask();
                 currentWorkTask.setWorkTaskID(rs.getInt("workTaskID"));
                 currentWorkTask.setHoursWorked(rs.getDouble("hoursWorked"));
@@ -215,11 +207,9 @@ public class WorkTaskDB implements WorkTaskDBIF {
                 currentWorkTask.setDateEnd(rs.getDate("dateEnd"));
                 currentWorkTask.setStatus(rs.getString("taskStatus"));
                 currentWorkTask.setWorkType(new WorkType(rs.getInt("workTypeID")));
-            }
 
             if (fullAssociation) {
-                WorkType workType = wtDB.findWorkTypeByID(currentWorkTask.getWorkType().getWorkTypeID(),
-                        false, currentWorkTask.getClass());
+                WorkType workType = wtDB.findWorkTypeByID(rs.getInt("workTypeID"),false);
                 currentWorkTask.setWorkType(workType);
             }
         }

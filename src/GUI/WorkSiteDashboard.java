@@ -20,7 +20,15 @@ public class WorkSiteDashboard extends JPanel {
 
     public WorkSiteDashboard(MainScreen mainScreen) throws DataAccessException {
         this.mainScreen = mainScreen;
-        initComponents();
+        try {
+            initComponents();
+        } catch (DataAccessException e) {
+            System.err.println("Issue obtaining connection.");
+//            e.printStackTrace();
+            // Alert the user here with e.g JDialog saying there was an issue connecting to the database.
+            // TODO
+            // Add a refresh button. (in this case should reload dashboard)
+        }
     }
     
     private void initComponents() throws DataAccessException {

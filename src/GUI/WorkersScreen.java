@@ -18,7 +18,7 @@ public class WorkersScreen extends JFrame {
             initComponents();
         } catch (DataAccessException e) {
             System.err.println("Issue obtaining connection.");
-            e.printStackTrace();
+//            e.printStackTrace();
             // Alert the user here with e.g JDialog saying there was an issue connecting to the database.
             // TODO
             // Add a refresh button.

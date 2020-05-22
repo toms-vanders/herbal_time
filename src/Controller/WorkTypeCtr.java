@@ -15,16 +15,16 @@ public class WorkTypeCtr implements WorkTypeCtrIF{
     @Override
     public List<WorkType> findAllWorkTypesOfWorkSite(int workSiteID) throws DataAccessException {
         try {
-            return workTypeDB.findAllWorkTypesOfWorkSite(workSiteID, false, WorkSite.class);
+            return workTypeDB.findAllWorkTypesOfWorkSite(workSiteID, false);
         } catch (DataAccessException e) {
             throw new DataAccessException("Error with WorkTypeCtr.", e);
         }
     }
 
     @Override
-    public WorkType findWorkTypeByID(int worktypeID, boolean fullAssociation, Type type) throws DataAccessException {
+    public WorkType findWorkTypeByID(int worktypeID, boolean fullAssociation) throws DataAccessException {
         try {
-            return workTypeDB.findWorkTypeByID(worktypeID, fullAssociation, type);
+            return workTypeDB.findWorkTypeByID(worktypeID, fullAssociation);
         } catch (DataAccessException e) {
             throw new DataAccessException("Error with WorkTypeCtr.", e);
         }

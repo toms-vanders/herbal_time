@@ -2,7 +2,9 @@ package GUI.DBStatus;
 
 import Controller.DataAccessException;
 import DB.DBConnection;
+import GUI.MainScreen;
 
+import javax.swing.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,6 +16,8 @@ public class StatusThread extends Thread {
     private PreparedStatement PSCheckTables;
     private Status status;
     private Status lastChangedStatus;
+    private JLabel statusLabel = MainScreen.getConnectionStatusLabel();
+    private JLabel statusIcon = MainScreen.getConnectionStatusIcon();
 
     public StatusThread() {
         this.status = Status.UNCHECKED;
@@ -21,7 +25,7 @@ public class StatusThread extends Thread {
 
     @Override
     public void run() {
-        System.out.println("Current connection status: " + this.status);
+//        System.out.println("Current connection status: " + this.status);
         while (true) {
             try {
                 checkDBConnection();
@@ -37,11 +41,22 @@ public class StatusThread extends Thread {
         }
     }
 
+    private ImageIcon getIcon(Status status) {
+        if (status == Status.WORKING) {
+            return new ImageIcon(getClass().getResource("/icons8_connection_status_on_24px.png"));
+        } else if (status == Status.UNABLE_TO_READ) {
+            return new ImageIcon(getClass().getResource("icons8_connection_status_meh_24px.png"));
+        } else {
+            return new ImageIcon(getClass().getResource("/icons8_connection_status_off_24px.png"));
+        }
+    }
+
+
     public void checkDBConnection() throws DataAccessException {
         ResultSet rs;
         Connection con;
 
-        System.out.println("Checking DB connection status:");
+//        System.out.println("Checking DB connection status:");
         dbConnection = DBConnection.getInstance();
         DBConnection.connect();
         con = dbConnection.getConnection();
@@ -50,7 +65,9 @@ public class StatusThread extends Thread {
             if (this.status != Status.NO_CONNECTION) {
                 this.status = Status.NO_CONNECTION;
             }
-            System.out.println("Current connection status: " + this.status);
+//            System.out.println("Current connection status: " + this.status);
+            statusLabel.setText(String.valueOf(status));
+            statusIcon.setIcon(getIcon(status));
             return;
         }
 //        else {
@@ -69,7 +86,9 @@ public class StatusThread extends Thread {
         } catch (SQLException e) {
             if (this.status != Status.NO_CONNECTION) {
                 this.status = Status.NO_CONNECTION;
-                System.out.println("Current connection status: " + this.status);
+//                System.out.println("Current connection status: " + this.status);
+                statusLabel.setText(String.valueOf(status));
+                statusIcon.setIcon(getIcon(status));
             }
             dbConnection.disconnect();
             throw new DataAccessException("Issue connecting to the database (status).", e);
@@ -79,18 +98,24 @@ public class StatusThread extends Thread {
             if (rs.next()) {
                 if (this.status != Status.WORKING) {
                     this.status = Status.WORKING;
-                    System.out.println("Current connection status: " + this.status);
+//                    System.out.println("Current connection status: " + this.status);
+                    statusLabel.setText(String.valueOf(status));
+                    statusIcon.setIcon(getIcon(status));
                 }
             } else {
                 if (this.status != Status.UNABLE_TO_READ) {
                     this.status = Status.UNABLE_TO_READ;
-                    System.out.println("Current connection status: " + this.status);
+//                    System.out.println("Current connection status: " + this.status);
+                    statusLabel.setText(String.valueOf(status));
+                    statusIcon.setIcon(getIcon(status));
                 }
             }
         } catch (SQLException e) {
             if (this.status != Status.UNKNOWN_ERROR) {
                 this.status = Status.UNKNOWN_ERROR;
-                System.out.println("Current connection status: " + this.status);
+//                System.out.println("Current connection status: " + this.status);
+                statusLabel.setText(String.valueOf(status));
+                statusIcon.setIcon(getIcon(status));
             }
             dbConnection.disconnect();
             throw new DataAccessException("Issue reading from the result set (status).", e);
@@ -103,7 +128,9 @@ public class StatusThread extends Thread {
             // System.out.println("Acquired connection: " + con.toString());
         }
 
-        System.out.println("Current connection status: " + this.status);
+//        System.out.println("Current connection status: " + this.status);
+        statusLabel.setText(String.valueOf(status));
+        statusIcon.setIcon(getIcon(status));
         dbConnection.disconnect();
     }
 }

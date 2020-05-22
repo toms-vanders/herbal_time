@@ -7,7 +7,7 @@ import java.util.List;
 
 public class WorkTaskCtr implements WorkTaskCtrIF {
 
-    WorkTaskDB workTaskDB;
+    WorkTaskDBIF workTaskDB;
 
     public WorkTaskCtr() throws DataAccessException
     {
@@ -19,10 +19,11 @@ public class WorkTaskCtr implements WorkTaskCtrIF {
     }
 
     @Override
-    public List<WorkTask> findAllWorkTasksOfWorker(String workerCpr) throws DataAccessException {
+    public List<WorkTask> findAllWorkTasksOfWorker(boolean fullAssociation, String workerCpr) throws DataAccessException {
         try {
-            return workTaskDB.findAllWorkTasksOfWorker(true, workerCpr, WorkTask.class);
+            return workTaskDB.findAllWorkTasksOfWorker(fullAssociation, workerCpr);
         } catch (DataAccessException e) {
+            e.printStackTrace();
             throw new DataAccessException("WorkTaskCtr error.", e);
         }
     }
@@ -30,7 +31,7 @@ public class WorkTaskCtr implements WorkTaskCtrIF {
     @Override
     public List<WorkTask> findAllWorkTasks() throws DataAccessException {
         try {
-            return workTaskDB.findAll(false, WorkTask.class);
+            return workTaskDB.findAll(false);
         }
         catch (DataAccessException e) {
             throw new DataAccessException("WorkTaskCtr error.", e);
@@ -40,7 +41,7 @@ public class WorkTaskCtr implements WorkTaskCtrIF {
     @Override
     public WorkTask findWorkTasks(Integer id) throws DataAccessException {
         try {
-            return workTaskDB.findByID(id, false, WorkTask.class);
+            return workTaskDB.findByID(id, false);
         } catch (DataAccessException e) {
             throw new DataAccessException("WorkTaskCtr error.", e);
         }

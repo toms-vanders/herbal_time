@@ -1,26 +1,32 @@
 package GUI;
 
+import Controller.DataAccessException;
+import Controller.WorkTaskCtr;
+import Controller.WorkTaskCtrIF;
+import Model.WorkTask;
 import org.netbeans.lib.awtextra.AbsoluteConstraints;
 import org.netbeans.lib.awtextra.AbsoluteLayout;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+
+import Controller.DataModel.*;
 
 public class Dashboard extends JPanel {
 
     private final MainScreen mainScreen;
 
-    public Dashboard(MainScreen mainScreen) {
+    public Dashboard(MainScreen mainScreen) throws DataAccessException {
         this.mainScreen = mainScreen;
         initComponents();
         registerWorkTask.setVisible(false);
     }
      
-    private void initComponents() {
+    private void initComponents() throws DataAccessException {
 
         overviewPane = new JPanel();
         overviewProfile = new JPanel();
@@ -41,6 +47,10 @@ public class Dashboard extends JPanel {
         registerWorkTask = new RegisterWorkTask();
         jScrollPane1 = new JScrollPane();
         workTaskListTable = new JTable();
+        workTaskController = new WorkTaskCtr();
+        workTaskModel = new WorkTaskDataModel(
+                new ArrayList<WorkTask>(workTaskController.findAllWorkTasksOfWorker(true,"1451684849")),
+                "1451684849");
 
         setEnabled(false);
         setMinimumSize(new Dimension(1000, 720));
@@ -181,32 +191,7 @@ public class Dashboard extends JPanel {
         add(registerWorkTask, new AbsoluteConstraints(310, 0, -1, -1));
 
         workTaskListTable.setForeground(new Color(102, 102, 102));
-        workTaskListTable.setModel(new DefaultTableModel(
-                new Object [][] {
-                        {"11/05/2020", "1", 120, Boolean.TRUE},
-                        {"12/05/2020", "1", 140, Boolean.FALSE},
-                        {"13/05/2020", "2", 100,  Boolean.TRUE},
-                        {"14/05/2020", "3", 90, Boolean.FALSE}
-                },
-                new String [] {
-                        "Date", "Site", "Quantity", "Approved"
-                }
-        ) {
-            final Class[] types = new Class [] {
-                    String.class, String.class, Integer.class, Boolean.class
-            };
-            final boolean[] canEdit = new boolean [] {
-                    false, false, false, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
+        workTaskListTable.setModel(workTaskModel);
         workTaskListTable.setGridColor(new Color(255, 255, 255));
         workTaskListTable.setRowHeight(32);
         workTaskListTable.setSelectionBackground(new Color(0, 120, 215));
@@ -256,5 +241,7 @@ public class Dashboard extends JPanel {
     private JButton registerTaskBtn;
     private RegisterWorkTask registerWorkTask;
     private JButton viewTaskBtn;
-    private JTable workTaskListTable;     
+    private JTable workTaskListTable;
+    private WorkTaskDataModel workTaskModel;
+    private WorkTaskCtrIF workTaskController;
 }
