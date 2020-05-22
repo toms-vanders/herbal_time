@@ -45,6 +45,11 @@ public class ClientDB implements ClientDBIF {
         init();
     }
 
+
+    // TODO
+    // This should be made obsolete ASAP
+    // In order to do that, find methods where preparing statements wasn't yet moved into corresponding bodies,
+    // and move it there
     /**
      * Initialize DB connection and prepare SQL statements
      *
@@ -202,7 +207,7 @@ public class ClientDB implements ClientDBIF {
                 currentClient.setDateEnd(rs.getDate("dateEnd"));
 
                 if (fullAssociation) {
-                    //todo
+                    //TODO
                 }
             } else {
                 throw new DataAccessException("Could not determine type.", new Exception());

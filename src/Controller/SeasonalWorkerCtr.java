@@ -3,7 +3,6 @@ package Controller;
 import Model.*;
 import DB.*;
 
-import javax.xml.crypto.Data;
 import java.util.List;
 
 public class SeasonalWorkerCtr implements SeasonalWorkerCtrIF{
@@ -13,7 +12,7 @@ public class SeasonalWorkerCtr implements SeasonalWorkerCtrIF{
     public SeasonalWorkerCtr() throws DataAccessException {
         try {
             seasonalWorkerDB = new SeasonalWorkerDB();
-        }catch (DataAccessException e){
+        } catch (DataAccessException e) {
             throw new DataAccessException("Unable to obtain seasonal worker database instance.", e);
         }
     }

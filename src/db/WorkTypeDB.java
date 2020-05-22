@@ -43,6 +43,11 @@ public class WorkTypeDB implements WorkTypeDBIF {
         init();
     }
 
+
+    // TODO
+    // This should be made obsolete or Fixed ASAP (otherwise NullPointerException)
+    // In order to do that, find methods where preparing statements wasn't yet moved into corresponding bodies,
+    // and move it there
     /**
      * Initialize DB connection and prepare SQL statements
      *
@@ -207,8 +212,6 @@ public class WorkTypeDB implements WorkTypeDBIF {
 
     /**
      * Builds a single WorkType object
-     * TODO fullAssociation is unneeded here?
-     * TODO also fullAssociation description is wacky, needs to be fixed for every method that has it
      *
      * @param rs ResultSet object filled with results of a query
      * @param fullAssociation specifies whether to build results with the objects the foreign keys point to or not
@@ -229,7 +232,7 @@ public class WorkTypeDB implements WorkTypeDBIF {
 //                currentWorkType.setWorkSiteID(rs.getInt("workSiteID"));
 
                 if (fullAssociation) {
-                    //todo
+                    //
                 }
             } else {
                 throw new DataAccessException("Issue: could not determine type.", new Exception());

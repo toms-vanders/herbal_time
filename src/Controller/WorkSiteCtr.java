@@ -10,10 +10,18 @@ public class WorkSiteCtr implements WorkSiteCtrIF{
 
     WorkSiteDB workSiteDB;
 
-    @Override
-    public List<WorkSite> listAllWorkSites(boolean fullAssociation, Type type) throws DataAccessException {
+    public WorkSiteCtr() throws DataAccessException {
         try {
-            return workSiteDB.findAll(fullAssociation, type);
+            workSiteDB = new WorkSiteDB();
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Unable to obtain seasonal worker database instance.", e);
+        }
+    }
+
+    @Override
+    public List<WorkSite> listAllWorkSites(boolean fullAssociation) throws DataAccessException {
+        try {
+            return workSiteDB.findAll(fullAssociation);
         } catch (DataAccessException e) {
             throw new DataAccessException("WorkSiteCtr error", e);
         }

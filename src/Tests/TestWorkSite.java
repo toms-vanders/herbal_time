@@ -37,9 +37,8 @@ public class TestWorkSite {
 
     @Test
     public void testGetAllWorkSites() throws DataAccessException {
-        createNewWorkSite();
         WorkSiteDB wsDB = new WorkSiteDB();
-        List<WorkSite> res1 = wsDB.findAll(false, WorkSite.class);
+        List<WorkSite> res1 = wsDB.findAll(false);
         for (WorkSite ws : res1) {
             System.out.println(ws.toString());
         }
@@ -49,7 +48,7 @@ public class TestWorkSite {
     public void testGetAllWorkSitesFromClient() throws DataAccessException {
         createNewWorkSite();
         WorkSiteDB wsDB = new WorkSiteDB();
-        List<WorkSite> res1 = wsDB.findWorkSitesOfClient("45678932", false, WorkSite.class);
+        List<WorkSite> res1 = wsDB.findWorkSitesOfClient("45678932", false);
         for (WorkSite ws : res1) {
             System.out.println(ws.toString());
         }

@@ -1,18 +1,35 @@
 package GUI;
 
+import Controller.DataAccessException;
+import Controller.EmployeeCtr;
+import Controller.EmployeeCtrIF;
+import Controller.SeasonalWorkerCtr;
+import Model.Employee;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.util.ArrayList;
 
 public class EmployeeDatabaseScreen extends JFrame {
 
-    public EmployeeDatabaseScreen() {
+    public EmployeeDatabaseScreen() throws DataAccessException {
         initComponents();
     }
 
-    private void initComponents() {
+    private void initComponents() throws DataAccessException {
+
+        try {
+            employeeCtr = new EmployeeCtr();
+        }catch(DataAccessException e) {
+            throw new DataAccessException("Unable to obtain seasonal worker controller instance.",e);
+        }
+        employees = new ArrayList<>();
+        try {
+            employees = new ArrayList<>(employeeCtr.findAllEmployees());
+        }catch (DataAccessException e) {
+            throw new DataAccessException("Unable to retrieve list of seasonal workers.", e);
+        }
+        MAX_EMPLOYEES = employees.size();
 
         JPanel mainContainer = new JPanel();
         JPanel topBar = new JPanel();
@@ -163,7 +180,7 @@ public class EmployeeDatabaseScreen extends JFrame {
                                 .addComponent(profilePicture, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(personName)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 356, Short.MAX_VALUE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 150, Short.MAX_VALUE)
                                 .addComponent(settingsBtn, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(generatedBtn, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
@@ -204,6 +221,7 @@ public class EmployeeDatabaseScreen extends JFrame {
     private void setElementComponents(JPanel listElement,
                                       JLabel profilePicture,
                                       JLabel personName,
+                                      String name,
                                       JButton settingsBtn,
                                       JButton generatedBtn,
                                       JButton removeBtn,
@@ -217,7 +235,7 @@ public class EmployeeDatabaseScreen extends JFrame {
 
         personName.setFont(ComponentsConfigure.defaultFont);
         personName.setForeground(Color.WHITE);
-        personName.setText("John Doe");
+        personName.setText(name);
 
         configureButton(settingsBtn,new ImageIcon(getClass().getResource("/icons8_settings_32px_1.png")));
         ComponentsConfigure.metroBtnConfig(settingsBtn);
@@ -254,7 +272,6 @@ public class EmployeeDatabaseScreen extends JFrame {
         listContainer.setLayout(listContainerLayout);
         listContainer.setBackground(new Color(71, 120, 197));
         listContainerLayout.setAutoCreateGaps(true);
-        listContainerLayout.setAutoCreateContainerGaps(true);
 
         parallelGroup = listContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING);
         listContainerLayout.setHorizontalGroup(listContainerLayout.createSequentialGroup().addGroup(parallelGroup));
@@ -262,10 +279,11 @@ public class EmployeeDatabaseScreen extends JFrame {
         sequentialGroup = listContainerLayout.createSequentialGroup();
         listContainerLayout.setVerticalGroup(sequentialGroup);
 
-        for(int i = 0; i < 5; i++){
+        for(int i = 0; i < MAX_EMPLOYEES; i++){
             JPanel listElement = new JPanel();
             JLabel profilePicture = new JLabel();
             JLabel personName = new JLabel();
+            String name = employees.get(i).getFname() + " " + employees.get(i).getLname();
             JButton settingsBtn = new JButton();
             JButton generatedBtn = new JButton();
             JButton removeBtn = new JButton();
@@ -274,7 +292,7 @@ public class EmployeeDatabaseScreen extends JFrame {
             JButton mailBtn = new JButton();
             JButton generateBtn = new JButton();
 
-            setElementComponents(listElement, profilePicture,personName,settingsBtn,generatedBtn,removeBtn,msgBtn,infoBtn,mailBtn,generateBtn);
+            setElementComponents(listElement, profilePicture,personName, name,settingsBtn,generatedBtn,removeBtn,msgBtn,infoBtn,mailBtn,generateBtn);
             setElementGroupsPosition(listElement, profilePicture,personName,settingsBtn,generatedBtn,removeBtn,msgBtn,infoBtn,mailBtn,generateBtn);
             addElementToList(listElement);
         }
@@ -301,7 +319,17 @@ public class EmployeeDatabaseScreen extends JFrame {
             java.util.logging.Logger.getLogger(EmployeeDatabaseScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
-        EventQueue.invokeLater(() -> new EmployeeDatabaseScreen().setVisible(true));
+        EventQueue.invokeLater(() -> {
+            try {
+                new EmployeeDatabaseScreen().setVisible(true);
+            } catch (DataAccessException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public void start(){
+        main(null);
     }
 
     private JPanel listContainer;
@@ -310,5 +338,7 @@ public class EmployeeDatabaseScreen extends JFrame {
     private GroupLayout.ParallelGroup parallelGroup;
     private GroupLayout.SequentialGroup sequentialGroup;
 
+    private EmployeeCtrIF employeeCtr;
+    private ArrayList<Employee> employees;
     private static int MAX_EMPLOYEES;
 }

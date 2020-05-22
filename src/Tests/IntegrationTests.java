@@ -129,7 +129,7 @@ public class IntegrationTests {
 
         // Validating added WorkSite object
         List<WorkSite> workSitesOfTestClient= wsDB.findWorkSitesOfClient(testClient1Check.getCvr(),
-                false, WorkSite.class);
+                false);
         WorkSite testWorkSite1Check = workSitesOfTestClient.get(0);
         Assertions.assertEquals(testWorkSite1Name, testWorkSite1Check.getName(), "Name invalid");
         Assertions.assertEquals(testWorkSite1Description, testWorkSite1Check.getDescription(),
@@ -171,6 +171,10 @@ public class IntegrationTests {
 //        cDB.updateClient()
 
     }
+
+    // TODO
+    // Test database on UPDATE, on DELETE
+    // what happens with depending entities
 
     @AfterAll
     static void cleanUp() throws DataAccessException {

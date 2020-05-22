@@ -13,21 +13,30 @@ import java.util.logging.Logger;
 
 public class WorkersScreen extends JFrame {
 
-    public WorkersScreen() throws DataAccessException {
-        initComponents();
+    public WorkersScreen() {
+        try {
+            initComponents();
+        } catch (DataAccessException e) {
+            System.err.println("Issue obtaining connection.");
+            e.printStackTrace();
+            // Alert the user here with e.g JDialog saying there was an issue connecting to the database.
+            // TODO
+            // Add a refresh button.
+        }
     }
 
     private void initComponents() throws DataAccessException {
 
+        SeasonalWorkerCtrIF seasonalWorkerController;
         try {
             seasonalWorkerController = new SeasonalWorkerCtr();
-        }catch(DataAccessException e){
+        }catch(DataAccessException e) {
             throw new DataAccessException("Unable to obtain seasonal worker controller instance.",e);
         }
         seasonalWorkers = new ArrayList<>();
-        try{
+        try {
             seasonalWorkers = new ArrayList<>(seasonalWorkerController.findAllSeasonalWorkers());
-        }catch (DataAccessException e){
+        }catch (DataAccessException e) {
             throw new DataAccessException("Unable to retrieve list of seasonal workers.", e);
         }
         MAX_WORKERS = seasonalWorkers.size();
@@ -48,8 +57,8 @@ public class WorkersScreen extends JFrame {
         ComponentsConfigure.topBarConfig(topBar,this, new Color(120,168,252));
         ComponentsConfigure.topBarButtons(minimizeBtn,maximizeBtn,exitBtn,this);
 
-        addBtn.setBackground(new Color(71, 120, 197));
         addBtn.setText("Add");
+        ComponentsConfigure.metroBtnConfig(addBtn);
         //TODO: add button action listener
         addBtn.addActionListener(e -> {});
 
@@ -138,6 +147,7 @@ public class WorkersScreen extends JFrame {
         profilePicture.setIcon(new ImageIcon(getClass().getResource("/icons8_github_96px.png"))); // NOI18N
 
         personName.setFont(ComponentsConfigure.defaultFont); // NOI18N
+        personName.setForeground(Color.WHITE);
         personName.setText(name);
 
         editBtn.setBackground(new Color(23, 35, 51));
@@ -162,7 +172,6 @@ public class WorkersScreen extends JFrame {
         listContainer.setLayout(listContainerLayout);
         listContainer.setBackground(new Color(71, 120, 197));
         listContainerLayout.setAutoCreateGaps(true);
-        listContainerLayout.setAutoCreateContainerGaps(true);
 
         parallelGroup = listContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING);
         listContainerLayout.setHorizontalGroup(listContainerLayout.createSequentialGroup().addGroup(parallelGroup));
@@ -240,11 +249,12 @@ public class WorkersScreen extends JFrame {
         }
 
         EventQueue.invokeLater(() -> {
-            try {
-                new WorkersScreen().setVisible(true);
-            } catch (DataAccessException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                new WorkersScreen().setVisible(true);
+//            } catch (DataAccessException e) {
+//                e.printStackTrace();
+//            }
+            new WorkersScreen().setVisible(true);
         });
     }
 
@@ -258,7 +268,6 @@ public class WorkersScreen extends JFrame {
     private GroupLayout.ParallelGroup parallelGroup;
     private GroupLayout.SequentialGroup sequentialGroup;
 
-    private SeasonalWorkerCtrIF seasonalWorkerController;
     private static Integer MAX_WORKERS;
     private ArrayList<SeasonalWorker> seasonalWorkers;
 }

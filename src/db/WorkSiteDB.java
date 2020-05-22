@@ -48,6 +48,10 @@ public class WorkSiteDB implements WorkSiteDBIF {
         init();
     }
 
+    // TODO
+    // This should be made obsolete ASAP
+    // In order to do that, find methods where preparing statements wasn't yet moved into corresponding bodies,
+    // and move it there
     private void init() throws DataAccessException {
         Connection con = DBConnection.getInstance().getConnection();
         try {
@@ -67,12 +71,11 @@ public class WorkSiteDB implements WorkSiteDBIF {
      * Queries database for all work sites
      *
      * @param fullAssociation specifies whether to build results with the objects the foreign keys point to or not
-     * @param type type of object in the code the query looks for in the database
      * @return if found - an ArrayList of all work sites in the database, otherwise an empty ArrayList
      * @throws DataAccessException
      */
     @Override
-    public List<WorkSite> findAll(boolean fullAssociation, Type type) throws DataAccessException {
+    public List<WorkSite> findAll(boolean fullAssociation) throws DataAccessException {
         List<WorkSite> res;
         ResultSet rs;
 
@@ -81,7 +84,7 @@ public class WorkSiteDB implements WorkSiteDBIF {
         } catch (SQLException e) {
             throw new DataAccessException("Issue with retrieving work sites from the database (executeQuery)", e);
         }
-        res = buildObjects(rs, fullAssociation, type);
+        res = buildObjects(rs, fullAssociation);
         return res;
     }
 
@@ -90,12 +93,11 @@ public class WorkSiteDB implements WorkSiteDBIF {
      *
      * @param cvr CVR of client
      * @param fullAssociation specifies whether to build results with the objects the foreign keys point to or not
-     * @param type type of object in the code the query looks for in the database
      * @return if found - an ArrayList of work sites a client has, otherwise an empty ArrayList
      * @throws DataAccessException
      */
     @Override
-    public List<WorkSite> findWorkSitesOfClient(String cvr, boolean fullAssociation, Type type) throws DataAccessException {
+    public List<WorkSite> findWorkSitesOfClient(String cvr, boolean fullAssociation) throws DataAccessException {
         List<WorkSite> res;
         ResultSet rs;
         try {
@@ -109,12 +111,12 @@ public class WorkSiteDB implements WorkSiteDBIF {
         } catch (SQLException e) {
             throw new DataAccessException("Issue with retrieving work sites from the database (executeQuery)", e);
         }
-        res = buildObjects(rs, fullAssociation, type);
+        res = buildObjects(rs, fullAssociation);
         return res;
     }
 
     @Override
-    public WorkSite findByID(int workSiteID, boolean fullAssociation, Type type) throws DataAccessException {
+    public WorkSite findByID(int workSiteID, boolean fullAssociation) throws DataAccessException {
         WorkSite res;
         ResultSet rs;
         try {
@@ -127,7 +129,7 @@ public class WorkSiteDB implements WorkSiteDBIF {
         } catch (SQLException e) {
             throw new DataAccessException("WorkSiteDB, findByID execute error.", e);
         }
-        res = buildObject(rs, fullAssociation, type);
+        res = buildObject(rs, fullAssociation);
         return res;
     }
 
@@ -167,7 +169,7 @@ public class WorkSiteDB implements WorkSiteDBIF {
     }
 
     @Override
-    public Integer updateWorkSite(int workSiteID, WorkSite newWorkSite, Type type) throws DataAccessException {
+    public Integer updateWorkSite(int workSiteID, WorkSite newWorkSite) throws DataAccessException {
         Integer affectedRows;
         try {
             PSupdateWorkSite.setString(1, newWorkSite.getName());
@@ -215,15 +217,14 @@ public class WorkSiteDB implements WorkSiteDBIF {
      *
      * @param rs ResultSet object filled with results of a query
      * @param fullAssociation specifies whether to build results with the objects the foreign keys point to or not
-     * @param type type of the object that is going to be built
      * @return ArrayList of built objects
      * @throws DataAccessException
      */
-    private List<WorkSite> buildObjects(ResultSet rs, boolean fullAssociation, Type type) throws DataAccessException {
+    private List<WorkSite> buildObjects(ResultSet rs, boolean fullAssociation) throws DataAccessException {
         List<WorkSite> res = new ArrayList<>();
         try {
             while (rs.next()) {
-                WorkSite currentWorkSite = buildObject(rs, fullAssociation, type);
+                WorkSite currentWorkSite = buildObject(rs, fullAssociation);
                 res.add(currentWorkSite);
             }
         } catch (SQLException e) {
@@ -237,14 +238,12 @@ public class WorkSiteDB implements WorkSiteDBIF {
      *
      * @param rs ResultSet object filled with results of a query
      * @param fullAssociation specifies whether to build results with the objects the foreign keys point to or not
-     * @param type type of the object that is going to be built
      * @return new WorkSite object
      * @throws DataAccessException
      */
-    private WorkSite buildObject(ResultSet rs, boolean fullAssociation, Type type) throws DataAccessException {
+    private WorkSite buildObject(ResultSet rs, boolean fullAssociation) throws DataAccessException {
         WorkSite currentWorkSite;
         try {
-            if (type.equals(WorkSite.class)) {
                 currentWorkSite = new WorkSite();
                 currentWorkSite.setWorkSiteID(rs.getInt("workSiteID"));
                 currentWorkSite.setName(rs.getString("siteName"));
@@ -257,13 +256,9 @@ public class WorkSiteDB implements WorkSiteDBIF {
                 currentWorkSite.setTypeOfJob(rs.getString("typeOfJob"));
                 currentWorkSite.setPricePerWorker(rs.getDouble("pricePerWorker"));
 //                currentWorkSite.setClientCvr(rs.getString("cvr"));
-
                 if (fullAssociation) {
 
                 }
-            } else {
-                throw new DataAccessException("Issue: could not determine type.", new Exception());
-            }
         } catch (SQLException e) {
             throw new DataAccessException("Issue with loading work site from the database (in buildObject", e);
         }

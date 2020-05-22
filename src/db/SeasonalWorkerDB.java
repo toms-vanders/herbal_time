@@ -2,6 +2,8 @@ package DB;
 
 import Controller.*;
 import Model.*;
+
+import javax.xml.crypto.Data;
 import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,8 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SeasonalWorkerDB implements SeasonalWorkerIF {
-
-
     /**
      * Pre-made queries for the program
      */
@@ -22,7 +22,7 @@ public class SeasonalWorkerDB implements SeasonalWorkerIF {
             "sw.swift, sw.iban, sw.ssn, sw.workedBefore, sw.leadBy, sw.wSiteID " +
             "FROM SeasonalWorker sw JOIN PERSON ps ON sw.cpr = ps.cpr";
 
-    private static final String findSeasonalWorkerByCVR = "SELECT * FROM SeasonalWorker WHERE cpr = ?";
+    private static final String findSeasonalWorkerByCPR = "SELECT * FROM SeasonalWorker WHERE cpr = ?";
     private static final String insertSeasonalWorker = "INSERT INTO SeasonalWorker VALUES(?,?,?,?,?,?,?,?,?,?,?)";
     private static final String updateSeasonalWorker = "UPDATE SeasonalWorker SET "
             + "cpr = ?,"
@@ -34,16 +34,16 @@ public class SeasonalWorkerDB implements SeasonalWorkerIF {
             + "leadBy = ?,"
             + "wSiteID = ?"
             + " WHERE cpr = ?";
-    private static final String deleteSeasonalWorkerByCVR = "DELETE FROM SeasonalWorker WHERE cpr = ?";
+    private static final String deleteSeasonalWorkerByCPR = "DELETE FROM SeasonalWorker WHERE cpr = ?";
 
     /**
      * Prepared statement declaration for the above queries
      */
     private PreparedStatement PSfindAll;
-    private PreparedStatement PSfindSeasonalWorkerByCVR;
+    private PreparedStatement PSfindSeasonalWorkerByCPR;
     private PreparedStatement PSinsertSeasonalWorker;
     private PreparedStatement PSupdateSeasonalWorker;
-    private PreparedStatement PSdeleteSeasonalWorkerByCVR;
+    private PreparedStatement PSdeleteSeasonalWorkerByCPR;
 
 
     public SeasonalWorkerDB() throws DataAccessException{
@@ -55,36 +55,70 @@ public class SeasonalWorkerDB implements SeasonalWorkerIF {
      *
      * @throws DataAccessException Throw an exception on statements that cannot be prepared
      */
+
+    private void connectToDB() throws DataAccessException{
+        DBConnection.connect();
+        if (DBConnection.instanceIsNull()) {
+            throw new DataAccessException("Couldn't connect and read from database; throwing to GUI", new Exception());
+        }
+    }
+
+    // TODO
+    // This should be made obsolete ASAP
+    // In order to do that, find methods where preparing statements wasn't yet moved into corresponding bodies,
+    // and move it there
     private void init() throws DataAccessException {
+        connectToDB();
         Connection con = DBConnection.getInstance().getConnection();
         try {
             PSfindAll = con.prepareStatement(findAll);
-            PSfindSeasonalWorkerByCVR = con.prepareStatement(findSeasonalWorkerByCVR);
+            PSfindSeasonalWorkerByCPR = con.prepareStatement(findSeasonalWorkerByCPR);
             PSinsertSeasonalWorker = con.prepareStatement(insertSeasonalWorker);
             PSupdateSeasonalWorker = con.prepareStatement(updateSeasonalWorker);
-            PSdeleteSeasonalWorkerByCVR = con.prepareStatement(deleteSeasonalWorkerByCVR);
+            PSdeleteSeasonalWorkerByCPR = con.prepareStatement(deleteSeasonalWorkerByCPR);
+            DBConnection.disconnect();
         } catch (SQLException e) {
+            DBConnection.disconnect();
             throw new DataAccessException("SeasonalWorkerDB could not initialize.", e);
         }
     }
 
     @Override
     public List<SeasonalWorker> findAll(boolean fullAssociation, Type type) throws DataAccessException {
+        connectToDB();
+        Connection con = DBConnection.getInstance().getConnection();
+        try {
+            PSfindAll = con.prepareStatement(findAll);
+        } catch (SQLException e) {
+            throw new DataAccessException("Issue preparing statement", e);
+        }
+
         ResultSet rs;
         try {
             rs = this.PSfindAll.executeQuery();
             return buildObjects(rs,fullAssociation,type);
         } catch (SQLException e) {
+            DBConnection.disconnect();
             throw new DataAccessException("Error with fetching all Seasonal Workers from DB.", e);
         }
     }
 
     @Override
     public SeasonalWorker findSeasonalWorkerByCPR(String seasonalWorkerCPR, boolean fullAssociation, Type type) throws DataAccessException {
+        connectToDB();
+        Connection con = DBConnection.getInstance().getConnection();
+        try {
+            PSfindSeasonalWorkerByCPR = con.prepareStatement(findSeasonalWorkerByCPR);
+        } catch (SQLException e) {
+            throw new DataAccessException("Issue preparing statement", e);
+        }
+
         ResultSet rs;
         try {
-            rs = this.PSfindSeasonalWorkerByCVR.executeQuery();
-            return buildObject(rs, fullAssociation, type);
+            rs = this.PSfindSeasonalWorkerByCPR.executeQuery();
+            SeasonalWorker res = buildObject(rs, fullAssociation, type);
+            DBConnection.disconnect();
+            return res;
         } catch (SQLException e) {
             throw new DataAccessException("Error with fetching a specific SeasonalWorker from DB.", e);
         }
@@ -93,6 +127,14 @@ public class SeasonalWorkerDB implements SeasonalWorkerIF {
 
     @Override
     public int insertSeasonalWorker(SeasonalWorker newSeasonalWorker, Integer workSiteID, Type type) throws DataAccessException {
+        connectToDB();
+        Connection con = DBConnection.getInstance().getConnection();
+        try {
+            PSinsertSeasonalWorker = con.prepareStatement(insertSeasonalWorker);
+        } catch (SQLException e) {
+            throw new DataAccessException("Issue preparing statement", e);
+        }
+
         int affectedRows;
         try {
             PSinsertSeasonalWorker.setString(1, newSeasonalWorker.getCpr());
@@ -109,7 +151,9 @@ public class SeasonalWorkerDB implements SeasonalWorkerIF {
 
         try {
             affectedRows = PSinsertSeasonalWorker.executeUpdate();
+            DBConnection.disconnect();
         } catch (SQLException e) {
+            DBConnection.disconnect();
             throw new DataAccessException("There was a problem with inserting client into DB.", e);
         }
         return affectedRows;
@@ -131,8 +175,10 @@ public class SeasonalWorkerDB implements SeasonalWorkerIF {
                 SeasonalWorker currentSeasonalWorker = buildObject(rs,fullAssociation,type);
                 res.add(currentSeasonalWorker);
             }
+            DBConnection.disconnect();
             return res;
         } catch (SQLException e) {
+            DBConnection.disconnect();
             throw new DataAccessException("buildObjects: There was an Error with building the List.", e);
         }
     }

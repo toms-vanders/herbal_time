@@ -43,6 +43,10 @@ public class WorkTaskDB implements WorkTaskDBIF {
 
     private WorkTypeDB wtDB;
 
+    // TODO
+    // This should be made obsolete ASAP
+    // In order to do that, find methods where preparing statements wasn't yet moved into corresponding bodies,
+    // and move it there
     public WorkTaskDB() throws DataAccessException{
         Connection con = DBConnection.getInstance().getConnection();
         wtDB = new WorkTypeDB();
@@ -214,7 +218,8 @@ public class WorkTaskDB implements WorkTaskDBIF {
             }
 
             if (fullAssociation) {
-                WorkType workType = wtDB.findWorkTypeByID(currentWorkTask.getWorkType().getWorkTypeID(), false,currentWorkTask.getClass());
+                WorkType workType = wtDB.findWorkTypeByID(currentWorkTask.getWorkType().getWorkTypeID(),
+                        false, currentWorkTask.getClass());
                 currentWorkTask.setWorkType(workType);
             }
         }

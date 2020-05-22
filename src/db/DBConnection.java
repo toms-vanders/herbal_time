@@ -19,6 +19,10 @@ public class DBConnection {
     private static final String password = "Password1!";
 
     private DBConnection() {
+        connect();
+    }
+
+    public synchronized static void connect() {
         String connectionString = String.format(
                 "jdbc:sqlserver://%s:%d;databaseName=%s;user=%s;password=%s"
                 , serverAddress

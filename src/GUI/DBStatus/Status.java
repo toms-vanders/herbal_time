@@ -1,0 +1,5 @@
+package GUI.DBStatus;
+
+public enum Status {
+    UNCHECKED, NO_CONNECTION, UNABLE_TO_READ, WORKING, UNKNOWN_ERROR
+}

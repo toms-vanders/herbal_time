@@ -1,45 +1,62 @@
 package GUI;
 
 import Controller.DataAccessException;
+import GUI.DBStatus.StatusThread;
 import org.netbeans.lib.awtextra.AbsoluteConstraints;
 import org.netbeans.lib.awtextra.AbsoluteLayout;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MainScreen extends JFrame {
-    
+    private StatusThread sT;
+
     public MainScreen() throws DataAccessException {
         initComponents();
+        sT = new StatusThread();
+        sT.start();
         dashboard.setVisible(false);
-        workSiteDashBoard.setVisible(false);
+        workSiteDashboard.setVisible(false);
+        createWorkSite.setVisible(false);
     }
     
     private void initComponents() throws DataAccessException {
 
-        sidePanel = new JPanel();
+        JPanel sidePanel = new JPanel();
         sidePanelBtnHome = new JPanel();
         ind = new JPanel();
-        homeBtnLabel = new JLabel();
-        sidePanelBtnUsers = new JPanel();
+        JLabel homeBtnLabel = new JLabel();
+        sidePanelBtnEmployees = new JPanel();
         ind1 = new JPanel();
-        usersBtnLabel = new JLabel();
-        sidePanelBtnProfile = new JPanel();
+        JLabel usersBtnLabel = new JLabel();
+        sidePanelBtnWorkSites = new JPanel();
         ind2 = new JPanel();
-        profileBtnLabel = new JLabel();
+        sidePanelBtnWorkers = new JPanel();
+        ind4 = new JPanel();
+        JLabel workSitesLabel = new JLabel();
+        JLabel workersBtnLabel = new JLabel();
         sidePanelBtnSettings = new JPanel();
         ind3 = new JPanel();
-        settingsBtnLabel = new JLabel();
-        topBar = new JPanel();
-        searchField = new JTextField();
-        searchBtn = new JLabel();
+        ind4 = new JPanel();
+        JLabel settingsBtnLabel = new JLabel();
+        JPanel topBar = new JPanel();
+        JTextField searchField = new JTextField();
+        JLabel searchBtn = new JLabel();
         dashboard = new Dashboard(this);
         loginScreen = new LoginScreen(this);
-        workSiteDashBoard = new WorkSiteDashboard(this);
+        workSiteDashboard = new WorkSiteDashboard(this);
         workersScreen = new WorkersScreen();
+        employeeScreen = new EmployeeDatabaseScreen();
+        JPanel statusBar = new JPanel();
+        JLabel connectionStatusIcon = new JLabel();
+        JLabel connectionStatusLabel = new JLabel();
+        createWorkSite = new CreateWorkSite();
+        navigation = new Stack<>();
+        navigation.push(loginScreen);
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("Herbal Time");
@@ -62,7 +79,7 @@ public class MainScreen extends JFrame {
         });
 
 
-        ComponentsConfigure.indicatorConfig(new JPanel[] {ind,ind1,ind2,ind3});
+        ComponentsConfigure.indicatorConfig(new JPanel[] {ind,ind1,ind2,ind3,ind4});
         ind.setOpaque(true);
         ComponentsConfigure.topBarConfig(topBar,this, new Color(71,120,197));
 
@@ -73,12 +90,12 @@ public class MainScreen extends JFrame {
 
         sidePanel.add(sidePanelBtnHome, new AbsoluteConstraints(0, 170, 200, 50));
 
-        sidePanelBtnUsers.setBackground(new Color(23, 35, 51));
-        sidePanelBtnUsers.addMouseListener(new MouseAdapter() {
+        sidePanelBtnEmployees.setBackground(new Color(23, 35, 51));
+        sidePanelBtnEmployees.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
                 try {
-                    sidePanelBtnUsersMousePressed();
-                    workersScreen.start();
+                    sidePanelBtnEmployeesMousePressed();
+                    employeeScreen.start();
                 } catch (DataAccessException e) {
                     e.printStackTrace();
                 }
@@ -88,24 +105,71 @@ public class MainScreen extends JFrame {
         usersBtnLabel.setForeground(new Color(255, 255, 255));
         usersBtnLabel.setText("Employees");
 
-        sidePanelButtonPosition(sidePanelBtnUsers, ind1, usersBtnLabel);
+        sidePanelButtonPosition(sidePanelBtnEmployees, ind1, usersBtnLabel);
 
-        sidePanel.add(sidePanelBtnUsers, new AbsoluteConstraints(0, 220, -1, -1));
+        sidePanel.add(sidePanelBtnEmployees, new AbsoluteConstraints(0, 220, -1, -1));
 
-        sidePanelBtnProfile.setBackground(new Color(23, 35, 51));
-        sidePanelBtnProfile.addMouseListener(new MouseAdapter() {
+        statusBar.setBackground(new Color(23, 35, 51));
+        statusBar.setMinimumSize(new Dimension(200, 25));
+        statusBar.setPreferredSize(new Dimension(200, 25));
+
+        connectionStatusIcon.setIcon(connectionStatus()); // NOI18N
+
+        connectionStatusLabel.setForeground(new Color(255, 255, 255));
+        connectionStatusLabel.setText(connectionStatusText);
+
+        javax.swing.GroupLayout statusBarLayout = new javax.swing.GroupLayout(statusBar);
+        statusBar.setLayout(statusBarLayout);
+        statusBarLayout.setHorizontalGroup(
+                statusBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(statusBarLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(connectionStatusIcon)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(connectionStatusLabel)
+                                .addContainerGap())
+        );
+        statusBarLayout.setVerticalGroup(
+                statusBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(statusBarLayout.createSequentialGroup()
+                                .addGap(8, 8, 8)
+                                .addGroup(statusBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(connectionStatusIcon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(connectionStatusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(8, 8, 8))
+        );
+
+        sidePanel.add(statusBar, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 770, 200, 40));
+
+        sidePanelBtnWorkSites.setBackground(new Color(23, 35, 51));
+        sidePanelBtnWorkSites.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
-                sidePanelBtnProfileMousePressed();
+                sidePanelBtnWorkSitesMousePressed();
             }
         });
 
-        profileBtnLabel.setForeground(new Color(255, 255, 255));
-        profileBtnLabel.setText("Work sites");
+        workSitesLabel.setForeground(new Color(255, 255, 255));
+        workSitesLabel.setText("Work sites");
 
-        sidePanelButtonPosition(sidePanelBtnProfile, ind2, profileBtnLabel);
+        sidePanelButtonPosition(sidePanelBtnWorkSites, ind2, workSitesLabel);
 
-        sidePanel.add(sidePanelBtnProfile, new AbsoluteConstraints(0, 270, -1, -1));
+        sidePanel.add(sidePanelBtnWorkSites, new AbsoluteConstraints(0, 270, -1, -1));
 
+        sidePanelBtnWorkers.setBackground(new Color(23,35,51));
+        sidePanelBtnWorkers.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                sidePanelBtnWorkersMousePressed();
+                workersScreen.start();
+            }
+        });
+        
+        workersBtnLabel.setForeground(Color.white);
+        workersBtnLabel.setText("Workers");
+
+        sidePanelButtonPosition(sidePanelBtnWorkers,ind4, workersBtnLabel);
+        sidePanel.add(sidePanelBtnWorkers,new AbsoluteConstraints(0,320,-1,-1));
+        
         sidePanelBtnSettings.setBackground(new Color(23, 35, 51));
         sidePanelBtnSettings.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
@@ -118,7 +182,7 @@ public class MainScreen extends JFrame {
 
         sidePanelButtonPosition(sidePanelBtnSettings, ind3, settingsBtnLabel);
 
-        sidePanel.add(sidePanelBtnSettings, new AbsoluteConstraints(0, 320, -1, -1));
+        sidePanel.add(sidePanelBtnSettings, new AbsoluteConstraints(0, 370, -1, -1));
 
         getContentPane().add(sidePanel, new AbsoluteConstraints(0, 0, 200, 810));
 
@@ -154,30 +218,31 @@ public class MainScreen extends JFrame {
         getContentPane().add(topBar, new AbsoluteConstraints(200, 0, 1000, 90));
         getContentPane().add(dashboard, new AbsoluteConstraints(200, 90, -1, -1));
         getContentPane().add(loginScreen, new AbsoluteConstraints(200, 90, -1, -1));
-        getContentPane().add(workSiteDashBoard, new AbsoluteConstraints(200, 90, -1, -1));
+        getContentPane().add(workSiteDashboard, new AbsoluteConstraints(200, 90, -1, -1));
+        getContentPane().add(createWorkSite,new AbsoluteConstraints(200,90,-1,-1));
 
         setIconImage(new ImageIcon(getClass().getResource("/icons8_potted_plant_50px_1.png")).getImage());
         pack();
         setLocationRelativeTo(null);
     }
 
-    private void sidePanelButtonPosition(JPanel sidePanelBtnHome, JPanel ind, JLabel homeBtnLabel) {
-        GroupLayout sidePanelBtnHomeLayout = new GroupLayout(sidePanelBtnHome);
-        sidePanelBtnHome.setLayout(sidePanelBtnHomeLayout);
-        sidePanelBtnHomeLayout.setHorizontalGroup(
-            sidePanelBtnHomeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(sidePanelBtnHomeLayout.createSequentialGroup()
+    private void sidePanelButtonPosition(JPanel sidePanelBtn, JPanel ind, JLabel sidePanelBtnLabel) {
+        GroupLayout sidePanelLayout = new GroupLayout(sidePanelBtn);
+        sidePanelBtn.setLayout(sidePanelLayout);
+        sidePanelLayout.setHorizontalGroup(
+            sidePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(sidePanelLayout.createSequentialGroup()
                 .addComponent(ind, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                 .addGap(34, 34, 34)
-                .addComponent(homeBtnLabel)
+                .addComponent(sidePanelBtnLabel)
                 .addGap(0, 130, Short.MAX_VALUE))
         );
-        sidePanelBtnHomeLayout.setVerticalGroup(
-            sidePanelBtnHomeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        sidePanelLayout.setVerticalGroup(
+            sidePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addComponent(ind, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(sidePanelBtnHomeLayout.createSequentialGroup()
+            .addGroup(sidePanelLayout.createSequentialGroup()
                 .addGap(16, 16, 16)
-                .addComponent(homeBtnLabel)
+                .addComponent(sidePanelBtnLabel)
                 .addContainerGap(18, Short.MAX_VALUE))
         );
     }
@@ -189,25 +254,35 @@ public class MainScreen extends JFrame {
     private void sidePanelBtnHomeMousePressed() {
         setColor(sidePanelBtnHome);
         ind.setOpaque(true);
-        resetColor(new JPanel[]{sidePanelBtnUsers,sidePanelBtnProfile,sidePanelBtnSettings},new JPanel[]{ind1,ind2,ind3});
+        resetColor(new JPanel[]{sidePanelBtnEmployees,sidePanelBtnWorkSites,sidePanelBtnSettings,sidePanelBtnWorkers},new JPanel[]{ind1,ind2,ind3,ind4});
+        navigation.empty();
+        setView(dashboard);
     }
 
-    private void sidePanelBtnUsersMousePressed() throws DataAccessException {
-        setColor(sidePanelBtnUsers);
+    private void sidePanelBtnEmployeesMousePressed() throws DataAccessException {
+        setColor(sidePanelBtnEmployees);
         ind1.setOpaque(true);
-        resetColor(new JPanel[]{sidePanelBtnHome,sidePanelBtnProfile,sidePanelBtnSettings},new JPanel[]{ind,ind2,ind3});
+        resetColor(new JPanel[]{sidePanelBtnHome,sidePanelBtnWorkSites,sidePanelBtnSettings,sidePanelBtnWorkers},new JPanel[]{ind,ind2,ind3,ind4});
     }
 
-    private void sidePanelBtnProfileMousePressed() {
-        setColor(sidePanelBtnProfile);
+    private void sidePanelBtnWorkSitesMousePressed() {
+        setColor(sidePanelBtnWorkSites);
         ind2.setOpaque(true);
-        resetColor(new JPanel[]{sidePanelBtnUsers,sidePanelBtnHome,sidePanelBtnSettings},new JPanel[]{ind1,ind,ind3});
+        resetColor(new JPanel[]{sidePanelBtnEmployees,sidePanelBtnHome,sidePanelBtnSettings,sidePanelBtnWorkers},new JPanel[]{ind,ind1,ind3,ind4});
+        navigation.push(workSiteDashboard);
+        setView(workSiteDashboard);
     }
 
     private void sidePanelBtnSettingsMousePressed() {
         setColor(sidePanelBtnSettings);
         ind3.setOpaque(true);
-        resetColor(new JPanel[]{sidePanelBtnUsers,sidePanelBtnProfile,sidePanelBtnHome},new JPanel[]{ind1,ind2,ind});
+        resetColor(new JPanel[]{sidePanelBtnEmployees,sidePanelBtnWorkSites,sidePanelBtnHome,sidePanelBtnWorkers},new JPanel[]{ind,ind1,ind2,ind4});
+    }
+    
+    private void sidePanelBtnWorkersMousePressed(){
+        setColor(sidePanelBtnWorkers);
+        ind4.setOpaque(true);
+        resetColor(new JPanel[]{sidePanelBtnEmployees,sidePanelBtnWorkSites,sidePanelBtnHome,sidePanelBtnSettings},new JPanel[]{ind,ind1,ind2,ind3});
     }
 
     public static void main(String[] args) {
@@ -243,42 +318,66 @@ public class MainScreen extends JFrame {
         }
     }
 
+    public void setView(JPanel view){
+        if(view.equals(loginScreen)){
+            navigation.forEach(x -> x.setVisible(false));
+            loginScreen.setVisible(true);
+        }
+        else if(view.equals(dashboard)){
+            navigation.forEach(x -> x.setVisible(false));
+            dashboard.setVisible(true);
+        }
+        else if(view.equals(workSiteDashboard)){
+            navigation.forEach(x -> x.setVisible(false));
+            workSiteDashboard.setVisible(true);
+        }
+        else if(view.equals(createWorkSite)){
+            navigation.forEach(x -> x.setVisible(false));
+            createWorkSite.setVisible(true);
+        }
+    }
+
     public void login(){
-        toggleLogin();
-        toggleDashboard();
+        navigation.push(dashboard);
+        setView(dashboard);
     }
 
     public void logout(){
-        toggleLogin();
-        toggleDashboard();
+        navigation.empty();
+        navigation.push(loginScreen);
+        setView(loginScreen);
     }
 
-    private void toggleDashboard(){
-        dashboard.setVisible(!dashboard.isVisible());
+    public void createWorkSite(){
+        navigation.push(createWorkSite);
+        setView(createWorkSite);
     }
 
-    private void toggleLogin(){
-        loginScreen.setVisible(!loginScreen.isVisible());
+
+    private ImageIcon connectionStatus() {
+        //TODO: Damian do your magic here for the status
+        String statusIcon = true ? "/icons8_connection_status_on_24px_1.png" : "/icons8_connection_status_off_24px_1.png";
+        connectionStatusText = "connectionStatusToBeSetSomehow";
+        return new ImageIcon(getClass().getResource(statusIcon));
     }
     
     private Dashboard dashboard;
-    private JPanel topBar;
-    private JLabel homeBtnLabel;
     private JPanel ind;
     private JPanel ind1;
     private JPanel ind2;
     private JPanel ind3;
+    private JPanel ind4;
     private LoginScreen loginScreen;
-    private JLabel profileBtnLabel;
-    private JLabel searchBtn;
-    private JTextField searchField;
-    private JLabel settingsBtnLabel;
-    private JPanel sidePanel;
     private JPanel sidePanelBtnHome;
-    private JPanel sidePanelBtnProfile;
+    private JPanel sidePanelBtnWorkSites;
     private JPanel sidePanelBtnSettings;
-    private JPanel sidePanelBtnUsers;
-    private JLabel usersBtnLabel;
-    private WorkSiteDashboard workSiteDashBoard;
+    private JPanel sidePanelBtnEmployees;
+    private JPanel sidePanelBtnWorkers;
+    private WorkSiteDashboard workSiteDashboard;
     private WorkersScreen workersScreen;
+    private EmployeeDatabaseScreen employeeScreen;
+    private String connectionStatusText;
+    private CreateWorkSite createWorkSite;
+
+    private Stack<JPanel> navigation;
 }
