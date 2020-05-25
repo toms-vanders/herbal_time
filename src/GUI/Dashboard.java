@@ -140,59 +140,19 @@ public class Dashboard extends JPanel {
 
         // Damian code
         Date date = new Date();
-        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        int year  = localDate.getYear();
-        int month = localDate.getMonthValue();
-        String sMonth;
-        switch (month) {
-            case 0:
-                sMonth = "January";
-                break;
-            case 1:
-                sMonth = "February";
-                break;
-            case 2:
-                sMonth = "March";
-                break;
-            case 3:
-                sMonth = "April";
-                break;
-            case 4:
-                sMonth = "May";
-                break;
-            case 5:
-                sMonth = "June";
-                break;
-            case 6:
-                sMonth = "July";
-                break;
-            case 7:
-                sMonth = "August";
-                break;
-            case 8:
-                sMonth = "September";
-                break;
-            case 9:
-                sMonth = "October";
-                break;
-            case 10:
-                sMonth = "November";
-                break;
-            case 11:
-                sMonth = "December";
-                break;
-                default:
-                    break;
+        LocalDate today = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-        }
+        String dayName = today.getDayOfWeek().name().toLowerCase();
+        String formattedDayName = dayName.substring(0, 1).toUpperCase() + dayName.substring(1);
 
-        int day = localDate.getDayOfMonth();
+        String monthName = today.getMonth().name().toLowerCase();
+        String formattedMonthName = monthName.substring(0, 1).toUpperCase() + monthName.substring(1);
 
         readableDayLabel.setForeground(new Color(255, 255, 255));
-        readableDayLabel.setText("Wednesday 13");
+        readableDayLabel.setText(formattedDayName + " " + today.getDayOfMonth());
 
         monthYearLabel.setForeground(new Color(255, 255, 255));
-        monthYearLabel.setText("May 2020");
+        monthYearLabel.setText(formattedMonthName + " " + today.getYear());
 
         registerTaskBtn.setText("Register Task");
         registerTaskBtn.addActionListener(this::registerTaskBtnActionPerformed);

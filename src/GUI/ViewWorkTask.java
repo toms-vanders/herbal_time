@@ -1,18 +1,57 @@
 package GUI;
 
+import Controller.*;
+import Model.SeasonalWorker;
+import Model.WorkSite;
 import Model.WorkTask;
+import Model.WorkType;
 import com.github.lgooddatepicker.components.DateTimePicker;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ViewWorkTask extends JFrame {
 
-    public ViewWorkTask(WorkTask currentTask) {
+    public ViewWorkTask(WorkTask currentTask,SeasonalWorker currentWorker) throws DataAccessException {
         this.currentTask = currentTask;
+        this.currentWorker = currentWorker;
+
+        try {
+            workSiteController = new WorkSiteCtr();
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Unable to obtain work site controller instance.", e);
+        }
+
+        try {
+            workTaskController = new WorkTaskCtr();
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Unable to obtain work task controller instance.", e);
+        }
+
+        try {
+            workSites = new ArrayList<>();
+            workSites.add(workSiteController.findByWorkerCPR(currentWorker.getCpr(), true));
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Unable to retrieve list of locations", e);
+        }
+
         initComponents();
     }
 
     private void initComponents() {
+
+        locationList = new javax.swing.JComboBox<>();
+        DefaultComboBoxModel<WorkSite> locationComboBoxModel = getLocationComboBoxModel(workSites);
+        locationList.setModel(locationComboBoxModel);
+        locationList.setRenderer(new WorkTaskWorkSiteComboBoxRenderer());
+
+        produceList = new javax.swing.JComboBox<>();
+        workTypes = new ArrayList<>();
+
+        updateProduceList();
 
         jPanel1 = new JPanel();
         topBar = new JPanel();
@@ -26,42 +65,35 @@ public class ViewWorkTask extends JFrame {
         fnameValue = new JLabel();
         lnameValue = new JLabel();
         locationLabel = new JLabel();
-        locationList = new JComboBox<>();
         produceLabel = new JLabel();
-        produceList = new JComboBox<>();
         startDateLabel = new JLabel();
         startDatePicker = new com.github.lgooddatepicker.components.DateTimePicker();
         endDatePicker = new com.github.lgooddatepicker.components.DateTimePicker();
         endDateLabel = new JLabel();
         quantityLabel = new JLabel();
-        quanitySpinner = new JSpinner();
+        quantitySpinner = new JSpinner();
         quantityPicker = new JComboBox<>();
         statusLabel = new JLabel();
         statusPicker = new JComboBox<>();
-        registerBtn = new JButton();
+        saveChangesBtn = new JButton();
         cancelBtn = new JButton();
         locationDescriptorLabel = new JLabel();
         produceDescriptorLabel = new JLabel();
-        registerBtn1 = new JButton();
+        approveBtn = new JButton();
         emailValue = new JLabel();
         emailLabel = new JLabel();
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(800, 565));
-        setMinimumSize(new java.awt.Dimension(800, 565));
+        setMaximumSize(new Dimension(800, 565));
+        setMinimumSize(new Dimension(800, 565));
 
-        jPanel1.setBackground(new java.awt.Color(71, 120, 197));
+        jPanel1.setBackground(new Color(71, 120, 197));
 
-        topBar.setBackground(new java.awt.Color(120, 168, 252));
+        ComponentsConfigure.topBarConfig(topBar,this, new Color(120,168,252));
+        ComponentsConfigure.topBarButtons(minimizeBtn,maximizeBtn,exitBtn,this);
 
-        maximizeBtn.setIcon(new ImageIcon(getClass().getResource("/icons8_maximize_button_32px.png"))); // NOI18N
-
-        exitBtn.setIcon(new ImageIcon(getClass().getResource("/icons8_close_window_32px.png"))); // NOI18N
-
-        minimizeBtn.setIcon(new ImageIcon(getClass().getResource("/icons8_minimize_window_32px_1.png"))); // NOI18N
-
-        frameTitle.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        frameTitle.setText("CS Works");
+        frameTitle.setFont(new Font("Dialog", Font.BOLD, 24));
+        frameTitle.setText("Reviewing work task");
 
         GroupLayout topBarLayout = new GroupLayout(topBar);
         topBar.setLayout(topBarLayout);
@@ -91,114 +123,52 @@ public class ViewWorkTask extends JFrame {
                                 .addContainerGap())
         );
 
-        profilePicture.setIcon(new ImageIcon(getClass().getResource("/icons8_github_96px.png"))); // NOI18N
-        profilePicture.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                profilePictureMousePressed(evt);
-            }
-        });
+        profilePicture.setIcon(new ImageIcon(getClass().getResource("/icons8_github_96px.png")));
 
-        fnameLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        fnameLabel.setForeground(new java.awt.Color(255, 255, 255));
-        fnameLabel.setText("Firstname:");
+        configureLabel(fnameLabel,"Firstname:");
+        configureLabel(lnameLabel,"Lastname:");
+        configureLabel(fnameValue,currentWorker.getFname());
+        configureLabel(lnameValue,currentWorker.getLname());
+        configureLabel(locationLabel,"Location");
+        locationLabel.setIcon(ComponentsConfigure.locationIcon);
+        configureLabel(produceLabel,"Produce");
+        produceLabel.setIcon(ComponentsConfigure.vegetableIcon);
+        configureLabel(startDateLabel,"Start");
+        startDateLabel.setIcon(ComponentsConfigure.watchIcon);
+        configureLabel(endDateLabel,"End");
+        endDateLabel.setIcon(ComponentsConfigure.presentIcon);
+        configureLabel(quantityLabel,"Quantity");
+        quantityLabel.setIcon(ComponentsConfigure.trolleyIcon);
+        configureLabel(statusLabel,"Status");
+        statusLabel.setIcon(ComponentsConfigure.approveIcon);
+        configureLabel(locationDescriptorLabel,"Full-address or something");//TODO: Query workSite for info
+        configureLabel(produceDescriptorLabel,"Produce description");//TODO: Query workType for info
+        configureLabel(emailLabel,"Email");
+        configureLabel(emailValue,currentWorker.getEmail());
 
-        lnameLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        lnameLabel.setForeground(new java.awt.Color(255, 255, 255));
-        lnameLabel.setText("Lastname:");
+        startDatePicker.setBackground(new Color(120, 168, 252));
+        endDatePicker.setBackground(new Color(120, 168, 252));
 
-        fnameValue.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        fnameValue.setForeground(new java.awt.Color(255, 255, 255));
-        fnameValue.setText("John");
+        quantityPicker.setModel(new DefaultComboBoxModel<>(new String[]{"Kg", "Crates"}));
+        statusPicker.setModel(new DefaultComboBoxModel<>(new String[]{"Pending approval", "Approved", "Rejected"}));
 
-        lnameValue.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        lnameValue.setForeground(new java.awt.Color(255, 255, 255));
-        lnameValue.setText("Doe");
+        locationList.addActionListener(this::locationListActionPerformed);
+        produceList.addActionListener(this::configureQuantity);
 
-        locationLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        locationLabel.setForeground(new java.awt.Color(249, 249, 249));
-        locationLabel.setIcon(new ImageIcon(getClass().getResource("/icons8_place_marker_32px.png"))); // NOI18N
-        locationLabel.setText("Location");
-        locationLabel.setFocusable(false);
+        ComponentsConfigure.metroBtnConfig(approveBtn);
+        approveBtn.setIcon(ComponentsConfigure.approveIcon);
+        approveBtn.setText("Approve");
+        approveBtn.addActionListener((e) -> {});//TODO: ApproveBtn
 
-        locationList.setModel(new DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        ComponentsConfigure.metroBtnConfig(saveChangesBtn);
+        saveChangesBtn.setIcon(ComponentsConfigure.saveIcon);
+        saveChangesBtn.setText("Save");
+        saveChangesBtn.addActionListener((e) -> {});//TODO: saveChangesBtn
 
-        produceLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        produceLabel.setForeground(new java.awt.Color(249, 249, 249));
-        produceLabel.setIcon(new ImageIcon(getClass().getResource("/icons8_vegetarian_mark_32px.png"))); // NOI18N
-        produceLabel.setText("Produce");
-
-        produceList.setModel(new DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        startDateLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        startDateLabel.setForeground(new java.awt.Color(249, 249, 249));
-        startDateLabel.setIcon(new ImageIcon(getClass().getResource("/icons8_watch_32px.png"))); // NOI18N
-        startDateLabel.setText("Start");
-
-        startDatePicker.setBackground(new java.awt.Color(120, 168, 252));
-
-        endDatePicker.setBackground(new java.awt.Color(120, 168, 252));
-
-        endDateLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        endDateLabel.setForeground(new java.awt.Color(249, 249, 249));
-        endDateLabel.setIcon(new ImageIcon(getClass().getResource("/icons8_present_32px.png"))); // NOI18N
-        endDateLabel.setText("End");
-
-        quantityLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        quantityLabel.setForeground(new java.awt.Color(249, 249, 249));
-        quantityLabel.setIcon(new ImageIcon(getClass().getResource("/icons8_trolley_32px.png"))); // NOI18N
-        quantityLabel.setText("Quantity");
-
-        quantityPicker.setModel(new DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        statusLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        statusLabel.setForeground(new java.awt.Color(249, 249, 249));
-        statusLabel.setIcon(new ImageIcon(getClass().getResource("/icons8_approval_32px.png"))); // NOI18N
-        statusLabel.setText("Status");
-
-        statusPicker.setModel(new DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        registerBtn.setBackground(new java.awt.Color(71, 120, 197));
-        registerBtn.setForeground(new java.awt.Color(60, 63, 65));
-        registerBtn.setIcon(new ImageIcon(getClass().getResource("/icons8_save_32px.png"))); // NOI18N
-        registerBtn.setText("Save");
-        registerBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                registerBtnActionPerformed(evt);
-            }
-        });
-
-        cancelBtn.setBackground(new java.awt.Color(71, 120, 197));
-        cancelBtn.setForeground(new java.awt.Color(60, 63, 65));
-        cancelBtn.setIcon(new ImageIcon(getClass().getResource("/icons8_trash_can_32px.png"))); // NOI18N
+        ComponentsConfigure.metroBtnConfig(cancelBtn);
+        cancelBtn.setIcon(ComponentsConfigure.trashIcon);
         cancelBtn.setText("Cancel");
-
-        locationDescriptorLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        locationDescriptorLabel.setForeground(new java.awt.Color(249, 249, 249));
-        locationDescriptorLabel.setText("Full-adress or something");
-        locationDescriptorLabel.setFocusable(false);
-
-        produceDescriptorLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        produceDescriptorLabel.setForeground(new java.awt.Color(249, 249, 249));
-        produceDescriptorLabel.setText("Produce description");
-        produceDescriptorLabel.setFocusable(false);
-
-        registerBtn1.setBackground(new java.awt.Color(71, 120, 197));
-        registerBtn1.setForeground(new java.awt.Color(60, 63, 65));
-        registerBtn1.setIcon(new ImageIcon(getClass().getResource("/icons8_approval_32px.png"))); // NOI18N
-        registerBtn1.setText("Approve");
-        registerBtn1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                registerBtn1ActionPerformed(evt);
-            }
-        });
-
-        emailValue.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        emailValue.setForeground(new java.awt.Color(255, 255, 255));
-        emailValue.setText("mymail@email.me");
-
-        emailLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        emailLabel.setForeground(new java.awt.Color(255, 255, 255));
-        emailLabel.setText("Email:");
+        cancelBtn.addActionListener((e) -> {});//TODO: cancelBtn
 
         GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -243,9 +213,9 @@ public class ViewWorkTask extends JFrame {
                                                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                                                         .addGroup(jPanel1Layout.createSequentialGroup()
-                                                                .addComponent(registerBtn1, GroupLayout.PREFERRED_SIZE, 180, GroupLayout.PREFERRED_SIZE)
+                                                                .addComponent(approveBtn, GroupLayout.PREFERRED_SIZE, 180, GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(registerBtn, GroupLayout.PREFERRED_SIZE, 180, GroupLayout.PREFERRED_SIZE)
+                                                                .addComponent(saveChangesBtn, GroupLayout.PREFERRED_SIZE, 180, GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(cancelBtn, GroupLayout.PREFERRED_SIZE, 180, GroupLayout.PREFERRED_SIZE))
                                                         .addGroup(jPanel1Layout.createSequentialGroup()
@@ -265,7 +235,7 @@ public class ViewWorkTask extends JFrame {
                                                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                                                         .addComponent(quantityLabel)
                                                                         .addGap(31, 31, 31)
-                                                                        .addComponent(quanitySpinner, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE)
+                                                                        .addComponent(quantitySpinner, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE)
                                                                         .addGap(11, 11, 11)
                                                                         .addComponent(quantityPicker, GroupLayout.PREFERRED_SIZE, 205, GroupLayout.PREFERRED_SIZE))
                                                                 .addComponent(startDateLabel)))))
@@ -301,7 +271,7 @@ public class ViewWorkTask extends JFrame {
                                                 .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                         .addComponent(quantityLabel)
                                                         .addComponent(quantityPicker, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(quanitySpinner, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE))
+                                                        .addComponent(quantitySpinner, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE))
                                                 .addGap(18, 18, 18)
                                                 .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                         .addComponent(statusLabel)
@@ -324,8 +294,8 @@ public class ViewWorkTask extends JFrame {
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                 .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(cancelBtn, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(registerBtn, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(registerBtn1, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(saveChangesBtn, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(approveBtn, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE))
                                 .addContainerGap())
         );
 
@@ -340,24 +310,20 @@ public class ViewWorkTask extends JFrame {
                         .addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
+        setUndecorated(true);
         pack();
         setLocationRelativeTo(null);
-        setUndecorated(true);
-    }// </editor-fold>
+    }
 
-    private void profilePictureMousePressed(java.awt.event.MouseEvent evt) {
+    private void saveChangesBtnActionPerformed(ActionEvent evt) {
         // TODO add your handling code here:
     }
 
-    private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {
+    private void approveBtnActionPerformed(ActionEvent evt) {
         // TODO add your handling code here:
     }
 
-    private void registerBtn1ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    public static void main(String[] args) {
+    public void start(WorkTask currentTask, SeasonalWorker currentWorker) {
         try {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Windows".equals(info.getName())) {
@@ -369,7 +335,54 @@ public class ViewWorkTask extends JFrame {
             java.util.logging.Logger.getLogger(ViewWorkTask.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
-        java.awt.EventQueue.invokeLater(() -> new ViewWorkTask(null).setVisible(true));
+        EventQueue.invokeLater(() -> {
+            try {
+                new ViewWorkTask(currentTask,currentWorker).setVisible(true);
+            } catch (DataAccessException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+    
+    private void configureLabel(JLabel label, String text){
+        label.setFont(new Font("Dialog", Font.BOLD, 24));
+        label.setForeground(new Color(255, 255, 255));
+        label.setText(text);
+        label.setFocusable(false);
+    }
+
+    private DefaultComboBoxModel<WorkSite> getLocationComboBoxModel(java.util.List<WorkSite> workSites) {
+        WorkSite[] comboBoxModel = workSites.toArray(new WorkSite[0]);
+        return new DefaultComboBoxModel<>(comboBoxModel);
+    }
+
+    private DefaultComboBoxModel<WorkType> getProduceComboBoxModel(List<WorkType> workTypes) {
+        WorkType[] comboBoxModel = workTypes.toArray(new WorkType[0]);
+        return new DefaultComboBoxModel<>(comboBoxModel);
+    }
+
+    private void locationListActionPerformed(java.awt.event.ActionEvent evt) {
+        updateProduceList();
+    }
+
+    private void updateProduceList() {
+        if (locationList.getItemCount() > 0) {
+            WorkSite selectedWorkSite = (WorkSite) locationList.getSelectedItem();
+            workTypes = selectedWorkSite.getWorkTypes();
+            DefaultComboBoxModel<WorkType> produceComboBoxModel = getProduceComboBoxModel(workTypes);
+            produceList.setModel(produceComboBoxModel);
+            produceList.setRenderer(new WorkTaskWorkTypeComboBoxRenderer());
+        }
+    }
+
+    private void configureQuantity(ActionEvent e) {
+        if (((WorkType) produceList.getSelectedItem()).getSalaryType().equalsIgnoreCase("hourly".trim())) {
+            quantitySpinner.setEnabled(false);
+            quantityPicker.setEnabled(false);
+        } else {
+            quantitySpinner.setEnabled(true);
+            quantityPicker.setEnabled(true);
+        }
     }
 
     private JButton cancelBtn;
@@ -387,17 +400,17 @@ public class ViewWorkTask extends JFrame {
     private JLabel locationLabel;
     private JLabel locationDescriptorLabel;
     private JLabel produceDescriptorLabel;
-    private JComboBox<String> locationList;
+    private JComboBox<WorkSite> locationList;
     private JLabel maximizeBtn;
     private JLabel minimizeBtn;
     private JLabel produceLabel;
-    private JComboBox<String> produceList;
+    private JComboBox<WorkType> produceList;
     private JLabel profilePicture;
-    private JSpinner quanitySpinner;
+    private JSpinner quantitySpinner;
     private JLabel quantityLabel;
     private JComboBox<String> quantityPicker;
-    private JButton registerBtn;
-    private JButton registerBtn1;
+    private JButton saveChangesBtn;
+    private JButton approveBtn;
     private JLabel startDateLabel;
     private DateTimePicker startDatePicker;
     private JLabel statusLabel;
@@ -405,5 +418,11 @@ public class ViewWorkTask extends JFrame {
     private JPanel topBar;
 
     private WorkTask currentTask;
+    private SeasonalWorker currentWorker;
 
+    private WorkSiteCtrIF workSiteController;
+    private WorkTaskCtrIF workTaskController;
+
+    private ArrayList<WorkSite> workSites;
+    private ArrayList<WorkType> workTypes;
 }

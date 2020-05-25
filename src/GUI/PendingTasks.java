@@ -1,6 +1,7 @@
 package GUI;
 
 import Controller.*;
+import Model.SeasonalWorker;
 import Model.WorkTask;
 import org.netbeans.lib.awtextra.AbsoluteConstraints;
 import org.netbeans.lib.awtextra.AbsoluteLayout;
@@ -32,7 +33,7 @@ public class PendingTasks extends JPanel {
         }
 
         //TODO: finish loading workTasks
-        pendingTasks = new ArrayList<>(workTaskController.findAllPendingTasks(false));
+        pendingTasks = new ArrayList<>(workTaskController.findAllPendingTasks(true));
         MAX_TASKS = pendingTasks.size();
         scrollableListContainer = new JScrollPane();
         listContainer = new JPanel();
@@ -106,6 +107,7 @@ public class PendingTasks extends JPanel {
 
     private void setElementComponents(JPanel listElement,
                                       WorkTask currentTask,
+                                      SeasonalWorker currentWorker,
                                       JLabel profilePicture,
                                       JLabel personName,
                                       String nameValue,
@@ -140,7 +142,11 @@ public class PendingTasks extends JPanel {
         ComponentsConfigure.metroBtnConfig(viewBtn);
         viewBtn.setIcon(ComponentsConfigure.viewIcon); // NOI18N
         viewBtn.addActionListener((e) -> {
-            new ViewWorkTask(currentTask);
+            try {
+                new ViewWorkTask(currentTask,currentWorker).start(currentTask,currentWorker);
+            } catch (DataAccessException dataAccessException) {
+                dataAccessException.printStackTrace();
+            }
         });
 
         configureLabel(workTaskNumberLabel, "Work task " + taskNum);
@@ -152,7 +158,7 @@ public class PendingTasks extends JPanel {
 
     }
 
-    private JPanel createListContainer(){
+    private JPanel createListContainer() throws DataAccessException {
 
         listContainer = new JPanel();
         listContainerLayout = new GroupLayout(listContainer);
@@ -181,10 +187,12 @@ public class PendingTasks extends JPanel {
             double hourNum = pendingTasks.get(i).getHoursWorked();
             double quantityNum = pendingTasks.get(i).getQuantity();
             Date dateValue = pendingTasks.get(i).getDateStart();
-            String workTypeValue = pendingTasks.get(i).getWorkType().getSalaryType();
-            String nameValue = pendingTasks.get(i).getStatus();
+            String workTypeValue = pendingTasks.get(i).getWorkType().getSalaryType().trim();
+            SeasonalWorker currentWorker = seasonalWorkerController.findSeasonalWorkerByWorkTask(pendingTasks.get(i).getWorkTaskID());
+            String nameValue = currentWorker.getFname() + " " + currentWorker.getLname();
             setElementComponents(elementToAdd,
                     pendingTasks.get(i),
+                    currentWorker,
                     profilePicture,
                     personName,
                     nameValue,

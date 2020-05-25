@@ -31,6 +31,14 @@ public class SeasonalWorkerCtr implements SeasonalWorkerCtrIF{
         }
     }
 
+    @Override
+    public SeasonalWorker findSeasonalWorkerByWorkTask(int workTaskID) throws DataAccessException {
+        try{
+            return seasonalWorkerDB.findSeasonalWorkerByWorkTask(workTaskID,false,SeasonalWorker.class);
+        }catch(DataAccessException e){
+            throw new DataAccessException("Unable to retrieve seasonal worker through work task ID",e);
+        }
+    }
 
     @Override
     public int insertSeasonalWorker(SeasonalWorker newSeasonalWorker, int workSiteID) throws DataAccessException {

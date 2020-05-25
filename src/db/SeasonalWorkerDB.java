@@ -34,6 +34,10 @@ public class SeasonalWorkerDB implements SeasonalWorkerIF {
             + "wSiteID = ?"
             + " WHERE cpr = ?";
     private static final String deleteSeasonalWorkerByCPR = "DELETE FROM SeasonalWorker WHERE cpr = ?";
+    private static final String findSeasonalWorkerByWorkTask = "SELECT * FROM SeasonalWorker sw " +
+            "JOIN Person ps ON sw.cpr = ps.cpr " +
+            "WHERE sw.cpr = (SELECT workerCpr FROM WorkTask " +
+            "WHERE workTaskID = ?)";
 
     /**
      * Prepared statement declaration for the above queries
@@ -43,6 +47,7 @@ public class SeasonalWorkerDB implements SeasonalWorkerIF {
     private PreparedStatement PSinsertSeasonalWorker;
     private PreparedStatement PSupdateSeasonalWorker;
     private PreparedStatement PSdeleteSeasonalWorkerByCPR;
+    private PreparedStatement PSfindSeasonalWorkerByTask;
 
 
     public SeasonalWorkerDB() {
@@ -123,6 +128,36 @@ public class SeasonalWorkerDB implements SeasonalWorkerIF {
         ResultSet rs;
         try {
             rs = this.PSfindSeasonalWorkerByCPR.executeQuery();
+            rs.next();
+            SeasonalWorker res = buildObject(rs, fullAssociation, type);
+            DBConnection.disconnect();
+            return res;
+        } catch (SQLException e) {
+            DBConnection.disconnect();
+            throw new DataAccessException("Error with fetching a specific SeasonalWorker from DB.", e);
+        }
+    }
+
+    @Override
+    public SeasonalWorker findSeasonalWorkerByWorkTask(int workTaskID, boolean fullAssociation, Type type) throws DataAccessException {
+        connectToDB();
+        Connection con = DBConnection.getInstance().getConnection();
+        try {
+            PSfindSeasonalWorkerByTask = con.prepareStatement(findSeasonalWorkerByWorkTask);
+        } catch (SQLException e) {
+            DBConnection.disconnect();
+            throw new DataAccessException("Issue preparing statement", e);
+        }
+        try {
+            PSfindSeasonalWorkerByTask.setInt(1, workTaskID);
+        } catch (SQLException e) {
+            DBConnection.disconnect();
+            throw new DataAccessException("Issue with setting up query parameters when loading seasonal worker.", e);
+        }
+
+        ResultSet rs;
+        try {
+            rs = PSfindSeasonalWorkerByTask.executeQuery();
             rs.next();
             SeasonalWorker res = buildObject(rs, fullAssociation, type);
             DBConnection.disconnect();

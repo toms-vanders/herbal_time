@@ -44,7 +44,7 @@ public class ComponentsConfigure implements Serializable {
     }
 
     static void topBarConfig(JPanel topBar, JFrame target,Color colour){
-
+        //TODO: FIX - it overwrites when new frames are displayed
         targetFrame = target;
 
         topBar.setBackground(colour);
