@@ -3,7 +3,6 @@ package GUI;
 import Controller.DataAccessException;
 import Controller.WorkTaskCtr;
 import Controller.WorkTaskCtrIF;
-import Model.WorkTask;
 import org.netbeans.lib.awtextra.AbsoluteConstraints;
 import org.netbeans.lib.awtextra.AbsoluteLayout;
 
@@ -25,7 +24,7 @@ public class Dashboard extends JPanel {
         initComponents();
         registerWorkTask.setVisible(false);
     }
-     
+
     private void initComponents() throws DataAccessException {
 
         overviewPane = new JPanel();
@@ -44,12 +43,12 @@ public class Dashboard extends JPanel {
         monthYearLabel = new JLabel();
         registerTaskBtn = new JButton();
         contactLeaderBtn = new JButton();
-        registerWorkTask = new RegisterWorkTask();
-        jScrollPane1 = new JScrollPane();
+        registerWorkTask = new RegisterWorkTask(this,mainScreen);
+        workListView = new JScrollPane();
         workTaskListTable = new JTable();
         workTaskController = new WorkTaskCtr();
         workTaskModel = new WorkTaskDataModel(
-                new ArrayList<WorkTask>(workTaskController.findAllWorkTasksOfWorker(true,"1451684849")),
+                new ArrayList<>(workTaskController.findAllWorkTasksOfWorker(true, "1451684849")),
                 "1451684849");
 
         setEnabled(false);
@@ -145,7 +144,13 @@ public class Dashboard extends JPanel {
         registerTaskBtn.setText("Register Task");
         registerTaskBtn.addActionListener(this::registerTaskBtnActionPerformed);
         viewTaskBtn.setText("View Task");
-        viewTaskBtn.addActionListener(this::viewTaskBtnActionPerformed);
+        viewTaskBtn.addActionListener((e) -> {
+            try {
+                viewTaskBtnActionPerformed(e);
+            } catch (DataAccessException dataAccessException) {
+                dataAccessException.printStackTrace();
+            }
+        });
         contactLeaderBtn.setText("Contact Leader");
 
 
@@ -195,13 +200,14 @@ public class Dashboard extends JPanel {
         workTaskListTable.setGridColor(new Color(255, 255, 255));
         workTaskListTable.setRowHeight(32);
         workTaskListTable.setSelectionBackground(new Color(0, 120, 215));
-        jScrollPane1.setViewportView(workTaskListTable);
+        workListView.setViewportView(workTaskListTable);
 
-        add(jScrollPane1, new AbsoluteConstraints(310, 0, 690, 720));
+        add(workListView, new AbsoluteConstraints(310, 0, 690, 720));
     }
 
-    private void viewTaskBtnActionPerformed(ActionEvent actionEvent) {
-        jScrollPane1.setVisible(true);
+    void viewTaskBtnActionPerformed(ActionEvent actionEvent) throws DataAccessException {
+        workListView.setVisible(true);
+        workTaskModel.updateData();
         registerWorkTask.setVisible(false);
     }
 
@@ -214,20 +220,26 @@ public class Dashboard extends JPanel {
     }
 
     private void registerTaskBtnActionPerformed(ActionEvent evt) {
-        jScrollPane1.setVisible(false);
+        workListView.setVisible(false);
         viewRegisterTask();
 
     }
 
-    private void viewRegisterTask(){
+    void viewRegisterTask(){
+        mainScreen.navigation.push(registerWorkTask);
         registerWorkTask.setVisible(true);
+    }
+
+    void showTaskListView() throws DataAccessException {
+        workTaskModel.updateData();
+        workListView.setVisible(true);
     }
 
     private JLabel calendarBtn;
     private JButton contactLeaderBtn;
     private JLabel contactsBtn;
     private JLabel exitBtn;
-    private JScrollPane jScrollPane1;
+    private JScrollPane workListView;
     private JSeparator buttonSeparator;
     private JLabel logoutBtn;
     private JLabel mailBtn;

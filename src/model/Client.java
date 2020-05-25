@@ -76,6 +76,10 @@ public class Client {
     public ArrayList<WorkSite> getWorkSites() { return workSites; }
     public void setWorkSites(ArrayList<WorkSite> workSites) { this.workSites = workSites; }
 
+    public String getComboBoxInfo() {
+        return cvr + " " + name + " " + zip +  " " + countryCode;
+    }
+
     @Override
     public String toString() {
         return "Client{" +

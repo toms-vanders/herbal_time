@@ -5,10 +5,7 @@ import Model.*;
 
 import javax.xml.crypto.Data;
 import java.lang.reflect.Type;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +19,9 @@ public class SeasonalWorkerDB implements SeasonalWorkerIF {
             "sw.swift, sw.iban, sw.ssn, sw.workedBefore, sw.leadBy, sw.wSiteID " +
             "FROM SeasonalWorker sw JOIN PERSON ps ON sw.cpr = ps.cpr";
 
-    private static final String findSeasonalWorkerByCPR = "SELECT * FROM SeasonalWorker WHERE cpr = ?";
+    private static final String findSeasonalWorkerByCPR = "SELECT * FROM SeasonalWorker " +
+            "JOIN Person ON SeasonalWorker.cpr = Person.cpr " +
+            "WHERE SeasonalWorker.cpr = ?";
     private static final String insertSeasonalWorker = "INSERT INTO SeasonalWorker VALUES(?,?,?,?,?,?,?,?,?,?,?)";
     private static final String updateSeasonalWorker = "UPDATE SeasonalWorker SET "
             + "cpr = ?,"
@@ -90,6 +89,7 @@ public class SeasonalWorkerDB implements SeasonalWorkerIF {
         try {
             PSfindAll = con.prepareStatement(findAll);
         } catch (SQLException e) {
+            DBConnection.disconnect();
             throw new DataAccessException("Issue preparing statement", e);
         }
 
@@ -110,16 +110,26 @@ public class SeasonalWorkerDB implements SeasonalWorkerIF {
         try {
             PSfindSeasonalWorkerByCPR = con.prepareStatement(findSeasonalWorkerByCPR);
         } catch (SQLException e) {
+            DBConnection.disconnect();
             throw new DataAccessException("Issue preparing statement", e);
+        }
+
+        try {
+            PSfindSeasonalWorkerByCPR.setString(1, seasonalWorkerCPR);
+        } catch (SQLException e) {
+            DBConnection.disconnect();
+            throw new DataAccessException("Issue with setting up query parameters when loading seasonal worker.", e);
         }
 
         ResultSet rs;
         try {
             rs = this.PSfindSeasonalWorkerByCPR.executeQuery();
+            rs.next();
             SeasonalWorker res = buildObject(rs, fullAssociation, type);
             DBConnection.disconnect();
             return res;
         } catch (SQLException e) {
+            DBConnection.disconnect();
             throw new DataAccessException("Error with fetching a specific SeasonalWorker from DB.", e);
         }
     }
@@ -132,6 +142,7 @@ public class SeasonalWorkerDB implements SeasonalWorkerIF {
         try {
             PSinsertSeasonalWorker = con.prepareStatement(insertSeasonalWorker);
         } catch (SQLException e) {
+            DBConnection.disconnect();
             throw new DataAccessException("Issue preparing statement", e);
         }
 
@@ -146,6 +157,7 @@ public class SeasonalWorkerDB implements SeasonalWorkerIF {
             PSinsertSeasonalWorker.setString(7, newSeasonalWorker.getLeadBy().getCpr());
             PSinsertSeasonalWorker.setInt(8, workSiteID);
         } catch (SQLException e) {
+            DBConnection.disconnect();
             throw new DataAccessException("There was a problem with the client being inserted into DB.", e);
         }
 
@@ -168,6 +180,8 @@ public class SeasonalWorkerDB implements SeasonalWorkerIF {
     public int deleteSeasonalWorker(String seasonalWorkerCPR, Type type) throws DataAccessException {
         return 0;
     }
+
+
     private List<SeasonalWorker> buildObjects(ResultSet rs, boolean fullAssociation, Type type) throws DataAccessException {
         List<SeasonalWorker> res = new ArrayList<>();
         try {
@@ -184,7 +198,7 @@ public class SeasonalWorkerDB implements SeasonalWorkerIF {
     }
 
 
-    private SeasonalWorker buildObject(ResultSet rs, boolean fullAssociation, Type type) throws DataAccessException {
+    private SeasonalWorker buildObject(ResultSet rs, boolean fullAssociation, Type type) throws DataAccessException, SQLException {
         SeasonalWorker currentSeasonalWorker = null;
 //        try {
 //            rs.next();
@@ -193,7 +207,8 @@ public class SeasonalWorkerDB implements SeasonalWorkerIF {
 //        }
         try {
             if (type.equals(SeasonalWorker.class)) {
-                currentSeasonalWorker = new SeasonalWorker(rs.getString("cpr"), rs.getString("fname"),
+                currentSeasonalWorker = new SeasonalWorker(rs.getString("cpr"),
+                        rs.getString("fname"),
                         rs.getString("lname"), rs.getDate("dateOfBirth"),
                         rs.getString("sex").charAt(0), rs.getString("email"),
                         rs.getString("phoneNum"), rs.getString("streetName"),

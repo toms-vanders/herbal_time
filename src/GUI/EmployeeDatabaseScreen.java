@@ -8,6 +8,7 @@ import Model.Employee;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
 public class EmployeeDatabaseScreen extends JFrame {
@@ -50,6 +51,8 @@ public class EmployeeDatabaseScreen extends JFrame {
         JLabel screenTitle = new JLabel();
         JTextField searchField = new JTextField();
         JButton searchBtn = new JButton();
+
+        viewEmployee = new ViewEmployee();
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new Dimension(1000, 720));
@@ -230,6 +233,7 @@ public class EmployeeDatabaseScreen extends JFrame {
                                       JLabel profilePicture,
                                       JLabel personName,
                                       String name,
+                                      String cpr,
                                       JButton settingsBtn,
                                       JButton generatedBtn,
                                       JButton removeBtn,
@@ -247,31 +251,91 @@ public class EmployeeDatabaseScreen extends JFrame {
 
         configureButton(settingsBtn,new ImageIcon(getClass().getResource("/icons8_settings_32px_1.png")));
         ComponentsConfigure.metroBtnConfig(settingsBtn);
-        settingsBtn.addActionListener((e) -> {});
+        settingsBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                settingsBtnActionPerformed(evt);
+            }
+        });
 
         configureButton(generatedBtn,new ImageIcon(getClass().getResource("/icons8_add_file_32px.png")));
         ComponentsConfigure.metroBtnConfig(generatedBtn);
-        generatedBtn.addActionListener((e) -> {});
+        generatedBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                generatedBtnActionPerformed(evt);
+            }
+        });
 
         configureButton(infoBtn,new ImageIcon(getClass().getResource("/icons8_information_32px.png")));
         ComponentsConfigure.metroBtnConfig(infoBtn);
-        infoBtn.addActionListener((e) -> {});
+        infoBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                infoBtnActionPerformed(evt);
+            }
+        });
 
         configureButton(mailBtn,new ImageIcon(getClass().getResource("/icons8_secured_letter_32px_3.png")));
         ComponentsConfigure.metroBtnConfig(mailBtn);
-        mailBtn.addActionListener((e) -> {});
+        mailBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mailBtnActionPerformed(evt);
+            }
+        });
 
         configureButton(generateBtn,new ImageIcon(getClass().getResource("/icons8_add_file_32px.png")));
         ComponentsConfigure.metroBtnConfig(generateBtn);
-        generateBtn.addActionListener((e) -> {});
+        generateBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                generateBtnActionPerformed(evt);
+            }
+        });
 
         configureButton(msgBtn,new ImageIcon(getClass().getResource("/icons8_sent_32px.png")));
         ComponentsConfigure.metroBtnConfig(msgBtn);
-        msgBtn.addActionListener((e) -> {});
+        msgBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                msgBtnActionPerformed(evt);
+            }
+        });
 
         configureButton(removeBtn,new ImageIcon(getClass().getResource("/icons8_trash_can_32px.png")));
         ComponentsConfigure.metroBtnConfig(removeBtn);
-        removeBtn.addActionListener((e) -> {});
+        removeBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeActionPerformed(evt,cpr);
+            }
+        });
+    }
+
+    private void removeActionPerformed(ActionEvent evt, String cpr) {
+        try {
+            employeeCtr.deleteEmployee(cpr);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void msgBtnActionPerformed(ActionEvent evt) {
+        //  TODO
+    }
+
+    private void generateBtnActionPerformed(ActionEvent evt) {
+        //  TODO
+    }
+
+    private void mailBtnActionPerformed(ActionEvent evt) {
+        //  TODO
+    }
+
+    private void settingsBtnActionPerformed(ActionEvent evt) {
+        //  TODO
+    }
+
+    private void generatedBtnActionPerformed(ActionEvent evt) {
+        //  TODO
+    }
+
+    private void infoBtnActionPerformed(ActionEvent evt) {
+        viewEmployee.setVisible(true);
     }
 
     private JPanel createListContainer(){
@@ -292,6 +356,7 @@ public class EmployeeDatabaseScreen extends JFrame {
             JLabel profilePicture = new JLabel();
             JLabel personName = new JLabel();
             String name = employees.get(i).getFname() + " " + employees.get(i).getLname();
+            String cpr = employees.get(i).getCpr();
             JButton settingsBtn = new JButton();
             JButton generatedBtn = new JButton();
             JButton removeBtn = new JButton();
@@ -300,7 +365,7 @@ public class EmployeeDatabaseScreen extends JFrame {
             JButton mailBtn = new JButton();
             JButton generateBtn = new JButton();
 
-            setElementComponents(listElement, profilePicture,personName, name,settingsBtn,generatedBtn,removeBtn,msgBtn,infoBtn,mailBtn,generateBtn);
+            setElementComponents(listElement, profilePicture,personName, name,cpr,settingsBtn,generatedBtn,removeBtn,msgBtn,infoBtn,mailBtn,generateBtn);
             setElementGroupsPosition(listElement, profilePicture,personName,settingsBtn,generatedBtn,removeBtn,msgBtn,infoBtn,mailBtn,generateBtn);
             addElementToList(listElement);
         }
@@ -341,6 +406,7 @@ public class EmployeeDatabaseScreen extends JFrame {
     }
 
     private JPanel listContainer;
+    private ViewEmployee viewEmployee;
 
     private GroupLayout listContainerLayout;
     private GroupLayout.ParallelGroup parallelGroup;

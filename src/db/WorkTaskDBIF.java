@@ -12,6 +12,6 @@ public interface WorkTaskDBIF {
     WorkTask findByID(Integer id, boolean fullAssociation) throws DataAccessException;
     Integer insertWorkTask(WorkTask workTask, String workerCpr) throws DataAccessException;
     Integer updateWorkTask(WorkTask workTask, Integer workTaskID) throws DataAccessException;
-    void deleteWorkTask(Integer id) throws DataAccessException;
+    Integer deleteWorkTask(Integer id) throws DataAccessException;
 }
 

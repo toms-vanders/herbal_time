@@ -26,7 +26,7 @@ public class TestWorkSite {
         System.out.println(dbConnection.toString() + "\n");
     }
 
-
+    @Test
     public void createNewWorkSite() throws DataAccessException {
         WorkSite ws = new WorkSite("The best work site", "Come work with us, you'll be in good hands",
                 "Egensevej", "155", "9270", "Denmark", "DK", "test",

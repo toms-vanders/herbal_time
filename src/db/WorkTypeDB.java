@@ -37,7 +37,7 @@ public class WorkTypeDB implements WorkTypeDBIF {
     private PreparedStatement PSfindByWorkSite;
 
     public WorkTypeDB() throws DataAccessException {
-        init();
+//        init();
     }
 
 
@@ -52,6 +52,7 @@ public class WorkTypeDB implements WorkTypeDBIF {
      * @throws DataAccessException Throw an exception on statements that cannot be prepared
      */
     private void init() throws DataAccessException {
+        connectToDB();
         Connection con = DBConnection.getInstance().getConnection();
         try {
             PSfindAll = con.prepareStatement(findAll);
@@ -65,12 +66,29 @@ public class WorkTypeDB implements WorkTypeDBIF {
         }
     }
 
+    private void connectToDB() throws DataAccessException{
+        DBConnection.connect();
+        if (DBConnection.instanceIsNull()) {
+            throw new DataAccessException("Couldn't connect and read from database; throwing to GUI", new Exception());
+        }
+    }
+
     @Override
     public List<WorkType> findAll(boolean fullAssociation) throws DataAccessException {
+        connectToDB();
+        Connection con = DBConnection.getInstance().getConnection();
+        try {
+            PSfindAll = con.prepareStatement(findAll);
+        } catch (SQLException e) {
+            DBConnection.disconnect();
+            throw new DataAccessException("Issue preparing statement", e);
+        }
+
         ResultSet rs;
         try {
             rs = PSfindAll.executeQuery();
         } catch (SQLException e) {
+            DBConnection.disconnect();
             throw new DataAccessException("Issue with retrieving work types from the database (executeQuery)", e);
         }
         return buildObjects(rs, fullAssociation);
@@ -86,16 +104,27 @@ public class WorkTypeDB implements WorkTypeDBIF {
      */
     @Override
     public List<WorkType> findAllWorkTypesOfWorkSite(Integer workSiteID, boolean fullAssociation) throws DataAccessException {
-        ResultSet rs;
+        connectToDB();
+        Connection con = DBConnection.getInstance().getConnection();
         try {
-            PSfindByWorkSite.setInt(1, workSiteID);
+            PSfindByWorkSite = con.prepareStatement(findByWorkSite);
         } catch (SQLException e) {
-            throw new DataAccessException("Issue with setting up query parameters when loading work types.", e);
+            DBConnection.disconnect();
+            throw new DataAccessException("Issue preparing statement", e);
         }
 
         try {
+            PSfindByWorkSite.setInt(1, workSiteID);
+        } catch (SQLException e) {
+            DBConnection.disconnect();
+            throw new DataAccessException("Issue with setting up query parameters when loading work types.", e);
+        }
+
+        ResultSet rs;
+        try {
             rs = PSfindByWorkSite.executeQuery();
         } catch (SQLException e) {
+            DBConnection.disconnect();
             throw new DataAccessException("Issue with retrieving work types from the database (executeQuery)", e);
         }
         return buildObjects(rs, fullAssociation);
@@ -103,19 +132,34 @@ public class WorkTypeDB implements WorkTypeDBIF {
 
     @Override
     public WorkType findWorkTypeByID(int workTypeID, boolean fullAssociation) throws DataAccessException {
-        ResultSet rs;
+        connectToDB();
+        Connection con = DBConnection.getInstance().getConnection();
         try {
-            PSfindByID.setInt(1, workTypeID);
+            PSfindByID = con.prepareStatement(findByID);
         } catch (SQLException e) {
-            throw new DataAccessException("Issue with setting up query parameters when loading work types.", e);
+            DBConnection.disconnect();
+            throw new DataAccessException("Issue preparing statement", e);
         }
 
         try {
-            rs = PSfindByID.executeQuery();
+            PSfindByID.setInt(1, workTypeID);
         } catch (SQLException e) {
+            DBConnection.disconnect();
+            throw new DataAccessException("Issue with setting up query parameters when loading work types.", e);
+        }
+
+        ResultSet rs;
+
+        try {
+            rs = PSfindByID.executeQuery();
+            rs.next();
+            WorkType res = buildObject(rs, fullAssociation);
+            DBConnection.disconnect();
+            return res;
+        } catch (SQLException e) {
+            DBConnection.disconnect();
             throw new DataAccessException("Issue with retrieving work types from the database (executeQuery)", e);
         }
-        return buildObject(rs, fullAssociation);
     }
 
     /**
@@ -128,6 +172,15 @@ public class WorkTypeDB implements WorkTypeDBIF {
      */
     @Override
     public Integer insertWorkType(Integer workSiteID, WorkType newWorkType) throws DataAccessException {
+        connectToDB();
+        Connection con = DBConnection.getInstance().getConnection();
+        try {
+            PSinsertWorkType = con.prepareStatement(insertWorkType);
+        } catch (SQLException e) {
+            DBConnection.disconnect();
+            throw new DataAccessException("Issue preparing statement", e);
+        }
+
         Integer affectedRows;
         try {
             PSinsertWorkType.setString(1, newWorkType.getDescOfJob());
@@ -136,12 +189,15 @@ public class WorkTypeDB implements WorkTypeDBIF {
             PSinsertWorkType.setDouble(4, newWorkType.getPay());
             PSinsertWorkType.setInt(5, workSiteID);
         } catch (SQLException e) {
+            DBConnection.disconnect();
             throw new DataAccessException("Issue with setting up query parameters when adding new workType", e);
         }
 
         try {
             affectedRows = PSinsertWorkType.executeUpdate();
+            DBConnection.disconnect();
         } catch (SQLException e) {
+            DBConnection.disconnect();
             throw new DataAccessException("Issue with inserting work type to database", e);
         }
 
@@ -150,6 +206,15 @@ public class WorkTypeDB implements WorkTypeDBIF {
 
     @Override
     public Integer updateWorkType(int workTypeID, WorkType newWorkType) throws DataAccessException {
+        connectToDB();
+        Connection con = DBConnection.getInstance().getConnection();
+        try {
+            PSupdateWorkType = con.prepareStatement(updateWorkType);
+        } catch (SQLException e) {
+            DBConnection.disconnect();
+            throw new DataAccessException("Issue preparing statement", e);
+        }
+
         Integer affectedRows;
         try {
             PSupdateWorkType.setString(1, newWorkType.getDescOfJob());
@@ -158,11 +223,15 @@ public class WorkTypeDB implements WorkTypeDBIF {
             PSupdateWorkType.setDouble(4, newWorkType.getPay());
             PSupdateWorkType.setInt(5, workTypeID);
         } catch (SQLException e) {
+            DBConnection.disconnect();
             throw new DataAccessException("Issue with setting up query parameters when updating WorkType", e);
         }
+
         try {
             affectedRows = PSupdateWorkType.executeUpdate();
+            DBConnection.disconnect();
         } catch (SQLException e) {
+            DBConnection.disconnect();
             throw new DataAccessException("Issue with updating work type to database", e);
         }
         return affectedRows;
@@ -170,16 +239,28 @@ public class WorkTypeDB implements WorkTypeDBIF {
 
     @Override
     public Integer deleteWorkType(int workTypeID) throws DataAccessException {
+        connectToDB();
+        Connection con = DBConnection.getInstance().getConnection();
+        try {
+            PSdeleteWorkType = con.prepareStatement(deleteWorkType);
+        } catch (SQLException e) {
+            DBConnection.disconnect();
+            throw new DataAccessException("Issue preparing statement", e);
+        }
+
         Integer affectedRows;
         try {
             PSdeleteWorkType.setInt(1, workTypeID);
         } catch (SQLException e) {
+            DBConnection.disconnect();
             throw new DataAccessException("Issue with setting up query parameters when deleting workType", e);
         }
 
         try {
             affectedRows = PSdeleteWorkType.executeUpdate();
+            DBConnection.disconnect();
         } catch (SQLException e) {
+            DBConnection.disconnect();
             throw new DataAccessException("Issue with deleting work type from database", e);
         }
         return affectedRows;
@@ -200,10 +281,12 @@ public class WorkTypeDB implements WorkTypeDBIF {
                 WorkType currentWorkType = buildObject(rs, fullAssociation);
                 res.add(currentWorkType);
             }
+            DBConnection.disconnect();
+            return  res;
         } catch (SQLException e) {
+            DBConnection.disconnect();
             throw new DataAccessException("Issue with loading work types from database (in buildObjects)", e);
         }
-        return res;
     }
 
     /**
@@ -218,15 +301,15 @@ public class WorkTypeDB implements WorkTypeDBIF {
         WorkType currentWorkType;
         try {
             currentWorkType = new WorkType();
-            if(rs.next()){
-                currentWorkType.setWorkTypeID(rs.getInt("workTypeID"));
-                currentWorkType.setDescOfJob(rs.getString("descOfJob"));
-                currentWorkType.setTypeOfProduce(rs.getString("typeOfProduce"));
-                currentWorkType.setSalaryType(rs.getString("salaryType"));
-                currentWorkType.setPay(rs.getDouble("pay"));
-//                currentWorkType.setWorkSiteID(rs.getInt("workSiteID"));
+//            if(rs.next()){
+            currentWorkType.setWorkTypeID(rs.getInt("workTypeID"));
+            currentWorkType.setDescOfJob(rs.getString("descOfJob"));
+            currentWorkType.setTypeOfProduce(rs.getString("typeOfProduce"));
+            currentWorkType.setSalaryType(rs.getString("salaryType"));
+            currentWorkType.setPay(rs.getDouble("pay"));
+//            currentWorkType.setWorkSiteID(rs.getInt("workSiteID"));
 
-            }
+//            }
             if (fullAssociation) {
                 //
             }

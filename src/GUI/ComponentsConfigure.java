@@ -13,6 +13,14 @@ public class ComponentsConfigure implements Serializable {
     static ImageIcon minimizeIcon = new ImageIcon(ComponentsConfigure.class.getResource("/icons8_minimize_window_32px_1.png"));
     static ImageIcon maximizeIcon = new ImageIcon(ComponentsConfigure.class.getResource("/icons8_maximize_button_32px.png"));
     static ImageIcon exitIcon = new ImageIcon(ComponentsConfigure.class.getResource("/icons8_close_window_32px.png"));
+    static ImageIcon locationIcon = new ImageIcon(ComponentsConfigure.class.getResource("/icons8_place_marker_32px.png"));
+    static ImageIcon vegetableIcon = new ImageIcon(ComponentsConfigure.class.getResource("/icons8_vegetarian_mark_32px.png"));
+    static ImageIcon watchIcon = new ImageIcon(ComponentsConfigure.class.getResource("/icons8_watch_32px.png"));
+    static ImageIcon presentIcon = new ImageIcon(ComponentsConfigure.class.getResource("/icons8_present_32px.png"));
+    static ImageIcon trolleyIcon = new ImageIcon(ComponentsConfigure.class.getResource("/icons8_trolley_32px.png"));
+    static ImageIcon approveIcon = new ImageIcon(ComponentsConfigure.class.getResource("/icons8_approval_32px.png"));
+    static ImageIcon saveIcon = new ImageIcon(ComponentsConfigure.class.getResource("/icons8_save_32px.png"));
+    static ImageIcon trashIcon = new ImageIcon(ComponentsConfigure.class.getResource("/icons8_trash_can_32px.png"));
 
     static Font defaultFont = new Font("Dialog", Font.BOLD, 24);
 

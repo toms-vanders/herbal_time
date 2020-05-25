@@ -23,6 +23,7 @@ public class TestWorkType {
         System.out.println(dbConnection.toString() + "\n");
     }
 
+    @Test
     public void createNewWorkType() throws DataAccessException {
         WorkType wt = new WorkType("cotton picking", "test", "Amount", 100);
         WorkTypeDB wtDB = new WorkTypeDB();

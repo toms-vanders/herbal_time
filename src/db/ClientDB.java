@@ -41,10 +41,17 @@ public class ClientDB implements ClientDBIF {
     private PreparedStatement PSdeleteClientByCVR;
 
 
+
     public ClientDB() throws DataAccessException{
         init();
     }
 
+    private void connectToDB() throws DataAccessException{
+        DBConnection.connect();
+        if (DBConnection.instanceIsNull()) {
+            throw new DataAccessException("Couldn't connect and read from database; throwing to GUI", new Exception());
+        }
+    }
 
     // TODO
     // This should be made obsolete ASAP
@@ -56,6 +63,7 @@ public class ClientDB implements ClientDBIF {
      * @throws DataAccessException Throw an exception on statements that cannot be prepared
      */
     private void init() throws DataAccessException {
+        connectToDB();
         Connection con = DBConnection.getInstance().getConnection();
         try {
             PSfindAll = con.prepareStatement(findAll);
@@ -63,7 +71,9 @@ public class ClientDB implements ClientDBIF {
             PSinsertClient = con.prepareStatement(insertClient);
             PSupdateClient = con.prepareStatement(updateClient);
             PSdeleteClientByCVR = con.prepareStatement(deleteClientByCVR);
+            DBConnection.disconnect();
         } catch (SQLException e) {
+            DBConnection.disconnect();
             throw new DataAccessException("ClientDB could not initialize.", e);
         }
     }
@@ -72,36 +82,67 @@ public class ClientDB implements ClientDBIF {
 
     @Override
     public List<Client> findAll(boolean fullAssociation, Type type) throws DataAccessException {
+        connectToDB();
+        Connection con = DBConnection.getInstance().getConnection();
+        try {
+            PSfindAll = con.prepareStatement(findAll);
+        } catch (SQLException e) {
+            DBConnection.disconnect();
+            throw new DataAccessException("Issue preparing statement", e);
+        }
+
         ResultSet rs;
         try {
             rs = this.PSfindAll.executeQuery();
+            return buildObjects(rs,fullAssociation,type);
         } catch (SQLException e) {
+            DBConnection.disconnect();
             throw new DataAccessException("Error with fetching all Clients from DB.", e);
         }
-        return buildObjects(rs,fullAssociation,type);
+
     }
 
     @Override
     public Client findClientByCVR(String clientCVR, boolean fullAssociation, Type type) throws DataAccessException {
-        ResultSet rs;
+        connectToDB();
+        Connection con = DBConnection.getInstance().getConnection();
         try {
-            PSfindClientByCVR.setString(1, clientCVR);
-            rs = PSfindClientByCVR.executeQuery();
+            PSfindClientByCVR = con.prepareStatement(findClientByCVR);
         } catch (SQLException e) {
-            throw new DataAccessException("There was an error finding the Client by their CVR number.", e);
+            DBConnection.disconnect();
+            throw new DataAccessException("Issue preparing statement", e);
         }
 
         try {
-            rs.next();
+            PSfindClientByCVR.setString(1, clientCVR);
         } catch (SQLException e) {
-            throw new DataAccessException("Issue setting cursor at the first row in resultSet", e);
+            throw new DataAccessException("Issue with setting up query parameters when loading client.", e);
         }
-        return buildObject(rs, fullAssociation, type);
+
+        ResultSet rs;
+        try {
+            rs = PSfindClientByCVR.executeQuery();
+            rs.next();
+            Client res = buildObject(rs, fullAssociation, type);
+            DBConnection.disconnect();
+            return res;
+        } catch (SQLException e) {
+            DBConnection.disconnect();
+            throw new DataAccessException("Issue retrieving client info from database.", e);
+        }
     }
 
     @Override
     public int insertClient(Client newClient, Type type) throws DataAccessException {
-        Integer affectedRows;
+        connectToDB();
+        Connection con = DBConnection.getInstance().getConnection();
+        try {
+            PSinsertClient = con.prepareStatement(insertClient);
+        } catch (SQLException e) {
+            DBConnection.disconnect();
+            throw new DataAccessException("Issue preparing statement", e);
+        }
+
         try {
             // cvr, name, email, phoneNum, streetName, streetNum, zip, countryCode, country, dateStart, dateEnd
             PSinsertClient.setString(1, newClient.getCvr());
@@ -116,14 +157,16 @@ public class ClientDB implements ClientDBIF {
             PSinsertClient.setDate(10, newClient.getDateStart());
             PSinsertClient.setDate(11, newClient.getDateEnd());
         } catch (SQLException e) {
-            e.printStackTrace();
+            DBConnection.disconnect();
             throw new DataAccessException("There was a problem with the client being inserted into DB.",e);
         }
+
+        Integer affectedRows;
         try {
             affectedRows = PSinsertClient.executeUpdate();
-            PSinsertClient.close();
+            DBConnection.disconnect();
         } catch (SQLException e) {
-            e.printStackTrace();
+            DBConnection.disconnect();
             throw new DataAccessException("There was a problem with inserting client into DB.", e);
         }
         return affectedRows;
@@ -131,7 +174,15 @@ public class ClientDB implements ClientDBIF {
 
     @Override
     public int updateClient(String clientCVR, Client newClient, Type type) throws DataAccessException {
-        Integer affectedRows;
+        connectToDB();
+        Connection con = DBConnection.getInstance().getConnection();
+        try {
+            PSupdateClient = con.prepareStatement(updateClient);
+        } catch (SQLException e) {
+            DBConnection.disconnect();
+            throw new DataAccessException("Issue preparing statement", e);
+        }
+
         try {
             PSupdateClient.setString(1, newClient.getCvr());
             PSupdateClient.setString(2, newClient.getName());
@@ -146,13 +197,16 @@ public class ClientDB implements ClientDBIF {
             PSupdateClient.setDate(11, newClient.getDateEnd());
             PSupdateClient.setString(12, clientCVR);
         } catch (SQLException e){
-            e.printStackTrace();
+            DBConnection.disconnect();
             throw new DataAccessException("There was an error updating the Client (newData).", e);
         }
+
+        Integer affectedRows;
         try {
             affectedRows = PSupdateClient.executeUpdate();
+            DBConnection.disconnect();
         } catch (SQLException e){
-            e.printStackTrace();
+            DBConnection.disconnect();
             throw new DataAccessException("There was an error updating the Client (applyingData).", e);
         }
         return affectedRows;
@@ -160,12 +214,28 @@ public class ClientDB implements ClientDBIF {
 
     @Override
     public int deleteClient(String clientCVR, Type type) throws DataAccessException {
-        Integer affectedRows;
+        connectToDB();
+        Connection con = DBConnection.getInstance().getConnection();
+        try {
+            PSdeleteClientByCVR = con.prepareStatement(deleteClientByCVR);
+        } catch (SQLException e) {
+            DBConnection.disconnect();
+            throw new DataAccessException("Issue preparing statement", e);
+        }
+
         try {
             PSdeleteClientByCVR.setString(1, clientCVR);
-            affectedRows = PSdeleteClientByCVR.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            DBConnection.disconnect();
+            throw new DataAccessException("Issue with setting update parameters when deleting client", e);
+        }
+
+        Integer affectedRows;
+        try {
+            affectedRows = PSdeleteClientByCVR.executeUpdate();
+            DBConnection.disconnect();
+        } catch (SQLException e) {
+            DBConnection.disconnect();
             throw new DataAccessException("There was an error deleting the Client.", e);
         }
         return affectedRows;
@@ -176,11 +246,13 @@ public class ClientDB implements ClientDBIF {
         try {
             while(rs.next()) {
                 Client currentClient = buildObject(rs,fullAssociation,type);
-                System.out.println(currentClient.getCountry());
-                System.out.println(currentClient.toString());
+//                System.out.println(currentClient.getCountry());
+//                System.out.println(currentClient.toString());
                 res.add(currentClient);
             }
+            DBConnection.disconnect();
         } catch (SQLException e) {
+            DBConnection.disconnect();
             throw new DataAccessException("buildObjects: There was an Error with building the List.", e);
         }
         return res;
@@ -200,8 +272,8 @@ public class ClientDB implements ClientDBIF {
                 currentClient.setStreetName(rs.getString("streetName"));
                 currentClient.setStreetNum(rs.getString("streetNum"));
                 currentClient.setStreetName(rs.getString("streetName"));
-                currentClient.setZip(rs.getString("zip"));
-                currentClient.setCountryCode(rs.getString("countryCode"));
+                currentClient.setZip(rs.getString("zip").trim());
+                currentClient.setCountryCode(rs.getString("countryCode").trim());
                 currentClient.setCountry(rs.getString("Country"));
                 currentClient.setDateStart(rs.getDate("dateStart"));
                 currentClient.setDateEnd(rs.getDate("dateEnd"));

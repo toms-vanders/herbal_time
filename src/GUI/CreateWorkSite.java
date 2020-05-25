@@ -1,46 +1,93 @@
 package GUI;
 
-import org.netbeans.lib.awtextra.AbsoluteConstraints;
-import org.netbeans.lib.awtextra.AbsoluteLayout;
+import Controller.*;
+import Model.Client;
+import Model.WorkSite;
 
 import javax.swing.*;
+
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CreateWorkSite extends JPanel {
-    
-    public CreateWorkSite() {
-        initComponents();
+
+    private WorkSiteCtrIF workSiteCtr;
+    private MainScreen mainScreen;
+
+    /**
+     * Creates new form workSiteDashboard
+     */
+    public CreateWorkSite(MainScreen mainScreen) {
+        try {
+            this.mainScreen = mainScreen;
+            initComponents();
+        } catch (DataAccessException e) {
+            System.err.println("Issue obtaining connection.");
+//            e.printStackTrace();
+            // Alert the user here with e.g JDialog saying there was an issue connecting to the database.
+            // TODO
+            // Add a refresh button.
+        }
     }
-    
-    private void initComponents() {
+
+    private void initComponents() throws DataAccessException {
+        ClientCtrIF clientCtr;
+        try {
+            clientCtr = new ClientCtr();
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Unable to obtain client controller instance.",e);
+        }
+
+        try {
+            workSiteCtr = new WorkSiteCtr();
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Unable to obtain work site controller instance.",e);
+        }
+
+        clients = new ArrayList<>();
+        try {
+            clients = new ArrayList<>(clientCtr.findAllClients());
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Unable to retrieve list of clients.", e);
+        }
+
+
+        clientComboBox = new JComboBox<>();
+        DefaultComboBoxModel<Client> comboBoxModel = getComboBoxModel(clients);
+        clientComboBox.setModel(comboBoxModel);
+        clientComboBox.setRenderer(new WorkSiteClientComboBoxRenderer());
+
 
         topBar = new JPanel();
         taskTitle = new JLabel();
         mainContainer = new JPanel();
-        locationLabel = new JLabel();
-        locationField = new JTextField();
-        cityLabel = new JLabel();
-        cityField = new JTextField();
+        clientLabel = new JLabel();
+        nameLabel = new JLabel();
+        nameField = new JTextField();
         locationInfoTitle = new JLabel();
-        streetLabel = new JLabel();
-        streetField = new JTextField();
         streetNoField = new JTextField();
+        streetLabel = new JLabel();
+        streetNameField = new JTextField();
         postalCodeLabel = new JLabel();
         postalCodeField = new JTextField();
-        townLabel = new JLabel();
-        townField = new JTextField();
-        descriptionLabel = new JLabel();
-        descriptionField = new JTextField();
+        typeOfJobLabel = new JLabel();
+        typeOfJobField = new JTextField();
         collectedProduceBtn = new JButton();
         addWorkersBtn = new JButton();
         scrollableListContainer = new JScrollPane();
         workerList = new JList<>();
         cancelBtn = new JButton();
         createBtn = new JButton();
+        pricePerWorkerLabel = new JLabel();
+        pricePerWorkerField = new JTextField();
+        descriptionField = new JTextField();
+        descriptionLabel = new JLabel();
 
         setMinimumSize(new Dimension(1000, 720));
         setName(""); // NOI18N
-        setLayout(new AbsoluteLayout());
+        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         topBar.setBackground(new Color(120, 168, 252));
         topBar.setPreferredSize(new Dimension(1000, 110));
@@ -54,224 +101,282 @@ public class CreateWorkSite extends JPanel {
         GroupLayout topBarLayout = new GroupLayout(topBar);
         topBar.setLayout(topBarLayout);
         topBarLayout.setHorizontalGroup(
-                topBarLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(topBarLayout.createSequentialGroup()
-                                .addGap(17, 17, 17)
-                                .addComponent(taskTitle, GroupLayout.PREFERRED_SIZE, 460, GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(523, Short.MAX_VALUE))
+            topBarLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(topBarLayout.createSequentialGroup()
+                .addGap(17, 17, 17)
+                .addComponent(taskTitle, GroupLayout.PREFERRED_SIZE, 460, GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(523, Short.MAX_VALUE))
         );
         topBarLayout.setVerticalGroup(
-                topBarLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(topBarLayout.createSequentialGroup()
-                                .addGap(25, 25, 25)
-                                .addComponent(taskTitle, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(35, Short.MAX_VALUE))
+            topBarLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(topBarLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addComponent(taskTitle, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(35, Short.MAX_VALUE))
         );
 
-        add(topBar, new AbsoluteConstraints(0, 0, -1, -1));
+        add(topBar, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         mainContainer.setBackground(new Color(71, 120, 197));
 
-        locationLabel.setFont(new Font("Dialog", Font.BOLD, 18)); // NOI18N
-        locationLabel.setForeground(new Color(249, 249, 249));
-        locationLabel.setIcon(new ImageIcon(getClass().getResource("/icons8_place_marker_32px.png"))); // NOI18N
-        locationLabel.setText("Name");
-        locationLabel.setFocusable(false);
+        configureField(nameField,"Name of the location");
+        configureField(streetNameField,"Street name");
+        configureField(streetNoField,"No.");
+        configureField(postalCodeField,"Postal code");
+        configureField(typeOfJobField, "Type of job");
+        configureField(pricePerWorkerField,"Price per worker");
+        configureField(descriptionField,"Description");
 
-        configureField(locationField,"Name of the location");
-        locationField.addActionListener((e) -> {});
+        nameField.addActionListener(this::nameFieldActionPerformed);
+        streetNameField.addActionListener(this::streetNameFieldActionPerformed);
+        streetNoField.addActionListener(this::streetNoFieldActionPerformed);
+        postalCodeField.addActionListener(this::postalCodeFieldActionPerformed);
+        typeOfJobField.addActionListener(this::typeOfJobFieldActionPerformed);
+        pricePerWorkerField.addActionListener(this::pricePerWorkerFieldActionPerformed);
+        descriptionField.addActionListener(this::descriptionFieldActionPerformed);
 
-        cityLabel.setFont(new Font("Dialog", Font.BOLD, 18)); // NOI18N
-        cityLabel.setForeground(new Color(249, 249, 249));
-        cityLabel.setIcon(new ImageIcon(getClass().getResource("/icons8_place_marker_32px.png"))); // NOI18N
-        cityLabel.setText("City");
-        cityLabel.setFocusable(false);
-
-        configureField(cityField,"City");
-        cityField.addActionListener((e) -> {});
+        configureLabel(clientLabel,"Client");
+        configureLabel(nameLabel,"Name");
+        configureLabel(streetLabel,"Street");
+        configureLabel(postalCodeLabel,"Postal code");
+        configureLabel(typeOfJobLabel,"Type of job");
+        configureLabel(pricePerWorkerLabel,"Price p. worker");
+        configureLabel(descriptionLabel,"Description");
 
         locationInfoTitle.setText("Location information:");
-        locationInfoTitle.setForeground(Color.white);
 
-        streetLabel.setFont(new Font("Dialog", Font.BOLD, 18)); // NOI18N
-        streetLabel.setForeground(new Color(249, 249, 249));
-        streetLabel.setIcon(new ImageIcon(getClass().getResource("/icons8_place_marker_32px.png"))); // NOI18N
-        streetLabel.setText("Street");
-        streetLabel.setFocusable(false);
-
-        configureField(streetField,"Streetname");
-        streetField.addActionListener((e) -> {});
-
-        configureField(streetNoField,"No.");
-        streetNoField.addActionListener((e) -> {});
-
-        postalCodeLabel.setFont(new Font("Dialog", Font.BOLD, 18)); // NOI18N
-        postalCodeLabel.setForeground(new Color(249, 249, 249));
-        postalCodeLabel.setIcon(new ImageIcon(getClass().getResource("/icons8_place_marker_32px.png"))); // NOI18N
-        postalCodeLabel.setText("Postal code");
-        postalCodeLabel.setFocusable(false);
-
-        configureField(postalCodeField,"Postal code");
-        postalCodeField.addActionListener((e) -> {});
-
-        townLabel.setFont(new Font("Dialog", Font.BOLD, 18)); // NOI18N
-        townLabel.setForeground(new Color(249, 249, 249));
-        townLabel.setIcon(new ImageIcon(getClass().getResource("/icons8_place_marker_32px.png"))); // NOI18N
-        townLabel.setText("Town");
-        townLabel.setFocusable(false);
-
-        configureField(townField,"Town");
-        townField.addActionListener((e) -> {});
-
-        descriptionLabel.setFont(new Font("Dialog", Font.BOLD, 18)); // NOI18N
-        descriptionLabel.setForeground(new Color(249, 249, 249));
-        descriptionLabel.setIcon(new ImageIcon(getClass().getResource("/icons8_place_marker_32px.png"))); // NOI18N
-        descriptionLabel.setText("Description");
-        descriptionLabel.setFocusable(false);
-
-        configureField(descriptionField,"Description");
-        descriptionField.addActionListener((e) -> {});
-
-        collectedProduceBtn.setText("Collected Produce");
-        ComponentsConfigure.metroBtnConfig(collectedProduceBtn);
-
-        addWorkersBtn.setText("Add/Edit workers");
-        ComponentsConfigure.metroBtnConfig(addWorkersBtn);
-        addWorkersBtn.addActionListener((e) -> {});
-
+        //TODO: Worker selection
         workerList.setModel(new AbstractListModel<>() {
-            final String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
+            final String[] strings = {"Item 1", "Item 2", "Item 3", "Item 4", "Item 5"};
+
+            public int getSize() {
+                return strings.length;
+            }
+
+            public String getElementAt(int i) {
+                return strings[i];
+            }
         });
         scrollableListContainer.setViewportView(workerList);
 
-        cancelBtn.setText("Cancel");
+        ComponentsConfigure.metroBtnConfig(collectedProduceBtn);
+        ComponentsConfigure.metroBtnConfig(addWorkersBtn);
         ComponentsConfigure.metroBtnConfig(cancelBtn);
-
-        createBtn.setText("Create");
         ComponentsConfigure.metroBtnConfig(createBtn);
+
+        collectedProduceBtn.setText("Collected Produce");
+        addWorkersBtn.setText("Add/Edit workers");
+        createBtn.setText("Create");
+        cancelBtn.setText("Cancel");
+
+        addWorkersBtn.addActionListener(this::addWorkersBtnActionPerformed);
+        createBtn.addActionListener(this::createBtnActionPerformed);
+        cancelBtn.addActionListener((e)-> mainScreen.returnNav());
 
         GroupLayout mainContainerLayout = new GroupLayout(mainContainer);
         mainContainer.setLayout(mainContainerLayout);
         mainContainerLayout.setHorizontalGroup(
-                mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(mainContainerLayout.createSequentialGroup()
+                .addGap(37, 37, 37)
+                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(GroupLayout.Alignment.LEADING, mainContainerLayout.createSequentialGroup()
+                            .addComponent(streetLabel)
+                            .addGap(97, 97, 97)
+                            .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addComponent(postalCodeField, GroupLayout.PREFERRED_SIZE, 270, GroupLayout.PREFERRED_SIZE)
+                                .addGroup(mainContainerLayout.createSequentialGroup()
+                                    .addComponent(streetNameField, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(streetNoField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
                         .addGroup(mainContainerLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addComponent(locationInfoTitle)
-                                        .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
-                                                .addGroup(GroupLayout.Alignment.LEADING, mainContainerLayout.createSequentialGroup()
-                                                        .addComponent(cityLabel)
-                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addComponent(cityField, GroupLayout.PREFERRED_SIZE, 270, GroupLayout.PREFERRED_SIZE))
-                                                .addGroup(mainContainerLayout.createSequentialGroup()
-                                                        .addComponent(locationLabel)
-                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addComponent(locationField, GroupLayout.PREFERRED_SIZE, 270, GroupLayout.PREFERRED_SIZE))
-                                                .addGroup(GroupLayout.Alignment.LEADING, mainContainerLayout.createSequentialGroup()
-                                                        .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                                .addComponent(postalCodeLabel)
-                                                                .addComponent(streetLabel))
-                                                        .addGap(18, 18, 18)
-                                                        .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                                                .addComponent(postalCodeField, GroupLayout.PREFERRED_SIZE, 270, GroupLayout.PREFERRED_SIZE)
-                                                                .addComponent(townField, GroupLayout.PREFERRED_SIZE, 270, GroupLayout.PREFERRED_SIZE)
-                                                                .addGroup(mainContainerLayout.createSequentialGroup()
-                                                                        .addComponent(streetField, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
-                                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                        .addComponent(streetNoField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))))
-                                        .addComponent(townLabel)
-                                        .addGroup(mainContainerLayout.createSequentialGroup()
-                                                .addComponent(descriptionLabel)
-                                                .addGap(18, 18, 18)
-                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                                        .addComponent(collectedProduceBtn, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addComponent(descriptionField, GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE))))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 118, Short.MAX_VALUE)
-                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addComponent(addWorkersBtn, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(GroupLayout.Alignment.TRAILING, mainContainerLayout.createSequentialGroup()
-                                                .addComponent(createBtn, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(cancelBtn, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE))
-                                        .addComponent(scrollableListContainer, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 394, GroupLayout.PREFERRED_SIZE))
-                                .addGap(49, 49, 49))
+                            .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addComponent(nameLabel)
+                                .addComponent(clientLabel))
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                .addComponent(nameField, GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
+                                .addComponent(clientComboBox, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addComponent(postalCodeLabel)
+                    .addGroup(mainContainerLayout.createSequentialGroup()
+                        .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(typeOfJobLabel)
+                            .addComponent(pricePerWorkerLabel)
+                            .addComponent(descriptionLabel))
+                        .addGap(18, 18, 18)
+                        .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                            .addComponent(collectedProduceBtn, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(typeOfJobField, GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
+                            .addComponent(pricePerWorkerField, GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
+                            .addComponent(descriptionField, GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)))
+                    .addGroup(mainContainerLayout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(locationInfoTitle)))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
+                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                    .addGroup(GroupLayout.Alignment.TRAILING, mainContainerLayout.createSequentialGroup()
+                        .addComponent(createBtn, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cancelBtn, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE))
+                    .addComponent(addWorkersBtn, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 394, Short.MAX_VALUE)
+                    .addComponent(scrollableListContainer, GroupLayout.Alignment.TRAILING))
+                .addGap(49, 49, 49))
         );
         mainContainerLayout.setVerticalGroup(
-                mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(mainContainerLayout.createSequentialGroup()
-                                .addGap(43, 43, 43)
-                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(locationLabel)
-                                        .addComponent(locationField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(addWorkersBtn, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE))
-                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addGroup(mainContainerLayout.createSequentialGroup()
-                                                .addGap(11, 11, 11)
-                                                .addComponent(locationInfoTitle)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(cityLabel)
-                                                        .addComponent(cityField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                .addGap(40, 40, 40)
-                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(streetLabel)
-                                                        .addComponent(streetField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(streetNoField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                .addGap(40, 40, 40)
-                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(postalCodeLabel)
-                                                        .addComponent(postalCodeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                .addGap(42, 42, 42)
-                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(townLabel)
-                                                        .addComponent(townField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                .addGap(40, 40, 40)
-                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(descriptionLabel)
-                                                        .addComponent(descriptionField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-                                        .addGroup(mainContainerLayout.createSequentialGroup()
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(scrollableListContainer, GroupLayout.PREFERRED_SIZE, 355, GroupLayout.PREFERRED_SIZE)))
-                                .addGap(50, 50, 50)
-                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(collectedProduceBtn, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(cancelBtn, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(createBtn, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(56, Short.MAX_VALUE))
+            mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(mainContainerLayout.createSequentialGroup()
+                .addGap(43, 43, 43)
+                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(clientLabel)
+                    .addComponent(addWorkersBtn, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(clientComboBox, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE))
+                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(mainContainerLayout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(nameLabel)
+                            .addComponent(nameField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                        .addGap(20, 20, 20)
+                        .addComponent(locationInfoTitle)
+                        .addGap(20, 20, 20)
+                        .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(streetLabel)
+                            .addComponent(streetNameField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(streetNoField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                        .addGap(32, 32, 32)
+                        .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(postalCodeLabel)
+                            .addComponent(postalCodeField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                        .addGap(32, 32, 32)
+                        .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(typeOfJobLabel)
+                            .addComponent(typeOfJobField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                        .addGap(32, 32, 32)
+                        .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(pricePerWorkerLabel)
+                            .addComponent(pricePerWorkerField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                        .addGap(32, 32, 32)
+                        .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(descriptionLabel)
+                            .addComponent(descriptionField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(mainContainerLayout.createSequentialGroup()
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(scrollableListContainer, GroupLayout.PREFERRED_SIZE, 355, GroupLayout.PREFERRED_SIZE)))
+                .addGap(24, 24, 24)
+                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(collectedProduceBtn, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cancelBtn, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(createBtn, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(32, Short.MAX_VALUE))
         );
 
-        add(mainContainer, new AbsoluteConstraints(0, 110, 1000, 610));
+        add(mainContainer, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 110, 1000, 610));
     }
 
-    public void configureField(JTextField field,String text){
+    private DefaultComboBoxModel<Client> getComboBoxModel(List<Client> clients) {
+        Client[] comboBoxModel = clients.toArray(new Client[0]);
+        return new DefaultComboBoxModel<>(comboBoxModel);
+    }
+
+    private void pricePerWorkerFieldActionPerformed(ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void addWorkersBtnActionPerformed(ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void typeOfJobFieldActionPerformed(ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+    private void postalCodeFieldActionPerformed(ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void streetNameFieldActionPerformed(ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void streetNoFieldActionPerformed(ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void nameFieldActionPerformed(ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void createBtnActionPerformed(ActionEvent evt) {
+        Client selectClient = (Client) clientComboBox.getSelectedItem();
+        String clientCVR = selectClient.getCvr();
+
+        String name = nameField.getText();
+        String description = descriptionField.getText();
+        String streetName = streetNameField.getText();
+        String streetNum = streetNoField.getText();
+        String zip = postalCodeField.getText();
+        String typeOfJob = typeOfJobField.getText();
+        double pricePerWorker = Double.parseDouble(pricePerWorkerField.getText());
+
+        WorkSite newWorkSite = new WorkSite(name, description, streetName, streetNum, zip, "Denmark",
+                "DK", typeOfJob, pricePerWorker);
+
+        try {
+            if (workSiteCtr.insertWorkSite(clientCVR, newWorkSite)) {
+                new StatusDialog(mainScreen, false, StatusDialog.CONFIRM, "SUCCESS", "Successfully added new work site.");
+            } else {
+                new StatusDialog(mainScreen, false, StatusDialog.WARNING, "Error adding a new work site", "Check " +
+                        "provided fields");
+            }
+        } catch (DataAccessException e) {
+            // TODO FIXME StatusDialog here
+            // TODO price per worker validation
+            System.err.println("DataAccessException");
+        }
+    }
+
+    private void descriptionFieldActionPerformed(ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void configureField(JTextField field,String hintText){
+        field.setUI(new JTextFieldHintUI(hintText,Color.GRAY));
         field.setMinimumSize(new Dimension(65, 26));
         field.setPreferredSize(new Dimension(65, 26));
-        field.setUI(new JTextFieldHintUI(text,Color.GRAY));
     }
-    
+
+    private void configureLabel(JLabel label, String labelText){
+        label.setText(labelText);
+        label.setFont(new Font("Dialog", Font.BOLD, 18));
+        label.setForeground(new Color(249, 249, 249));
+        label.setIcon(ComponentsConfigure.locationIcon);
+        label.setFocusable(false);
+    }
     private JButton addWorkersBtn;
     private JButton cancelBtn;
-    private JTextField cityField;
-    private JLabel cityLabel;
+    private JComboBox<Client> clientComboBox;
+    private JLabel clientLabel;
     private JButton collectedProduceBtn;
     private JButton createBtn;
     private JTextField descriptionField;
     private JLabel descriptionLabel;
-    private JTextField locationField;
     private JLabel locationInfoTitle;
-    private JLabel locationLabel;
     private JPanel mainContainer;
+    private JTextField nameField;
+    private JLabel nameLabel;
     private JTextField postalCodeField;
     private JLabel postalCodeLabel;
+    private JTextField pricePerWorkerField;
+    private JLabel pricePerWorkerLabel;
     private JScrollPane scrollableListContainer;
-    private JTextField streetField;
     private JLabel streetLabel;
+    private JTextField streetNameField;
     private JTextField streetNoField;
     private JLabel taskTitle;
     private JPanel topBar;
-    private JTextField townField;
-    private JLabel townLabel;
+    private JTextField typeOfJobField;
+    private JLabel typeOfJobLabel;
     private JList<String> workerList;
+
+    private ArrayList<Client> clients;
 }

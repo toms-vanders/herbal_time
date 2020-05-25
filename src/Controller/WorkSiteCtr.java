@@ -19,6 +19,15 @@ public class WorkSiteCtr implements WorkSiteCtrIF{
     }
 
     @Override
+    public WorkSite findByID(int workSiteID,boolean fullAssociation) throws DataAccessException {
+        try{
+            return workSiteDB.findByID(workSiteID,fullAssociation);
+        }catch (DataAccessException e){
+            throw new DataAccessException("Unable to retrive worksite by ID, controller level.",e);
+        }
+    }
+
+    @Override
     public List<WorkSite> listAllWorkSites(boolean fullAssociation) throws DataAccessException {
         try {
             return workSiteDB.findAll(fullAssociation);
@@ -28,16 +37,28 @@ public class WorkSiteCtr implements WorkSiteCtrIF{
     }
 
     @Override
-    public int insertWorkSite(String cvr, WorkSite newWorkSite) throws DataAccessException {
+    public Boolean insertWorkSite(String cvr, WorkSite newWorkSite) throws DataAccessException {
         try {
-            return workSiteDB.insertWorkSite(cvr, newWorkSite);
+            if (workSiteDB.insertWorkSite(cvr, newWorkSite) == 1) {
+                return true;
+            }
         } catch (DataAccessException e) {
             throw new DataAccessException("WorkSiteCtr error", e);
         }
+        return false;
     }
 
     @Override
-    public int updateWorkSite(String workSiteID, WorkSite newWorkSite) throws DataAccessException {
+    public int updateWorkSite(int workSiteID, WorkSite newWorkSite) throws DataAccessException {
         return 0;
+    }
+
+    @Override
+    public WorkSite findByWorkerCPR(String cpr, boolean fullAssociation) throws DataAccessException {
+        try{
+            return workSiteDB.findByWorkerCPR(cpr,fullAssociation);
+        }catch (DataAccessException e){
+            throw new DataAccessException("Unable to retrieve worksite based on seasonal worker CPR.", e);
+        }
     }
 }

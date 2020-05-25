@@ -5,10 +5,16 @@ import java.awt.*;
 
 public class StatusDialog extends JDialog {
 
-    public StatusDialog(JFrame parent,boolean modal,String title, String errorMsg) {
+    public static final ImageIcon WARNING = new ImageIcon(StatusDialog.class.getResource("/icons8_error_100px.png"));
+    public static final ImageIcon CONFIRM = new ImageIcon(StatusDialog.class.getResource("/icons8_ok_100px_1.png"));
+
+    public ImageIcon typeOfDialog;
+
+    public StatusDialog(JFrame parent,boolean modal,ImageIcon typeOfDialog,String title, String msg) {
         super(parent,modal);
         setTitle(title);
-        this.errorMsg = errorMsg;
+        this.msg = msg;
+        this.typeOfDialog = typeOfDialog;
         initComponents();
         setVisible(true);
     }
@@ -27,7 +33,7 @@ public class StatusDialog extends JDialog {
         setPreferredSize(new java.awt.Dimension(400, 200));
         setLayout(new java.awt.GridBagLayout());
 
-        errorIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons8_error_100px.png"))); // NOI18N
+        errorIcon.setIcon(typeOfDialog); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -35,7 +41,7 @@ public class StatusDialog extends JDialog {
         gridBagConstraints.insets = new Insets(20, 150, 0, 150);
         add(errorIcon, gridBagConstraints);
 
-        errorText.setText(errorMsg);
+        errorText.setText(msg);
         errorText.setForeground(Color.WHITE);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -65,6 +71,6 @@ public class StatusDialog extends JDialog {
     private javax.swing.JLabel errorText;
     private javax.swing.JLabel errorIcon;
     private javax.swing.JButton okBtn;
-    private String errorMsg;
+    private String msg;
     // End of variables declaration
 }

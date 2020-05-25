@@ -1,7 +1,9 @@
 package DB;
 
 import Controller.DataAccessException;
+import Model.SeasonalWorker;
 import Model.WorkSite;
+import Model.WorkType;
 
 import javax.xml.crypto.Data;
 import java.lang.reflect.Type;
@@ -19,7 +21,8 @@ public class WorkSiteDB implements WorkSiteDBIF {
     private static final String findAll = "SELECT * FROM WorkSite";
     private static final String findByID = "SELECT * FROM WorkSite WHERE workSiteID = ?";
     private static final String findWorkSitesOfClient = "SELECT * FROM WorkSite WHERE cvr = ?";
-    private static final String insertWorkSite = "INSERT INTO WorkSite VALUES (?,?,?,?,?,?,?,?,?,?)";
+    private static final String insertWorkSite = "INSERT INTO WorkSite(siteName, siteDescription, streetName, streetNum," +
+            " zip, typeOfJob, pricePerWorker, cvr) VALUES (?,?,?,?,?,?,?,?)";
     private static final String updateWorkSite = "UPDATE WorkSite SET "
             + "siteName = ?,"
             + "siteDescription = ?,"
@@ -33,6 +36,10 @@ public class WorkSiteDB implements WorkSiteDBIF {
 //            + "cvr = ? "
             + "WHERE workSiteID = ?";
     private static final String deleteWorkSite = "DELETE FROM Worksite WHERE workSiteID = ?";
+    private static final String findWorkSiteByCPR = "SELECT * FROM WorkSite " +
+            "WHERE workSiteID = " +
+            "(SELECT wSiteID FROM SeasonalWorker " +
+            "WHERE SeasonalWorker.cpr = ?)";
     /**
      * PreparedStatement declarations for the above queries
      */
@@ -43,12 +50,13 @@ public class WorkSiteDB implements WorkSiteDBIF {
     private PreparedStatement PSupdateWorkSite;
     private PreparedStatement PSdeleteWorkSite;
     private PreparedStatement PSfindWorkSitesOfClient;
+    private PreparedStatement PSfindWorkSiteByCPR;
 
     public WorkSiteDB() throws DataAccessException {
-        init();
+//        init();
     }
 
-    private void connectToDB() throws DataAccessException{
+    private void connectToDB() throws DataAccessException {
         DBConnection.connect();
         if (DBConnection.instanceIsNull()) {
             throw new DataAccessException("Couldn't connect and read from database; throwing to GUI", new Exception());
@@ -69,6 +77,7 @@ public class WorkSiteDB implements WorkSiteDBIF {
             PSupdateWorkSite = con.prepareStatement(updateWorkSite);
             PSdeleteWorkSite = con.prepareStatement(deleteWorkSite);
             PSfindWorkSitesOfClient = con.prepareStatement(findWorkSitesOfClient);
+            PSfindWorkSiteByCPR = con.prepareStatement(findWorkSiteByCPR);
             DBConnection.disconnect();
         } catch (SQLException e) {
             DBConnection.disconnect();
@@ -111,7 +120,7 @@ public class WorkSiteDB implements WorkSiteDBIF {
     /**
      * Queries database for all work sites of a client
      *
-     * @param cvr CVR of client
+     * @param cvr             CVR of client
      * @param fullAssociation specifies whether to build results with the objects the foreign keys point to or not
      * @return if found - an ArrayList of work sites a client has, otherwise an empty ArrayList
      * @throws DataAccessException
@@ -147,6 +156,39 @@ public class WorkSiteDB implements WorkSiteDBIF {
     }
 
     @Override
+    public WorkSite findByWorkerCPR(String cpr, boolean fullAssociation) throws DataAccessException {
+        connectToDB();
+        Connection con = DBConnection.getInstance().getConnection();
+        try {
+            PSfindWorkSiteByCPR = con.prepareStatement(findWorkSiteByCPR);
+        } catch (SQLException e) {
+            DBConnection.disconnect();
+            throw new DataAccessException("Issue preparing statement", e);
+        }
+
+        try {
+            PSfindWorkSiteByCPR.setString(1, cpr);
+        } catch (SQLException e) {
+            DBConnection.disconnect();
+            throw new DataAccessException("Issue with setting up query parameters when loading work site.", e);
+        }
+
+        ResultSet rs;
+        try {
+            rs = PSfindWorkSiteByCPR.executeQuery();
+            rs.next();
+            WorkSite res = buildObject(rs, fullAssociation);
+            if (!DBConnection.instanceIsNull()) {
+                DBConnection.disconnect();
+            }
+            return res;
+        } catch (SQLException e) {
+            DBConnection.disconnect();
+            throw new DataAccessException("Error with fetching a specific SeasonalWorker from DB.", e);
+        }
+    }
+
+    @Override
     public WorkSite findByID(int workSiteID, boolean fullAssociation) throws DataAccessException {
         connectToDB();
         Connection con = DBConnection.getInstance().getConnection();
@@ -168,6 +210,7 @@ public class WorkSiteDB implements WorkSiteDBIF {
         ResultSet rs;
         try {
             rs = PSfindByID.executeQuery();
+            rs.next();
             WorkSite res = buildObject(rs, fullAssociation);
             DBConnection.disconnect();
             return res;
@@ -204,11 +247,11 @@ public class WorkSiteDB implements WorkSiteDBIF {
             PSinsertWorkSite.setString(3, newWorkSite.getStreetName());
             PSinsertWorkSite.setString(4, newWorkSite.getStreetNum());
             PSinsertWorkSite.setString(5, newWorkSite.getZip());
-            PSinsertWorkSite.setString(6, newWorkSite.getCountryCode());
-            PSinsertWorkSite.setString(7, newWorkSite.getCountry());
-            PSinsertWorkSite.setString(8, newWorkSite.getTypeOfJob());
-            PSinsertWorkSite.setDouble(9, newWorkSite.getPricePerWorker());
-            PSinsertWorkSite.setString(10, cvr);
+            //PSinsertWorkSite.setString(6, newWorkSite.getCountryCode()); // TODO delete
+            //PSinsertWorkSite.setString(7, newWorkSite.getCountry()); // TODO delete
+            PSinsertWorkSite.setString(6, newWorkSite.getTypeOfJob());
+            PSinsertWorkSite.setDouble(7, newWorkSite.getPricePerWorker());
+            PSinsertWorkSite.setString(8, cvr);
         } catch (SQLException e) {
             DBConnection.disconnect();
             throw new DataAccessException("Issue with setting up query parameters when adding new work site", e);
@@ -274,7 +317,6 @@ public class WorkSiteDB implements WorkSiteDBIF {
             throw new DataAccessException("Issue preparing statement", e);
         }
 
-        Integer affectedRows;
         try {
             PSdeleteWorkSite.setInt(1, workSiteID);
         } catch (SQLException e) {
@@ -282,6 +324,7 @@ public class WorkSiteDB implements WorkSiteDBIF {
             throw new DataAccessException("Issue with setting up query parameters when deleting a work site", e);
         }
 
+        Integer affectedRows;
         try {
             affectedRows = PSdeleteWorkSite.executeUpdate();
             DBConnection.disconnect();
@@ -295,7 +338,7 @@ public class WorkSiteDB implements WorkSiteDBIF {
     /**
      * Generates and returns WorkSite objects based on the ResultSet returned by the query
      *
-     * @param rs ResultSet object filled with results of a query
+     * @param rs              ResultSet object filled with results of a query
      * @param fullAssociation specifies whether to build results with the objects the foreign keys point to or not
      * @return ArrayList of built objects
      * @throws DataAccessException
@@ -307,7 +350,9 @@ public class WorkSiteDB implements WorkSiteDBIF {
                 WorkSite currentWorkSite = buildObject(rs, fullAssociation);
                 res.add(currentWorkSite);
             }
-            DBConnection.disconnect();
+            if (!DBConnection.instanceIsNull()) {
+                DBConnection.disconnect();
+            }
             return res;
         } catch (SQLException e) {
             DBConnection.disconnect();
@@ -318,7 +363,7 @@ public class WorkSiteDB implements WorkSiteDBIF {
     /**
      * Builds a single WorkSite object
      *
-     * @param rs ResultSet object filled with results of a query
+     * @param rs              ResultSet object filled with results of a query
      * @param fullAssociation specifies whether to build results with the objects the foreign keys point to or not
      * @return new WorkSite object
      * @throws DataAccessException
@@ -339,11 +384,18 @@ public class WorkSiteDB implements WorkSiteDBIF {
             currentWorkSite.setPricePerWorker(rs.getDouble("pricePerWorker"));
 //                currentWorkSite.setClientCvr(rs.getString("cvr"));
             if (fullAssociation) {
-
+                WorkTypeDB wtDB = new WorkTypeDB();
+                List<WorkType> workTypes = new ArrayList<>(wtDB.findAllWorkTypesOfWorkSite(
+                        rs.getInt("workSiteID"), false));
+                if (!workTypes.isEmpty()) {
+                    currentWorkSite.setWorkTypes((ArrayList<WorkType>) workTypes);
+                } else {
+                    currentWorkSite.setWorkTypes(new ArrayList<>());
+                }
             }
         } catch (SQLException e) {
             throw new DataAccessException("Issue with loading work site from the database (in buildObject", e);
         }
-        return  currentWorkSite;
+        return currentWorkSite;
     }
 }

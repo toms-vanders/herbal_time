@@ -48,9 +48,9 @@ public class WorkTaskCtr implements WorkTaskCtrIF {
     }
 
     @Override
-    public int insertWorkTask(WorkTask newWorkTask, String workerCpr) throws DataAccessException {
+    public boolean insertWorkTask(WorkTask newWorkTask, String workerCpr) throws DataAccessException {
         try {
-            return workTaskDB.insertWorkTask(newWorkTask, workerCpr);
+            return workTaskDB.insertWorkTask(newWorkTask, workerCpr) == 1;
         } catch(DataAccessException e) {
             throw new DataAccessException("WorkTaskCtr error.", e);
         }
