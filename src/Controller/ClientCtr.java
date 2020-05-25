@@ -12,11 +12,7 @@ public class ClientCtr implements ClientCtrIF {
     ClientDB clientDB;
 
     public ClientCtr() throws DataAccessException {
-        try {
-            clientDB = new ClientDB();
-        } catch (DataAccessException e) {
-            throw new DataAccessException("Unable to obtain client database instance.", e);
-        }
+        clientDB = new ClientDB();
     }
 
     public List<Client> findAllClients() throws DataAccessException {

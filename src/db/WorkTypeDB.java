@@ -41,30 +41,25 @@ public class WorkTypeDB implements WorkTypeDBIF {
     }
 
 
-    // TODO
-    // This should be made obsolete or Fixed ASAP (otherwise NullPointerException)
-    // In order to do that, find methods where preparing statements wasn't yet moved into corresponding bodies,
-    // and move it there
-
-    /**
-     * Initialize DB connection and prepare SQL statements
-     *
-     * @throws DataAccessException Throw an exception on statements that cannot be prepared
-     */
-    private void init() throws DataAccessException {
-        connectToDB();
-        Connection con = DBConnection.getInstance().getConnection();
-        try {
-            PSfindAll = con.prepareStatement(findAll);
-            PSfindByID = con.prepareStatement(findByID);
-            PSinsertWorkType = con.prepareStatement(insertWorkType);
-            PSupdateWorkType = con.prepareStatement(updateWorkType);
-            PSdeleteWorkType = con.prepareStatement(deleteWorkType);
-            PSfindByWorkSite = con.prepareStatement(findByWorkSite);
-        } catch (SQLException e) {
-            throw new DataAccessException("Issue with preparing database statement", e);
-        }
-    }
+//    /**
+//     * Initialize DB connection and prepare SQL statements
+//     *
+//     * @throws DataAccessException Throw an exception on statements that cannot be prepared
+//     */
+//    private void init() throws DataAccessException {
+//        connectToDB();
+//        Connection con = DBConnection.getInstance().getConnection();
+//        try {
+//            PSfindAll = con.prepareStatement(findAll);
+//            PSfindByID = con.prepareStatement(findByID);
+//            PSinsertWorkType = con.prepareStatement(insertWorkType);
+//            PSupdateWorkType = con.prepareStatement(updateWorkType);
+//            PSdeleteWorkType = con.prepareStatement(deleteWorkType);
+//            PSfindByWorkSite = con.prepareStatement(findByWorkSite);
+//        } catch (SQLException e) {
+//            throw new DataAccessException("Issue with preparing database statement", e);
+//        }
+//    }
 
     private void connectToDB() throws DataAccessException{
         DBConnection.connect();

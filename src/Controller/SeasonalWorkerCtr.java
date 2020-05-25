@@ -10,11 +10,7 @@ public class SeasonalWorkerCtr implements SeasonalWorkerCtrIF{
     SeasonalWorkerIF seasonalWorkerDB;
 
     public SeasonalWorkerCtr() throws DataAccessException {
-        try {
-            seasonalWorkerDB = new SeasonalWorkerDB();
-        } catch (DataAccessException e) {
-            throw new DataAccessException("Unable to obtain seasonal worker database instance.", e);
-        }
+        seasonalWorkerDB = new SeasonalWorkerDB();
     }
 
     @Override

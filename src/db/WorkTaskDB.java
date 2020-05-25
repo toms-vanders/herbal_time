@@ -31,7 +31,7 @@ public class WorkTaskDB implements WorkTaskDBIF {
             + "workTypeID = ? "
 //            + "workerCPR = ? "
             + "WHERE workTaskID = ? ";
-
+    private static final String findAllPending = "SELECT * FROM WorkTask WHERE taskStatus = 'PENDING APPROVAL' OR  taskStatus = 'PENDING'";
     /**
      * Prepared statement declaration for the above queries
      */
@@ -41,14 +41,17 @@ public class WorkTaskDB implements WorkTaskDBIF {
     private PreparedStatement PSinsertWorkTask;
     private PreparedStatement PSupdateWorkTask;
     private PreparedStatement PSdeleteWorkTask;
+    private PreparedStatement PSfindAllPending;
+
+    public WorkTaskDB() throws DataAccessException {
+
+    }
 
 
-
-    // TODO
-    // This should be made obsolete ASAP
-    // In order to do that, find methods where preparing statements wasn't yet moved into corresponding bodies,
-    // and move it there
-    public WorkTaskDB() throws DataAccessException{
+////     This should be made obsolete ASAP
+////     In order to do that, find methods where preparing statements wasn't yet moved into corresponding bodies,
+////     and move it there
+//    private void init() throws DataAccessException {
 //        connectToDB();
 //        Connection con = DBConnection.getInstance().getConnection();
 //        try {
@@ -61,7 +64,7 @@ public class WorkTaskDB implements WorkTaskDBIF {
 //        } catch (SQLException e) {
 //            throw new DataAccessException("WorkTaskDB error.", e);
 //        }
-    }
+//    }
 
     private void connectToDB() throws DataAccessException{
         DBConnection.connect();
@@ -91,6 +94,26 @@ public class WorkTaskDB implements WorkTaskDBIF {
 
         try {
             rs = PSfindAllWorkTasksOfWorker.executeQuery();
+        } catch (SQLException e) {
+            DBConnection.disconnect();
+            throw new DataAccessException("Issue with retrieving work types from the database (executeQuery)", e);
+        }
+        return buildObjects(rs, fullAssociation);
+    }
+
+    @Override
+    public List<WorkTask> findAllPendingTasks(boolean fullAssociation) throws DataAccessException {
+        connectToDB();
+        Connection con = DBConnection.getInstance().getConnection();
+        try {
+            PSfindAllPending = con.prepareStatement(findAllPending);
+        } catch (SQLException e) {
+            DBConnection.disconnect();
+            throw new DataAccessException("Issue preparing statement", e);
+        }
+        ResultSet rs;
+        try {
+            rs = PSfindAllPending.executeQuery();
         } catch (SQLException e) {
             DBConnection.disconnect();
             throw new DataAccessException("Issue with retrieving work types from the database (executeQuery)", e);
@@ -162,8 +185,6 @@ public class WorkTaskDB implements WorkTaskDBIF {
             throw new DataAccessException("Issue preparing statement", e);
         }
 
-        Integer affectedRows;
-//        Integer genKey = null;
         try {
             PSinsertWorkTask.setDouble(1, workTask.getHoursWorked());
             PSinsertWorkTask.setDouble(2, workTask.getQuantity());
@@ -177,10 +198,10 @@ public class WorkTaskDB implements WorkTaskDBIF {
             throw new DataAccessException("There was a problem with the workTask being inserted into DB.", e);
         }
 
+        Integer affectedRows;
         try {
             affectedRows = PSinsertWorkTask.executeUpdate();
             DBConnection.disconnect();
-//            genKey = PSinsertWorkTask.getGeneratedKeys().getInt(1);
         } catch (SQLException e) {
             DBConnection.disconnect();
             throw new DataAccessException("There was a problem with inserting workTask into DB.", e);
@@ -199,15 +220,13 @@ public class WorkTaskDB implements WorkTaskDBIF {
             throw new DataAccessException("Issue preparing statement", e);
         }
 
-        // TODO change gen key to affectedRows like above
-        Integer genKey = null;
         try {
             PSupdateWorkTask.setDouble(1,workTask.getHoursWorked());
             PSupdateWorkTask.setDouble(2,workTask.getQuantity());
             PSupdateWorkTask.setDate(3,workTask.getDateStart());
             PSupdateWorkTask.setDate(4,workTask.getDateEnd());
             PSupdateWorkTask.setString(5,workTask.getStatus());
-            PSinsertWorkTask.setInt(6, workTask.getWorkType().getWorkTypeID());
+            PSupdateWorkTask.setInt(6, workTask.getWorkType().getWorkTypeID());
 //            PSupdateWorkTask.setString(7,workerCpr);
             PSupdateWorkTask.setInt(7, workTaskID);
         }
@@ -215,17 +234,17 @@ public class WorkTaskDB implements WorkTaskDBIF {
             DBConnection.disconnect();
             throw new DataAccessException("There was a problem with the workTask being updated in DB.",e);
         }
-        try
-        {
-            PSupdateWorkTask.executeQuery();
-            genKey = PSupdateWorkTask.getGeneratedKeys().getInt(1);
+
+        Integer affectedRows;
+        try {
+            affectedRows = PSupdateWorkTask.executeUpdate();
             DBConnection.disconnect();
         }
         catch (SQLException e) {
             DBConnection.disconnect();
             throw new DataAccessException("There was a problem with updating workTask in DB.",e);
         }
-        return genKey;
+        return affectedRows;
     }
 
     @Override

@@ -29,8 +29,8 @@ public class WorkSiteDB implements WorkSiteDBIF {
             + "streetName = ?,"
             + "streetNum = ?,"
             + "zip = ?,"
-            + "countryCode = ?,"
-            + "country = ?,"
+//            + "countryCode = ?,"
+//            + "country = ?,"
             + "typeOfJob = ?,"
             + "pricePerWorker = ?,"
 //            + "cvr = ? "
@@ -63,27 +63,26 @@ public class WorkSiteDB implements WorkSiteDBIF {
         }
     }
 
-    // TODO
-    // This should be made obsolete ASAP
-    // In order to do that, find methods where preparing statements wasn't yet moved into corresponding bodies,
-    // and move it there
-    private void init() throws DataAccessException {
-        connectToDB();
-        Connection con = DBConnection.getInstance().getConnection();
-        try {
-            PSfindAll = con.prepareStatement(findAll);
-            PSfindByID = con.prepareStatement(findByID);
-            PSinsertWorkSite = con.prepareStatement(insertWorkSite);
-            PSupdateWorkSite = con.prepareStatement(updateWorkSite);
-            PSdeleteWorkSite = con.prepareStatement(deleteWorkSite);
-            PSfindWorkSitesOfClient = con.prepareStatement(findWorkSitesOfClient);
-            PSfindWorkSiteByCPR = con.prepareStatement(findWorkSiteByCPR);
-            DBConnection.disconnect();
-        } catch (SQLException e) {
-            DBConnection.disconnect();
-            throw new DataAccessException("Issue with preparing database statements", e);
-        }
-    }
+//    // This should be made obsolete ASAP
+//    // In order to do that, find methods where preparing statements wasn't yet moved into corresponding bodies,
+//    // and move it there
+//    private void init() throws DataAccessException {
+//        connectToDB();
+//        Connection con = DBConnection.getInstance().getConnection();
+//        try {
+//            PSfindAll = con.prepareStatement(findAll);
+//            PSfindByID = con.prepareStatement(findByID);
+//            PSinsertWorkSite = con.prepareStatement(insertWorkSite);
+//            PSupdateWorkSite = con.prepareStatement(updateWorkSite);
+//            PSdeleteWorkSite = con.prepareStatement(deleteWorkSite);
+//            PSfindWorkSitesOfClient = con.prepareStatement(findWorkSitesOfClient);
+//            PSfindWorkSiteByCPR = con.prepareStatement(findWorkSiteByCPR);
+//            DBConnection.disconnect();
+//        } catch (SQLException e) {
+//            DBConnection.disconnect();
+//            throw new DataAccessException("Issue with preparing database statements", e);
+//        }
+//    }
 
 
     /**
@@ -247,8 +246,6 @@ public class WorkSiteDB implements WorkSiteDBIF {
             PSinsertWorkSite.setString(3, newWorkSite.getStreetName());
             PSinsertWorkSite.setString(4, newWorkSite.getStreetNum());
             PSinsertWorkSite.setString(5, newWorkSite.getZip());
-            //PSinsertWorkSite.setString(6, newWorkSite.getCountryCode()); // TODO delete
-            //PSinsertWorkSite.setString(7, newWorkSite.getCountry()); // TODO delete
             PSinsertWorkSite.setString(6, newWorkSite.getTypeOfJob());
             PSinsertWorkSite.setDouble(7, newWorkSite.getPricePerWorker());
             PSinsertWorkSite.setString(8, cvr);
@@ -285,12 +282,11 @@ public class WorkSiteDB implements WorkSiteDBIF {
             PSupdateWorkSite.setString(3, newWorkSite.getStreetName());
             PSupdateWorkSite.setString(4, newWorkSite.getStreetNum());
             PSupdateWorkSite.setString(5, newWorkSite.getZip());
-            PSupdateWorkSite.setString(6, newWorkSite.getCountryCode());
-            PSupdateWorkSite.setString(7, newWorkSite.getCountry());
-            PSupdateWorkSite.setString(8, newWorkSite.getTypeOfJob());
-            PSupdateWorkSite.setDouble(9, newWorkSite.getPricePerWorker());
-//            PSupdateWorkSite.setString(10, newWorkSite.()); // todo - no getCVR method?
-
+//            PSupdateWorkSite.setString(6, newWorkSite.getCountryCode());
+//            PSupdateWorkSite.setString(7, newWorkSite.getCountry());
+            PSupdateWorkSite.setString(6, newWorkSite.getTypeOfJob());
+            PSupdateWorkSite.setDouble(7, newWorkSite.getPricePerWorker());
+            PSupdateWorkSite.setInt(8, workSiteID);
         } catch (SQLException e) {
             DBConnection.disconnect();
             throw new DataAccessException("Issue with setting up query parameters when adding new work site", e);

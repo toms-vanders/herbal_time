@@ -240,6 +240,13 @@ public class RegisterWorkTask extends JPanel {
             quantity = (int) quantitySpinner.getValue();
         }
 
+        // TODO
+        // check if end date is not earlier than start date
+
+        // TODO (Maybe?) At least that's how it's in the report
+        // should notify team leader
+
+        // Maybe this should be put in try catch too since it's calling a method inside a controller
         if (workTaskController.insertWorkTask(new WorkTask(workSiteID,
                         hoursWorked,
                         quantity,

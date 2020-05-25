@@ -2,6 +2,7 @@ package DB;
 
 import Controller.DataAccessException;
 import Model.Client;
+import Model.WorkSite;
 
 import java.lang.reflect.Type;
 import java.sql.*;
@@ -42,8 +43,8 @@ public class ClientDB implements ClientDBIF {
 
 
 
-    public ClientDB() throws DataAccessException{
-        init();
+    public ClientDB() {
+//        init();
     }
 
     private void connectToDB() throws DataAccessException{
@@ -53,32 +54,30 @@ public class ClientDB implements ClientDBIF {
         }
     }
 
-    // TODO
-    // This should be made obsolete ASAP
-    // In order to do that, find methods where preparing statements wasn't yet moved into corresponding bodies,
-    // and move it there
-    /**
-     * Initialize DB connection and prepare SQL statements
-     *
-     * @throws DataAccessException Throw an exception on statements that cannot be prepared
-     */
-    private void init() throws DataAccessException {
-        connectToDB();
-        Connection con = DBConnection.getInstance().getConnection();
-        try {
-            PSfindAll = con.prepareStatement(findAll);
-            PSfindClientByCVR = con.prepareStatement(findClientByCVR);
-            PSinsertClient = con.prepareStatement(insertClient);
-            PSupdateClient = con.prepareStatement(updateClient);
-            PSdeleteClientByCVR = con.prepareStatement(deleteClientByCVR);
-            DBConnection.disconnect();
-        } catch (SQLException e) {
-            DBConnection.disconnect();
-            throw new DataAccessException("ClientDB could not initialize.", e);
-        }
-    }
 
-
+//    // This should be made obsolete ASAP
+//    // In order to do that, find methods where preparing statements wasn't yet moved into corresponding bodies,
+//    // and move it there
+//    /**
+//     * Initialize DB connection and prepare SQL statements
+//     *
+//     * @throws DataAccessException Throw an exception on statements that cannot be prepared
+//     */
+//    private void init() throws DataAccessException {
+//        connectToDB();
+//        Connection con = DBConnection.getInstance().getConnection();
+//        try {
+//            PSfindAll = con.prepareStatement(findAll);
+//            PSfindClientByCVR = con.prepareStatement(findClientByCVR);
+//            PSinsertClient = con.prepareStatement(insertClient);
+//            PSupdateClient = con.prepareStatement(updateClient);
+//            PSdeleteClientByCVR = con.prepareStatement(deleteClientByCVR);
+//            DBConnection.disconnect();
+//        } catch (SQLException e) {
+//            DBConnection.disconnect();
+//            throw new DataAccessException("ClientDB could not initialize.", e);
+//        }
+//    }
 
     @Override
     public List<Client> findAll(boolean fullAssociation, Type type) throws DataAccessException {
@@ -279,7 +278,15 @@ public class ClientDB implements ClientDBIF {
                 currentClient.setDateEnd(rs.getDate("dateEnd"));
 
                 if (fullAssociation) {
-                    //TODO
+                    //TODO test it
+                    WorkSiteDB wsDB = new WorkSiteDB();
+                    List<WorkSite> workSites = new ArrayList<>(wsDB.findWorkSitesOfClient(
+                            rs.getString("cvr"), false));
+                    if (!workSites.isEmpty()) {
+                        currentClient.setWorkSites((ArrayList<WorkSite>) workSites);
+                    } else {
+                        currentClient.setWorkSites(new ArrayList<>());
+                    }
                 }
             } else {
                 throw new DataAccessException("Could not determine type.", new Exception());

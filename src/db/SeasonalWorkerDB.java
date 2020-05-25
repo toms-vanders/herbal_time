@@ -45,8 +45,8 @@ public class SeasonalWorkerDB implements SeasonalWorkerIF {
     private PreparedStatement PSdeleteSeasonalWorkerByCPR;
 
 
-    public SeasonalWorkerDB() throws DataAccessException{
-        init();
+    public SeasonalWorkerDB() {
+//        init();
     }
 
     /**
@@ -62,25 +62,24 @@ public class SeasonalWorkerDB implements SeasonalWorkerIF {
         }
     }
 
-    // TODO
-    // This should be made obsolete ASAP
-    // In order to do that, find methods where preparing statements wasn't yet moved into corresponding bodies,
-    // and move it there
-    private void init() throws DataAccessException {
-        connectToDB();
-        Connection con = DBConnection.getInstance().getConnection();
-        try {
-            PSfindAll = con.prepareStatement(findAll);
-            PSfindSeasonalWorkerByCPR = con.prepareStatement(findSeasonalWorkerByCPR);
-            PSinsertSeasonalWorker = con.prepareStatement(insertSeasonalWorker);
-            PSupdateSeasonalWorker = con.prepareStatement(updateSeasonalWorker);
-            PSdeleteSeasonalWorkerByCPR = con.prepareStatement(deleteSeasonalWorkerByCPR);
-            DBConnection.disconnect();
-        } catch (SQLException e) {
-            DBConnection.disconnect();
-            throw new DataAccessException("SeasonalWorkerDB could not initialize.", e);
-        }
-    }
+//    // This should be made obsolete ASAP
+//    // In order to do that, find methods where preparing statements wasn't yet moved into corresponding bodies,
+//    // and move it there
+//    private void init() throws DataAccessException {
+//        connectToDB();
+//        Connection con = DBConnection.getInstance().getConnection();
+//        try {
+//            PSfindAll = con.prepareStatement(findAll);
+//            PSfindSeasonalWorkerByCPR = con.prepareStatement(findSeasonalWorkerByCPR);
+//            PSinsertSeasonalWorker = con.prepareStatement(insertSeasonalWorker);
+//            PSupdateSeasonalWorker = con.prepareStatement(updateSeasonalWorker);
+//            PSdeleteSeasonalWorkerByCPR = con.prepareStatement(deleteSeasonalWorkerByCPR);
+//            DBConnection.disconnect();
+//        } catch (SQLException e) {
+//            DBConnection.disconnect();
+//            throw new DataAccessException("SeasonalWorkerDB could not initialize.", e);
+//        }
+//    }
 
     @Override
     public List<SeasonalWorker> findAll(boolean fullAssociation, Type type) throws DataAccessException {

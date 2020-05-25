@@ -11,7 +11,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 
 import Controller.DataModel.*;
 
@@ -134,6 +137,56 @@ public class Dashboard extends JPanel {
             }
         });
         overviewProfile.add(profilePicture, new AbsoluteConstraints(0, 10, 100, 100));
+
+        // Damian code
+        Date date = new Date();
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        int year  = localDate.getYear();
+        int month = localDate.getMonthValue();
+        String sMonth;
+        switch (month) {
+            case 0:
+                sMonth = "January";
+                break;
+            case 1:
+                sMonth = "February";
+                break;
+            case 2:
+                sMonth = "March";
+                break;
+            case 3:
+                sMonth = "April";
+                break;
+            case 4:
+                sMonth = "May";
+                break;
+            case 5:
+                sMonth = "June";
+                break;
+            case 6:
+                sMonth = "July";
+                break;
+            case 7:
+                sMonth = "August";
+                break;
+            case 8:
+                sMonth = "September";
+                break;
+            case 9:
+                sMonth = "October";
+                break;
+            case 10:
+                sMonth = "November";
+                break;
+            case 11:
+                sMonth = "December";
+                break;
+                default:
+                    break;
+
+        }
+
+        int day = localDate.getDayOfMonth();
 
         readableDayLabel.setForeground(new Color(255, 255, 255));
         readableDayLabel.setText("Wednesday 13");

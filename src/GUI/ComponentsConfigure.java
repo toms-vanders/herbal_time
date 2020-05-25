@@ -21,6 +21,7 @@ public class ComponentsConfigure implements Serializable {
     static ImageIcon approveIcon = new ImageIcon(ComponentsConfigure.class.getResource("/icons8_approval_32px.png"));
     static ImageIcon saveIcon = new ImageIcon(ComponentsConfigure.class.getResource("/icons8_save_32px.png"));
     static ImageIcon trashIcon = new ImageIcon(ComponentsConfigure.class.getResource("/icons8_trash_can_32px.png"));
+    static ImageIcon viewIcon = new ImageIcon(ComponentsConfigure.class.getResource("/icons8_eye_32px.png"));
 
     static Font defaultFont = new Font("Dialog", Font.BOLD, 24);
 

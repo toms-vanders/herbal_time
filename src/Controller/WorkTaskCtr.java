@@ -29,6 +29,15 @@ public class WorkTaskCtr implements WorkTaskCtrIF {
     }
 
     @Override
+    public List<WorkTask> findAllPendingTasks(boolean fullAssociation) throws DataAccessException {
+        try{
+            return workTaskDB.findAllPendingTasks(fullAssociation);
+        }catch (DataAccessException e){
+            throw new DataAccessException("Unable to execute query to retrieve pending tasks.",e);
+        }
+    }
+
+    @Override
     public List<WorkTask> findAllWorkTasks() throws DataAccessException {
         try {
             return workTaskDB.findAll(false);

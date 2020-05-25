@@ -22,6 +22,7 @@ public class MainScreen extends JFrame {
         workSiteDashboard.setVisible(false);
         createWorkSite.setVisible(false);
         clientScreen.setVisible(false);
+        pendingTasks.setVisible(false);
     }
 
     private ImageIcon connectionStatus() {
@@ -64,6 +65,7 @@ public class MainScreen extends JFrame {
         clientScreen = new ClientScreen(this);
         workersScreen = new WorkersScreen();
         employeeScreen = new EmployeeDatabaseScreen();
+        pendingTasks = new PendingTasks(this);
 //        JLabel connectionStatusIcon = new JLabel();
 //        JLabel connectionStatusLabel = new JLabel();
         createWorkSite = new CreateWorkSite(this);
@@ -249,6 +251,7 @@ public class MainScreen extends JFrame {
         getContentPane().add(workSiteDashboard, new AbsoluteConstraints(200, 90, -1, -1));
         getContentPane().add(createWorkSite,new AbsoluteConstraints(200,90,-1,-1));
         getContentPane().add(clientScreen,new AbsoluteConstraints(200,90,-1,-1));
+        getContentPane().add(pendingTasks,new AbsoluteConstraints(200,90,-1,-1));
 
         setIconImage(new ImageIcon(getClass().getResource("/icons8_potted_plant_50px_1.png")).getImage());
         pack();
@@ -311,6 +314,8 @@ public class MainScreen extends JFrame {
         ind3.setOpaque(true);
         resetColor(new JPanel[]{sidePanelBtnEmployees,sidePanelBtnWorkSites,sidePanelBtnHome,sidePanelBtnWorkers,sidePanelBtnClients},
                 new JPanel[]{ind,ind1,ind2,ind4,ind5});
+        navigation.push(pendingTasks);
+        setView(pendingTasks);
     }
 
     private void sidePanelBtnWorkersMousePressed() {
@@ -399,6 +404,10 @@ public class MainScreen extends JFrame {
             navigation.forEach(x -> x.setVisible(false));
             clientScreen.setVisible(true);
         }
+        else if (view.equals(pendingTasks)){
+            navigation.forEach(x -> x.setVisible(false));
+            pendingTasks.setVisible(true);
+        }
     }
 
     public void login() {
@@ -434,6 +443,7 @@ public class MainScreen extends JFrame {
     private String connectionStatusText;
     static CreateWorkSite createWorkSite;
     static ClientScreen clientScreen;
+    static PendingTasks pendingTasks;
 
     Stack<JPanel> navigation;
     private static boolean isLogged;

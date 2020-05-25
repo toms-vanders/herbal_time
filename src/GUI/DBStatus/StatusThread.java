@@ -53,7 +53,6 @@ public class StatusThread extends Thread {
 
 
     public void checkDBConnection() throws DataAccessException {
-        ResultSet rs;
         Connection con;
 
 //        System.out.println("Checking DB connection status:");
@@ -66,7 +65,7 @@ public class StatusThread extends Thread {
                 this.status = Status.NO_CONNECTION;
             }
 //            System.out.println("Current connection status: " + this.status);
-            statusLabel.setText(String.valueOf(status));
+            statusLabel.setText(status.toString().replaceAll("_", " "));
             statusIcon.setIcon(getIcon(status));
             return;
         }
@@ -81,13 +80,14 @@ public class StatusThread extends Thread {
             throw new DataAccessException("Issue preparing statement (status).", e);
         }
 
+        ResultSet rs;
         try {
             rs = PSCheckTables.executeQuery();
         } catch (SQLException e) {
             if (this.status != Status.NO_CONNECTION) {
                 this.status = Status.NO_CONNECTION;
 //                System.out.println("Current connection status: " + this.status);
-                statusLabel.setText(String.valueOf(status));
+                statusLabel.setText(status.toString().replaceAll("_", " "));
                 statusIcon.setIcon(getIcon(status));
             }
             dbConnection.disconnect();
@@ -99,14 +99,14 @@ public class StatusThread extends Thread {
                 if (this.status != Status.WORKING) {
                     this.status = Status.WORKING;
 //                    System.out.println("Current connection status: " + this.status);
-                    statusLabel.setText(String.valueOf(status));
+                    statusLabel.setText(status.toString().replaceAll("_", " "));
                     statusIcon.setIcon(getIcon(status));
                 }
             } else {
                 if (this.status != Status.UNABLE_TO_READ) {
                     this.status = Status.UNABLE_TO_READ;
 //                    System.out.println("Current connection status: " + this.status);
-                    statusLabel.setText(String.valueOf(status));
+                    statusLabel.setText(status.toString().replaceAll("_", " "));
                     statusIcon.setIcon(getIcon(status));
                 }
             }
@@ -114,7 +114,7 @@ public class StatusThread extends Thread {
             if (this.status != Status.UNKNOWN_ERROR) {
                 this.status = Status.UNKNOWN_ERROR;
 //                System.out.println("Current connection status: " + this.status);
-                statusLabel.setText(String.valueOf(status));
+                statusLabel.setText(status.toString().replaceAll("_", " "));
                 statusIcon.setIcon(getIcon(status));
             }
             dbConnection.disconnect();
@@ -129,7 +129,7 @@ public class StatusThread extends Thread {
         }
 
 //        System.out.println("Current connection status: " + this.status);
-        statusLabel.setText(String.valueOf(status));
+        statusLabel.setText(status.toString().replaceAll("_", " "));
         statusIcon.setIcon(getIcon(status));
         dbConnection.disconnect();
     }
