@@ -47,7 +47,7 @@ public class LoginScreen extends JPanel {
             .addComponent(userTextField, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
         );
 
-        passwordField.setUI(new JTextFieldHintUI("*******",Color.GRAY));
+        passwordField.setEchoChar('*');
 
         GroupLayout passwordPanelLayout = new GroupLayout(passwordPanel);
         passwordPanel.setLayout(passwordPanelLayout);

@@ -242,6 +242,9 @@ public class EmployeeDatabaseScreen extends JFrame {
                                       JButton mailBtn,
                                       JButton generateBtn) {
         listElement.setBackground(new Color(23, 35, 51));
+        listElement.setMaximumSize(new Dimension(975, 112));
+        listElement.setPreferredSize(new Dimension(975, 112));
+        listElement.setMinimumSize(new Dimension(975, 112));
 
         profilePicture.setIcon(new ImageIcon(getClass().getResource("/icons8_github_96px.png"))); // NOI18N
 
@@ -269,7 +272,7 @@ public class EmployeeDatabaseScreen extends JFrame {
         ComponentsConfigure.metroBtnConfig(infoBtn);
         infoBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                infoBtnActionPerformed(evt);
+                infoBtnActionPerformed(evt,cpr);
             }
         });
 
@@ -334,11 +337,16 @@ public class EmployeeDatabaseScreen extends JFrame {
         //  TODO
     }
 
-    private void infoBtnActionPerformed(ActionEvent evt) {
+    private void infoBtnActionPerformed(ActionEvent evt,String cpr) {
+        try {
+            viewEmployee = new ViewEmployee(employeeCtr.findEmployeeByCPR(cpr));
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+        }
         viewEmployee.setVisible(true);
     }
 
-    private JPanel createListContainer(){
+    private JPanel createListContainer() {
         listContainer = new JPanel();
         listContainerLayout = new GroupLayout(listContainer);
         listContainer.setLayout(listContainerLayout);

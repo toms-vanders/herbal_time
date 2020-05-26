@@ -33,8 +33,6 @@ public class PendingTasks extends JPanel {
         }
 
         //TODO: finish loading workTasks
-        pendingTasks = new ArrayList<>(workTaskController.findAllPendingTasks(true));
-        MAX_TASKS = pendingTasks.size();
         scrollableListContainer = new JScrollPane();
         listContainer = new JPanel();
         topBar = new JPanel();
@@ -172,56 +170,6 @@ public class PendingTasks extends JPanel {
         sequentialGroup = listContainerLayout.createSequentialGroup();
         listContainerLayout.setVerticalGroup(sequentialGroup);
 
-        for(int i = 0; i < MAX_TASKS; i++){
-            JPanel elementToAdd = new JPanel();
-            JLabel personName = new JLabel();
-            JLabel hoursLabel = new JLabel();
-            JLabel quantityLabel = new JLabel();
-            JLabel dateLabel = new JLabel();
-            JLabel workTaskNumberLabel = new JLabel();
-            JLabel workTypeLabel = new JLabel();
-            JLabel profilePicture = new JLabel();
-            JButton approveBtn = new JButton();
-            JButton viewBtn = new JButton();
-            JButton removeBtn = new JButton();
-            double hourNum = pendingTasks.get(i).getHoursWorked();
-            double quantityNum = pendingTasks.get(i).getQuantity();
-            Date dateValue = pendingTasks.get(i).getDateStart();
-            String workTypeValue = pendingTasks.get(i).getWorkType().getSalaryType().trim();
-            SeasonalWorker currentWorker = seasonalWorkerController.findSeasonalWorkerByWorkTask(pendingTasks.get(i).getWorkTaskID());
-            String nameValue = currentWorker.getFname() + " " + currentWorker.getLname();
-            setElementComponents(elementToAdd,
-                    pendingTasks.get(i),
-                    currentWorker,
-                    profilePicture,
-                    personName,
-                    nameValue,
-                    approveBtn,
-                    viewBtn,
-                    removeBtn,
-                    workTaskNumberLabel,
-                    i,
-                    hoursLabel,
-                    hourNum,
-                    quantityLabel,
-                    quantityNum,
-                    dateLabel,
-                    dateValue,
-                    workTypeLabel,
-                    workTypeValue);
-            setElementGroupsPosition(elementToAdd,
-                    profilePicture,
-                    personName,
-                    approveBtn,
-                    viewBtn,
-                    removeBtn,
-                    workTaskNumberLabel,
-                    hoursLabel,
-                    quantityLabel,
-                    dateLabel,
-                    workTypeLabel);
-            addElementToList(elementToAdd);
-        }
         return listContainer;
     }
 
@@ -300,6 +248,80 @@ public class PendingTasks extends JPanel {
         );
     }
 
+    private void createElements() throws DataAccessException {
+        if(MAX_TASKS > 0){
+            for(int i = 0; i < MAX_TASKS; i++){
+                JPanel elementToAdd = new JPanel();
+                JLabel personName = new JLabel();
+                JLabel hoursLabel = new JLabel();
+                JLabel quantityLabel = new JLabel();
+                JLabel dateLabel = new JLabel();
+                JLabel workTaskNumberLabel = new JLabel();
+                JLabel workTypeLabel = new JLabel();
+                JLabel profilePicture = new JLabel();
+                JButton approveBtn = new JButton();
+                JButton viewBtn = new JButton();
+                JButton removeBtn = new JButton();
+                double hourNum = pendingTasks.get(i).getHoursWorked();
+                double quantityNum = pendingTasks.get(i).getQuantity();
+                Date dateValue = pendingTasks.get(i).getDateStart();
+                String workTypeValue = pendingTasks.get(i).getWorkType().getSalaryType().trim();
+                SeasonalWorker currentWorker = seasonalWorkerController.findSeasonalWorkerByWorkTask(pendingTasks.get(i).getWorkTaskID());
+                String nameValue = currentWorker.getFname() + " " + currentWorker.getLname();
+                setElementComponents(elementToAdd,
+                        pendingTasks.get(i),
+                        currentWorker,
+                        profilePicture,
+                        personName,
+                        nameValue,
+                        approveBtn,
+                        viewBtn,
+                        removeBtn,
+                        workTaskNumberLabel,
+                        i,
+                        hoursLabel,
+                        hourNum,
+                        quantityLabel,
+                        quantityNum,
+                        dateLabel,
+                        dateValue,
+                        workTypeLabel,
+                        workTypeValue);
+                setElementGroupsPosition(elementToAdd,
+                        profilePicture,
+                        personName,
+                        approveBtn,
+                        viewBtn,
+                        removeBtn,
+                        workTaskNumberLabel,
+                        hoursLabel,
+                        quantityLabel,
+                        dateLabel,
+                        workTypeLabel);
+                addElementToList(elementToAdd);
+            }
+        }
+        listContainer.validate();
+    }
+
+    @Override
+    public void setVisible(boolean aFlag) {
+        super.setVisible(aFlag);
+        if(aFlag){
+            try {
+                loadPendingTasks();
+            } catch (DataAccessException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void loadPendingTasks() throws DataAccessException {
+        pendingTasks = new ArrayList<>(workTaskController.findAllPendingTasks(true));
+        MAX_TASKS = pendingTasks.size();
+        createElements();
+    }
+
     // Variables declaration - do not modify
     private JLabel frameTitle;
     private JScrollPane scrollableListContainer;
@@ -312,7 +334,7 @@ public class PendingTasks extends JPanel {
     private GroupLayout.ParallelGroup parallelGroup;
     private GroupLayout.SequentialGroup sequentialGroup;
 
-    private int MAX_TASKS;
+    private int MAX_TASKS = 0;
     private WorkTaskCtrIF workTaskController;
     private SeasonalWorkerCtrIF seasonalWorkerController;
     private ArrayList<WorkTask> pendingTasks;

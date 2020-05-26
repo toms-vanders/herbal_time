@@ -9,7 +9,6 @@ import java.io.Serializable;
 
 public class ComponentsConfigure implements Serializable {
 
-    static JFrame targetFrame;
     static ImageIcon minimizeIcon = new ImageIcon(ComponentsConfigure.class.getResource("/icons8_minimize_window_32px_1.png"));
     static ImageIcon maximizeIcon = new ImageIcon(ComponentsConfigure.class.getResource("/icons8_maximize_button_32px.png"));
     static ImageIcon exitIcon = new ImageIcon(ComponentsConfigure.class.getResource("/icons8_close_window_32px.png"));
@@ -44,21 +43,24 @@ public class ComponentsConfigure implements Serializable {
     }
 
     static void topBarConfig(JPanel topBar, JFrame target,Color colour){
-        //TODO: FIX - it overwrites when new frames are displayed
-        targetFrame = target;
+        final int[] xx = new int[1];
+        final int[] xy = new int[1];
 
         topBar.setBackground(colour);
+        topBar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                xx[0] = e.getX();
+                xy[0] = e.getY();
+            }
+        });
         topBar.addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseDragged(MouseEvent evt) {
-                topBarMouseDragged(evt);
+                int x = evt.getXOnScreen();
+                int y = evt.getYOnScreen();
+                target.setLocation(x- xx[0],y- xy[0]);
             }
         });
-        topBar.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent evt) {
-                topBarMousePressed(evt);
-            }
-        });
-
     }
 
     static void topBarButtons(JLabel minimizeBtn, JLabel maximizeBtn, JLabel exitBtn, JFrame targetFrame){
@@ -102,21 +104,5 @@ public class ComponentsConfigure implements Serializable {
                             .addGap(0, 0, Short.MAX_VALUE)
             );
         }
-    }
-
-    static void configureFrame(){
-
-    }
-
-    static int xx,xy;
-    private static void topBarMouseDragged(MouseEvent evt) {
-        int x = evt.getXOnScreen();
-        int y = evt.getYOnScreen();
-        targetFrame.setLocation(x-xx,y-xy);
-    }
-
-    private static void topBarMousePressed(MouseEvent evt) {
-        xx = evt.getX();
-        xy = evt.getY();
     }
 }

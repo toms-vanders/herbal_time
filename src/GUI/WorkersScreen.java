@@ -143,6 +143,9 @@ public class WorkersScreen extends JFrame {
 
     private void setElementComponents(JPanel listElement, JLabel profilePicture,JLabel personName, String name,JButton editBtn,JButton removeBtn) {
         listElement.setBackground(new Color(23, 35, 51));
+        listElement.setMaximumSize(new Dimension(770, 112));
+        listElement.setPreferredSize(new Dimension(770, 112));
+        listElement.setMinimumSize(new Dimension(770, 112));
 
         profilePicture.setIcon(new ImageIcon(getClass().getResource("/icons8_github_96px.png"))); // NOI18N
 

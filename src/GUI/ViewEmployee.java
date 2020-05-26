@@ -5,6 +5,8 @@
  */
 package GUI;
 
+import Model.Employee;
+
 /**
  *
  * @author dmich
@@ -14,9 +16,15 @@ public class ViewEmployee extends javax.swing.JFrame {
     /**
      * Creates new form ViewEmployee
      */
-    public ViewEmployee() {
+    public ViewEmployee(Employee employee) {
+        this.employee = employee;
         initComponents();
     }
+
+    public ViewEmployee() {
+    }
+
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -123,7 +131,7 @@ public class ViewEmployee extends javax.swing.JFrame {
 
         fnameValue.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         fnameValue.setForeground(new java.awt.Color(255, 255, 255));
-        fnameValue.setText("John");
+        fnameValue.setText(employee.getFname());
 
         lnameLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         lnameLabel.setForeground(new java.awt.Color(255, 255, 255));
@@ -131,7 +139,7 @@ public class ViewEmployee extends javax.swing.JFrame {
 
         lnameValue.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         lnameValue.setForeground(new java.awt.Color(255, 255, 255));
-        lnameValue.setText("Doe");
+        lnameValue.setText(employee.getLname());
 
         emailLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         emailLabel.setForeground(new java.awt.Color(255, 255, 255));
@@ -139,7 +147,7 @@ public class ViewEmployee extends javax.swing.JFrame {
 
         emailValue.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         emailValue.setForeground(new java.awt.Color(255, 255, 255));
-        emailValue.setText("mymail@email.me");
+        emailValue.setText(employee.getEmail());
 
         dobLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         dobLabel.setForeground(new java.awt.Color(255, 255, 255));
@@ -147,7 +155,7 @@ public class ViewEmployee extends javax.swing.JFrame {
 
         dobValue.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         dobValue.setForeground(new java.awt.Color(255, 255, 255));
-        dobValue.setText("08/08/1985");
+        dobValue.setText(String.valueOf(employee.getDob()));
 
         sexLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         sexLabel.setForeground(new java.awt.Color(255, 255, 255));
@@ -155,7 +163,7 @@ public class ViewEmployee extends javax.swing.JFrame {
 
         sexValue.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         sexValue.setForeground(new java.awt.Color(255, 255, 255));
-        sexValue.setText("M");
+        sexValue.setText(String.valueOf(employee.getSex()));
 
         postalCodeLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         postalCodeLabel.setForeground(new java.awt.Color(255, 255, 255));
@@ -163,7 +171,7 @@ public class ViewEmployee extends javax.swing.JFrame {
 
         postalCodeValue.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         postalCodeValue.setForeground(new java.awt.Color(255, 255, 255));
-        postalCodeValue.setText("9000");
+        postalCodeValue.setText(String.valueOf(employee.getZip()));
 
         phoneLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         phoneLabel.setForeground(new java.awt.Color(255, 255, 255));
@@ -171,7 +179,7 @@ public class ViewEmployee extends javax.swing.JFrame {
 
         phoneValue.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         phoneValue.setForeground(new java.awt.Color(255, 255, 255));
-        phoneValue.setText("+45 12345678");
+        phoneValue.setText(employee.getPhoneNum());
 
         addressLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         addressLabel.setForeground(new java.awt.Color(255, 255, 255));
@@ -179,7 +187,7 @@ public class ViewEmployee extends javax.swing.JFrame {
 
         addressValue.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         addressValue.setForeground(new java.awt.Color(255, 255, 255));
-        addressValue.setText("Sofiendalsvej 16");
+        addressValue.setText(employee.getStreetName() + " " + employee.getStreetNum());
 
         countryLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         countryLabel.setForeground(new java.awt.Color(255, 255, 255));
@@ -187,7 +195,7 @@ public class ViewEmployee extends javax.swing.JFrame {
 
         countryValue.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         countryValue.setForeground(new java.awt.Color(255, 255, 255));
-        countryValue.setText("Denmark");
+        countryValue.setText(employee.getCountry());
 
         cprLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         cprLabel.setForeground(new java.awt.Color(255, 255, 255));
@@ -195,12 +203,13 @@ public class ViewEmployee extends javax.swing.JFrame {
 
         cprValue.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         cprValue.setForeground(new java.awt.Color(255, 255, 255));
-        cprValue.setText("0808854422");
+        cprValue.setText(String.valueOf(employee.getCpr()));
 
         seasonalWorkersList.setBackground(new java.awt.Color(23, 35, 51));
         seasonalWorkersList.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Seasonal Workers", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12), new java.awt.Color(255, 255, 255))); // NOI18N
         seasonalWorkersList.setForeground(new java.awt.Color(255, 255, 255));
         seasonalWorkersList.setModel(new javax.swing.AbstractListModel<String>() {
+            // TODO
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
@@ -211,6 +220,7 @@ public class ViewEmployee extends javax.swing.JFrame {
         paymentslipsList.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Paymentslips", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12), new java.awt.Color(255, 255, 255))); // NOI18N
         paymentslipsList.setForeground(new java.awt.Color(255, 255, 255));
         paymentslipsList.setModel(new javax.swing.AbstractListModel<String>() {
+            // TODO
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
@@ -433,5 +443,7 @@ public class ViewEmployee extends javax.swing.JFrame {
     private javax.swing.JPanel topBar1;
     private javax.swing.JPanel topBar2;
     private javax.swing.JPanel topBar3;
+
+    private Employee employee;
     // End of variables declaration
 }

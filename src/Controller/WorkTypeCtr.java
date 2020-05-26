@@ -12,6 +12,23 @@ public class WorkTypeCtr implements WorkTypeCtrIF{
 
     WorkTypeDB workTypeDB;
 
+    public WorkTypeCtr() throws DataAccessException {
+        try {
+            workTypeDB = new WorkTypeDB();
+        } catch(DataAccessException e) {
+            throw new DataAccessException("WorkTaskCtr error.", e);
+        }
+    }
+
+    @Override
+    public List<WorkType> findAll() throws DataAccessException {
+        try {
+            return workTypeDB.findAll(false);
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Error with WorkTypeCtr.", e);
+        }
+    }
+
     @Override
     public List<WorkType> findAllWorkTypesOfWorkSite(int workSiteID) throws DataAccessException {
         try {

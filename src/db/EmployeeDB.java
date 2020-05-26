@@ -88,6 +88,7 @@ public class EmployeeDB implements EmployeeDBIF {
         try {
             PSfindEmployeeByCPR = con.prepareStatement(findEmployeeByCPR);
         } catch (SQLException e) {
+            DBConnection.disconnect();
             throw new DataAccessException("Issue preparing statement", e);
         }
 
@@ -98,6 +99,7 @@ public class EmployeeDB implements EmployeeDBIF {
             DBConnection.disconnect();
             return res;
         } catch (SQLException e) {
+            DBConnection.disconnect();
             throw new DataAccessException("Error with fetching a specific Employee from DB.", e);
         }
     }
@@ -109,6 +111,7 @@ public class EmployeeDB implements EmployeeDBIF {
         try {
             PSinsertEmployee = con.prepareStatement(insertEmployee);
         } catch (SQLException e) {
+            DBConnection.disconnect();
             throw new DataAccessException("Issue preparing statement", e);
         }
 
@@ -119,6 +122,7 @@ public class EmployeeDB implements EmployeeDBIF {
             PSinsertEmployee.setInt(3, newEmployee.getKontoNum());
             PSinsertEmployee.setBigDecimal(4, newEmployee.getSalary());
         } catch (SQLException e) {
+            DBConnection.disconnect();
             throw new DataAccessException("Could not prepare statement.", e);
         }
 
@@ -136,9 +140,10 @@ public class EmployeeDB implements EmployeeDBIF {
     public int updateEmployee(String employeeCPR, Employee newEmployee) throws DataAccessException {
         connectToDB();
         Connection con = DBConnection.getInstance().getConnection();
-        try{
+        try {
             PSupdateEmployee = con.prepareStatement(updateEmployee);
-        }catch(SQLException e){
+        } catch (SQLException e) {
+            DBConnection.disconnect();
             throw new DataAccessException("Unable to prepare update statement.", e);
         }
 
@@ -149,6 +154,7 @@ public class EmployeeDB implements EmployeeDBIF {
             PSupdateEmployee.setInt(3, newEmployee.getKontoNum());
             PSupdateEmployee.setBigDecimal(4, newEmployee.getSalary());
         } catch (SQLException e) {
+            DBConnection.disconnect();
             throw new DataAccessException("Could not set statement variables.", e);
         }
 
@@ -166,9 +172,10 @@ public class EmployeeDB implements EmployeeDBIF {
     public int deleteEmployee(String employeeCPR) throws DataAccessException {
         connectToDB();
         Connection con = DBConnection.getInstance().getConnection();
-        try{
+        try {
             PSdeleteEmployeeByCPR = con.prepareStatement(deleteEmployeeByCPR);
-        }catch(SQLException e){
+        } catch(SQLException e) {
+            DBConnection.disconnect();
             throw new DataAccessException("Unable to prepare update statement.", e);
         }
 
@@ -176,6 +183,7 @@ public class EmployeeDB implements EmployeeDBIF {
         try {
             PSdeleteEmployeeByCPR.setString(1,employeeCPR);
         } catch (SQLException e) {
+            DBConnection.disconnect();
             throw new DataAccessException("Could not set statement variables.", e);
         }
 
@@ -225,7 +233,6 @@ public class EmployeeDB implements EmployeeDBIF {
                     rs.getBigDecimal("salary"));
             return currentEmployee;
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new DataAccessException("buildObject: There was an Error with building the Employee object.", e);
         }
     }

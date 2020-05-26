@@ -255,6 +255,7 @@ public class MainScreen extends JFrame {
 
         setIconImage(new ImageIcon(getClass().getResource("/icons8_potted_plant_50px_1.png")).getImage());
         pack();
+        requestFocus();
         setLocationRelativeTo(null);
     }
 
