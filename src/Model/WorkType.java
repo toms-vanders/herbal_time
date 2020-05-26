@@ -1,5 +1,9 @@
 package Model;
 
+/**
+ * Represents type of work performed by a seasonal worker. intended to be created and reused for tasks
+ *  * that have to be performed regularly.
+ */
 public class WorkType {
 
     private int wTypeID;

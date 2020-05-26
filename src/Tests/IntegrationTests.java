@@ -155,8 +155,7 @@ public class IntegrationTests {
                 testWorkType1Pay);
         affectedRows += wtDB.insertWorkType(testWorkSite1Check.getWorkSiteID(), testWorkType1);
 
-        List<WorkType> workTypesOfTestWorkSite = wtDB.findAllWorkTypesOfWorkSite(testWorkSite1Check.getWorkSiteID(),
-                false);
+        List<WorkType> workTypesOfTestWorkSite = wtDB.findAllWorkTypesOfWorkSite(testWorkSite1Check.getWorkSiteID());
         WorkType testWorkType1Check = workTypesOfTestWorkSite.get(0);
         Assertions.assertEquals(testWorkType1DescOfJob, testWorkType1Check.getDescOfJob(), "Desc of job invalid");
         Assertions.assertEquals(testWorkType1TypeOfProduce, testWorkType1Check.getTypeOfProduce(), "Type of produce invalid");

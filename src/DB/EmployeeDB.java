@@ -18,7 +18,7 @@ public class EmployeeDB implements EmployeeDBIF {
             + "cpr = ?,"
             + "regNum = ?,"
             + "kontoNum = ?,"
-            + "salary = ?,"
+            + "salary = ?"
             + " WHERE cpr = ?";
     private static final String deleteEmployeeByCPR = "DELETE FROM Employee WHERE cpr = ?";
 
@@ -29,7 +29,7 @@ public class EmployeeDB implements EmployeeDBIF {
     private PreparedStatement PSdeleteEmployeeByCPR;
 
     public EmployeeDB() throws DataAccessException {
-        init();
+//        init();
     }
 
     /**
@@ -45,21 +45,22 @@ public class EmployeeDB implements EmployeeDBIF {
         }
     }
 
-    private void init() throws DataAccessException {
-        connectToDB();
-        Connection con = DBConnection.getInstance().getConnection();
-        try {
-            PSfindAll = con.prepareStatement(findAll);
-            PSfindEmployeeByCPR = con.prepareStatement(findEmployeeByCPR);
-            PSinsertEmployee = con.prepareStatement(insertEmployee);
-            PSupdateEmployee = con.prepareStatement(updateEmployee);
-            PSdeleteEmployeeByCPR = con.prepareStatement(deleteEmployeeByCPR);
-            DBConnection.disconnect();
-        } catch (SQLException e) {
-            DBConnection.disconnect();
-            throw new DataAccessException("EmployeeDB could not initialize.", e);
-        }
-    }
+    // UNUSED, see ClientDB
+//    private void init() throws DataAccessException {
+//        connectToDB();
+//        Connection con = DBConnection.getInstance().getConnection();
+//        try {
+//            PSfindAll = con.prepareStatement(findAll);
+//            PSfindEmployeeByCPR = con.prepareStatement(findEmployeeByCPR);
+//            PSinsertEmployee = con.prepareStatement(insertEmployee);
+//            PSupdateEmployee = con.prepareStatement(updateEmployee);
+//            PSdeleteEmployeeByCPR = con.prepareStatement(deleteEmployeeByCPR);
+//            DBConnection.disconnect();
+//        } catch (SQLException e) {
+//            DBConnection.disconnect();
+//            throw new DataAccessException("EmployeeDB could not initialize.", e);
+//        }
+//    }
 
     @Override
     public List<Employee> findAll() throws DataAccessException {

@@ -2,9 +2,17 @@ package GUI;
 
 import javax.swing.*;
 import Controller.*;
+import DB.ProduceDB;
 import Model.*;
+
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class ProduceCheckList extends javax.swing.JFrame {
 
@@ -15,22 +23,66 @@ public class ProduceCheckList extends javax.swing.JFrame {
     /**
      * Creates new form produceCheckList
      */
-    public ProduceCheckList() {
+    public ProduceCheckList(Consumer<ArrayList<String>> consumer) {
+        this.consumer = consumer;
         try {
             loadProduce();
         } catch (DataAccessException e) {
             e.printStackTrace();
+            // Alert to user
         }
         initComponents();
     }
+
     private void loadProduce() throws DataAccessException {
         workTypeCtr = new WorkTypeCtr();
         produceList = workTypeCtr.findAll();
-        int length = produceList.size();
-        x = new String[length];
-        for(int i=0; i<length; i++) {
-            x[i] = produceList.get(i).getTypeOfProduce();
+
+        ProduceDB pDB;
+        try {
+            pDB = new ProduceDB();
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Unable to obtain produce database access object.", e);
         }
+
+        // Setting the list model.
+        // Populating with all products found in the database.
+        ArrayList<Produce> allProduces = new ArrayList<>(pDB.findAll(false, Produce.class));
+        jList1 = new javax.swing.JList();
+        for (Produce produce: allProduces) {
+            produce.setCollectedOnWorksite(false);
+        }
+        DefaultListModel listModel = new DefaultListModel();
+        for (int i = 0; i < allProduces.size(); i++) {
+            listModel.addElement(allProduces.get(i));
+        }
+        jList1.setModel(listModel);
+
+        jList1.setCellRenderer(new CheckBoxListCellRenderer());
+        jList1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        jList1.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent event) {
+                JList<Produce> list =
+                        (JList<Produce>) event.getSource();
+
+                // Get index of item clicked
+
+                int index = list.locationToIndex(event.getPoint());
+                Produce item = (Produce) list.getModel()
+                        .getElementAt(index);
+
+                // Toggle selected state
+
+                item.setCollectedOnWorksite(!item.getCollectedOnWorksite());
+
+                // Repaint cell
+
+                list.repaint(list.getCellBounds(index, index));
+            }
+        });
+
+
+        // todo tick those that are collected on the worksite
     }
 
     private void initComponents() {
@@ -42,7 +94,7 @@ public class ProduceCheckList extends javax.swing.JFrame {
         minimizeBtn = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+//        jList1 = new javax.swing.JList();
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -87,18 +139,23 @@ public class ProduceCheckList extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>(){
-            public int getSize () {
-                return x.length;
-            }
-            public String getElementAt ( int i){
-                return x[i];
-            }
-        });
+//        jList1.setModel(new javax.swing.AbstractListModel<String>(){
+//            public int getSize () {
+//                return x.length;
+//            }
+//            public String getElementAt ( int i){
+//                return x[i];
+//            }
+//        });
         jScrollPane1.setViewportView(jList1);
 
         jButton1.setBackground(new java.awt.Color(71, 120, 197));
         jButton1.setText("Confirm");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -141,6 +198,40 @@ public class ProduceCheckList extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }
 
+    // Always call this when you edit WorkSite's collected produce
+    private void updateProduceCheckList(Integer workSiteID) throws DataAccessException {
+        ProduceDB pDB;
+        try {
+            pDB = new ProduceDB();
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Unable to obtain produce database access object.", e);
+        }
+
+        ArrayList<Produce> workSiteCollectedProduce = new ArrayList<>(pDB.findWorkSiteProduce(workSiteID,
+                Produce.class));
+
+        // TBC
+
+    }
+
+    // Confirm button
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+        // Should accept an Array of String maybe
+        ArrayList<String> collectedProduce = new ArrayList<>();
+
+        for (int i = 0;  i < jList1.getModel().getSize(); i++) {
+            if (jList1.getModel().getElementAt(i).getCollectedOnWorksite()) {
+                collectedProduce.add(jList1.getModel().getElementAt(i).getProduceName());
+            }
+        }
+        consumer.accept(collectedProduce);
+        dispose();
+    }
+
+//    public void getCollectedProduce(Consumer<HashMap<Object, Object>> consumer) {
+//
+//    }
+
     public static void main(String[] args) {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -153,7 +244,7 @@ public class ProduceCheckList extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(ProduceCheckList.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
-        java.awt.EventQueue.invokeLater(() -> new ProduceCheckList().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new ProduceCheckList(consumer).setVisible(true));
     }
 
     private javax.swing.JButton jButton1;
@@ -161,8 +252,10 @@ public class ProduceCheckList extends javax.swing.JFrame {
     private javax.swing.JLabel exitBtn;
     private javax.swing.JLabel minimizeBtn;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JList<String> jList1;
+    private javax.swing.JList<Produce> jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel topBar;
     private javax.swing.JScrollPane jScrollPane1;
+
+    private static Consumer<ArrayList<String>> consumer;
 }

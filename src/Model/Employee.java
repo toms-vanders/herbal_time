@@ -2,29 +2,21 @@ package Model;
 
 import java.math.BigDecimal;
 import java.sql.Date;
-import java.time.LocalDate;
 
+/**
+ * Used to represent employees of CS Works
+ */
 public class Employee extends Person {
     private Integer regNum;
     private Integer kontoNum;
     private BigDecimal salary;
 
-    public Employee(String cpr,
-                    String fname,
-                    String lname,
-                    Date dob,
-                    char sex,
-                    String email,
-                    String phoneNum,
-                    String streetName,
-                    String streetNum,
-                    String zip,
-                    String countryCode,
-                    String country,
-                    Integer regNum,
-                    Integer kontoNum,
-                    BigDecimal salary) {
+    public Employee(String cpr, String fname, String lname, Date dob, char sex, String email,
+                    String phoneNum, String streetName, String streetNum, String zip, String countryCode,
+                    String country, Integer regNum, Integer kontoNum, BigDecimal salary) {
+        // Creates the Person object
         super(cpr, fname, lname, dob, sex, email, phoneNum, streetName, streetNum, zip, countryCode, country);
+        // Sets the rest of the parameters
         this.regNum = regNum;
         this.kontoNum = kontoNum;
         this.salary = salary;

@@ -4,6 +4,9 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+/**
+ * Used to represent the seasonal workers employed by CS Works to perform tasks for clients
+ */
 public class SeasonalWorker extends Person{
 
     private String passportNum;
@@ -11,9 +14,7 @@ public class SeasonalWorker extends Person{
     private String iban;
     private String ssn;
     private boolean workedBefore;
-//    private String leadBy;
     private SeasonalWorker leadBy;
-//    private int wSiteID;
     private ArrayList<WorkTask> workTasks;
 
     public SeasonalWorker(String cpr) {
@@ -31,13 +32,13 @@ public class SeasonalWorker extends Person{
         this.iban = iban;
         this.ssn = ssn;
         this.workedBefore = workedBefore;
-//        this.leadBy = leadBy;
+//        this.leadBy = null;
         workTasks = new ArrayList<>();
 //        this.wSiteID = wSiteID;
     }
 
     /**
-     * essentially an empty constructor, only makes the Person aspects of SeasonalWorker
+     * Only makes the Interface (Person) part of SeasonalWorker
      */
     public SeasonalWorker(String cpr, String fname, String lname, Date dob, char sex, String email,
                           String phoneNum, String streetName, String streetNum, String zip, String countryCode,
@@ -62,11 +63,9 @@ public class SeasonalWorker extends Person{
     public boolean isWorkedBefore() { return workedBefore; }
     public void setWorkedBefore(boolean workedBefore) { this.workedBefore = workedBefore; }
 
+    // This is a leftover from when leadBy used to be a foreign key reference, not used anymore.
 //    public String getLeadBy() { return leadBy; }
 //    public void setLeadBy(String leadBy) { this.leadBy = leadBy; }
-
-//    public int getWorkSiteID() { return wSiteID; }
-//    public void setWorkSiteID(int wSiteID) { this.wSiteID = wSiteID; }
 
     public ArrayList<WorkTask> getWorkTasks() { return workTasks; }
     public void setWorkTasks(ArrayList<WorkTask> workTasks) { this.workTasks = workTasks; }
@@ -76,7 +75,6 @@ public class SeasonalWorker extends Person{
 
     @Override
     public String toString() {
-        // Note: wSiteID is no longer a property of SeasonalWorker
         return "{Person: (" +
                 "cpr='" + getCpr() + '\'' +
                 ", fname='" + getFname() + '\'' +
@@ -98,7 +96,6 @@ public class SeasonalWorker extends Person{
                 ", ssn='" + ssn + '\'' +
                 ", workedBefore=" + workedBefore +
                 ", leadBy='" + getLeadBy().getCpr() + '\'' +
-//                ", wSiteID='" + wSiteID + '\'' +
                 ")}";
     }
 }

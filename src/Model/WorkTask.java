@@ -2,6 +2,10 @@ package Model;
 
 import java.sql.Date;
 
+/**
+ * Used to represent work tasks performed by seasonal workers. Workers are to register
+ * their shifts as work tasks performed (hence the hoursWorked field)
+ */
 public class WorkTask {
     private int wTaskID;
     private double hoursWorked;

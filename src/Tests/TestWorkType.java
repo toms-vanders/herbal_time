@@ -36,7 +36,7 @@ public class TestWorkType {
     public void testGetAllWorkTypesFromWorkSite() throws DataAccessException {
         createNewWorkType();
         WorkTypeDB wtDB = new WorkTypeDB();
-        List<WorkType> res1 = wtDB.findAllWorkTypesOfWorkSite(1, false);
+        List<WorkType> res1 = wtDB.findAllWorkTypesOfWorkSite(1);
         for (WorkType wt : res1) {
             System.out.println(wt.toString());
         }

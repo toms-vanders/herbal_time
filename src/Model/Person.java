@@ -1,13 +1,18 @@
 package Model;
 
 import java.sql.Date;
-import java.time.LocalDate;
-import java.util.ArrayList;
 
-public class Client {
+/**
+ * Interface used for Employee and SeasonalWorker classes. Holds mainly personal information
+ * about the person in question.
+ */
+public abstract class Person {
 
-    private String cvr;
-    private String name;
+    private String cpr;
+    private String fname;
+    private String lname;
+    private Date dob;
+    private Character sex;
     private String email;
     private String phoneNum;
     private String streetName;
@@ -15,19 +20,14 @@ public class Client {
     private String zip;
     private String countryCode;
     private String country;
-    private Date dateStart;
-    private Date dateEnd;
-    private ArrayList<WorkSite> workSites;
 
-// Empty constructor, used in ClientDB
-    public Client() {
-        workSites = new ArrayList<>();
-    }
-
-    public Client(String cvr, String name, String email, String phoneNum, String streetName, String streetNum,
-                  String zip, String countryCode, String country, Date dateStart, Date dateEnd) {
-        this.cvr = cvr;
-        this.name = name;
+    public Person(String cpr, String fname, String lname, Date dob, Character sex, String email, String phoneNum,
+                  String streetName, String streetNum, String zip, String countryCode, String country) {
+        this.cpr = cpr;
+        this.fname = fname;
+        this.lname = lname;
+        this.dob = dob;
+        this.sex = sex;
         this.email = email;
         this.phoneNum = phoneNum;
         this.streetName = streetName;
@@ -35,16 +35,22 @@ public class Client {
         this.zip = zip;
         this.countryCode = countryCode;
         this.country = country;
-        this.dateStart = dateStart;
-        this.dateEnd = dateEnd;
-        workSites = new ArrayList<>();
     }
 
-    public String getCvr() { return cvr; }
-    public void setCvr(String cvr) { this.cvr = cvr; }
+    public String getCpr() { return cpr; }
+    public void setCpr(String cpr) { this.cpr = cpr; }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public String getFname() { return fname; }
+    public void setFname(String fname) { this.fname = fname; }
+
+    public String getLname() { return lname; }
+    public void setLname(String lname) { this.lname = lname; }
+
+    public Date getDob() { return dob; }
+    public void setDob(Date dob) { this.dob = dob; }
+
+    public Character getSex() { return sex; }
+    public void setSex(Character sex) { this.sex = sex; }
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
@@ -64,27 +70,17 @@ public class Client {
     public String getCountry() { return country; }
     public void setCountry(String country) { this.country = country; }
 
-    public Date getDateStart() { return dateStart; }
-    public void setDateStart(Date dateStart) { this.dateStart = dateStart; }
-
-    public Date getDateEnd() { return dateEnd; }
-    public void setDateEnd(Date dateEnd) { this.dateEnd = dateEnd; }
-
     public String getCountryCode() { return countryCode; }
     public void setCountryCode(String countryCode) { this.countryCode = countryCode; }
 
-    public ArrayList<WorkSite> getWorkSites() { return workSites; }
-    public void setWorkSites(ArrayList<WorkSite> workSites) { this.workSites = workSites; }
-
-    public String getComboBoxInfo() {
-        return cvr + " " + name + " " + zip +  " " + countryCode;
-    }
-
     @Override
     public String toString() {
-        return "Client{" +
-                "cvr='" + cvr + '\'' +
-                ", name='" + name + '\'' +
+        return "Person{" +
+                "cpr='" + cpr + '\'' +
+                ", fname='" + fname + '\'' +
+                ", lname='" + lname + '\'' +
+                ", dob=" + dob +
+                ", sex=" + sex +
                 ", email='" + email + '\'' +
                 ", phoneNum='" + phoneNum + '\'' +
                 ", streetName='" + streetName + '\'' +
@@ -92,8 +88,6 @@ public class Client {
                 ", zip=" + zip +
                 ", countryCode='" + countryCode + '\'' +
                 ", country='" + country + '\'' +
-                ", dateStart=" + dateStart +
-                ", dateEnd=" + dateEnd +
                 '}';
     }
 }

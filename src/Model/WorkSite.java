@@ -2,6 +2,9 @@ package Model;
 
 import java.util.ArrayList;
 
+/**
+ * Used to represent individual work sites of clients where seasonal workers go work
+ */
 public class WorkSite {
 
     private Integer wSiteID;
@@ -14,7 +17,6 @@ public class WorkSite {
     private String countryCode;
     private String typeOfJob;
     private double pricePerWorker;
-//    private String clientCvr;
     private ArrayList<WorkType> workTypes;
     private ArrayList<SeasonalWorker> seasonalWorkers;
 
@@ -34,7 +36,6 @@ public class WorkSite {
         this.countryCode = countryCode;
         this.typeOfJob = typeOfJob;
         this.pricePerWorker = pricePerWorker;
-//        this.clientCvr = clientCvr;
         this.workTypes = new ArrayList<>();
         this.seasonalWorkers = new ArrayList<>();
     }
@@ -51,7 +52,6 @@ public class WorkSite {
         this.countryCode = countryCode;
         this.typeOfJob = typeOfJob;
         this.pricePerWorker = pricePerWorker;
-//        this.clientCvr = clientCvr;
         this.workTypes = new ArrayList<>();
         this.seasonalWorkers = new ArrayList<>();
     }
@@ -115,13 +115,6 @@ public class WorkSite {
         this.pricePerWorker = pricePerWorker;
     }
 
-//    public String getClientCvr() {
-//        return clientCvr;
-//    }
-//    public void setClientCvr(String clientCvr) {
-//        this.clientCvr = clientCvr;
-//    }
-
     public String getCountryCode() { return countryCode; }
     public void setCountryCode(String countryCode) { this.countryCode = countryCode; }
 
@@ -145,7 +138,6 @@ public class WorkSite {
         String s7 = "countryCode: " + countryCode + "\n";
         String s8 = "typeOfJob: " + typeOfJob + "\n";
         String s9 = "pricePerWorker: " + pricePerWorker + "\n";
-//        String s10 = "clientCvr: " + clientCvr + "\n";
 
         return s1+s2+s3+s4+s5+s6+s7+s8+s9;
 

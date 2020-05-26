@@ -31,6 +31,7 @@ public class WorkTaskDB implements WorkTaskDBIF {
             + "workTypeID = ? "
 //            + "workerCPR = ? "
             + "WHERE workTaskID = ? ";
+    private static final String approveWorkTask = "UPDATE WorkTask SET taskStatus = 'APPROVED' WHERE workTaskID = ?";
     private static final String findAllPending = "SELECT * FROM WorkTask WHERE taskStatus = 'PENDING APPROVAL' OR  taskStatus = 'PENDING'";
     /**
      * Prepared statement declaration for the above queries
@@ -41,6 +42,7 @@ public class WorkTaskDB implements WorkTaskDBIF {
     private PreparedStatement PSinsertWorkTask;
     private PreparedStatement PSupdateWorkTask;
     private PreparedStatement PSdeleteWorkTask;
+    private PreparedStatement PSapproveWorkTask;
     private PreparedStatement PSfindAllPending;
 
     public WorkTaskDB() throws DataAccessException {
@@ -143,7 +145,7 @@ public class WorkTaskDB implements WorkTaskDBIF {
     }
 
     @Override
-    public WorkTask findByID(Integer id, boolean fullAssociation) throws DataAccessException {
+    public WorkTask findByID(int id, boolean fullAssociation) throws DataAccessException {
         connectToDB();
         Connection con = DBConnection.getInstance().getConnection();
         try {
@@ -175,7 +177,7 @@ public class WorkTaskDB implements WorkTaskDBIF {
     }
 
     @Override
-    public Integer insertWorkTask(WorkTask workTask, String workerCpr) throws DataAccessException {
+    public int insertWorkTask(WorkTask workTask, String workerCpr) throws DataAccessException {
         connectToDB();
         Connection con = DBConnection.getInstance().getConnection();
         try {
@@ -198,7 +200,7 @@ public class WorkTaskDB implements WorkTaskDBIF {
             throw new DataAccessException("There was a problem with the workTask being inserted into DB.", e);
         }
 
-        Integer affectedRows;
+        int affectedRows;
         try {
             affectedRows = PSinsertWorkTask.executeUpdate();
             DBConnection.disconnect();
@@ -210,7 +212,7 @@ public class WorkTaskDB implements WorkTaskDBIF {
     }
 
     @Override
-    public Integer updateWorkTask(WorkTask workTask, Integer workTaskID) throws DataAccessException {
+    public int updateWorkTask(WorkTask workTask, int workTaskID) throws DataAccessException {
         connectToDB();
         Connection con = DBConnection.getInstance().getConnection();
         try {
@@ -235,7 +237,7 @@ public class WorkTaskDB implements WorkTaskDBIF {
             throw new DataAccessException("There was a problem with the workTask being updated in DB.",e);
         }
 
-        Integer affectedRows;
+        int affectedRows;
         try {
             affectedRows = PSupdateWorkTask.executeUpdate();
             DBConnection.disconnect();
@@ -248,7 +250,34 @@ public class WorkTaskDB implements WorkTaskDBIF {
     }
 
     @Override
-    public Integer deleteWorkTask(Integer id) throws DataAccessException {
+    public boolean approveWorkTasks(ArrayList<Integer> idList) throws DataAccessException {
+        connectToDB();
+        Connection con = DBConnection.getInstance().getConnection();
+        try {
+            con.setAutoCommit(false);
+            PSapproveWorkTask = con.prepareStatement(approveWorkTask);
+            for (Integer id : idList) {
+                PSapproveWorkTask.setInt(1, id);
+                PSapproveWorkTask.executeUpdate();
+            }
+            con.commit();
+            con.setAutoCommit(true);
+            DBConnection.disconnect();
+            return true;
+
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException e) {
+                throw new DataAccessException("There was an error making a rollback", e);
+            }
+            DBConnection.disconnect();
+            return false;
+        }
+    }
+
+    @Override
+    public int deleteWorkTask(int id) throws DataAccessException {
         connectToDB();
         Connection con = DBConnection.getInstance().getConnection();
         try {
@@ -265,7 +294,7 @@ public class WorkTaskDB implements WorkTaskDBIF {
             throw new DataAccessException("There was a problem with the id of the workTask being deleted from DB.",e);
         }
 
-        Integer affectedRows;
+        int affectedRows;
         try {
             affectedRows = PSdeleteWorkTask.executeUpdate();
             DBConnection.disconnect();
@@ -308,7 +337,7 @@ public class WorkTaskDB implements WorkTaskDBIF {
 
             if (fullAssociation) {
                 WorkTypeDB wtDB = new WorkTypeDB();
-                WorkType workType = wtDB.findWorkTypeByID(rs.getInt("workTypeID"),false);
+                WorkType workType = wtDB.findWorkTypeByID(rs.getInt("workTypeID"));
                 currentWorkTask.setWorkType(workType);
             }
         }

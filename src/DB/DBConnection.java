@@ -3,6 +3,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Provides a fixed connection to UCN's hildur server, and our personal database.
+ */
 public class DBConnection {
 
     private static Connection connection;

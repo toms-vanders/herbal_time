@@ -69,7 +69,7 @@ public class WorkTypeDB implements WorkTypeDBIF {
     }
 
     @Override
-    public List<WorkType> findAll(boolean fullAssociation) throws DataAccessException {
+    public List<WorkType> findAll() throws DataAccessException {
         connectToDB();
         Connection con = DBConnection.getInstance().getConnection();
         try {
@@ -86,19 +86,18 @@ public class WorkTypeDB implements WorkTypeDBIF {
             DBConnection.disconnect();
             throw new DataAccessException("Issue with retrieving work types from the database (executeQuery)", e);
         }
-        return buildObjects(rs, fullAssociation);
+        return buildObjects(rs);
     }
 
     /**
      * Queries database for all work types within work site.
      *
      * @param workSiteID      ID of work site
-     * @param fullAssociation specifies whether to build results with the objects the foreign keys point to or not
      * @return if found - an ArrayList of work types within the work site; otherwise an empty ArrayList
      * @throws DataAccessException
      */
     @Override
-    public List<WorkType> findAllWorkTypesOfWorkSite(Integer workSiteID, boolean fullAssociation) throws DataAccessException {
+    public List<WorkType> findAllWorkTypesOfWorkSite(Integer workSiteID) throws DataAccessException {
         connectToDB();
         Connection con = DBConnection.getInstance().getConnection();
         try {
@@ -122,11 +121,11 @@ public class WorkTypeDB implements WorkTypeDBIF {
             DBConnection.disconnect();
             throw new DataAccessException("Issue with retrieving work types from the database (executeQuery)", e);
         }
-        return buildObjects(rs, fullAssociation);
+        return buildObjects(rs);
     }
 
     @Override
-    public WorkType findWorkTypeByID(int workTypeID, boolean fullAssociation) throws DataAccessException {
+    public WorkType findWorkTypeByID(int workTypeID) throws DataAccessException {
         connectToDB();
         Connection con = DBConnection.getInstance().getConnection();
         try {
@@ -148,7 +147,7 @@ public class WorkTypeDB implements WorkTypeDBIF {
         try {
             rs = PSfindByID.executeQuery();
             rs.next();
-            WorkType res = buildObject(rs, fullAssociation);
+            WorkType res = buildObject(rs);
             DBConnection.disconnect();
             return res;
         } catch (SQLException e) {
@@ -166,7 +165,7 @@ public class WorkTypeDB implements WorkTypeDBIF {
      * @throws DataAccessException
      */
     @Override
-    public Integer insertWorkType(Integer workSiteID, WorkType newWorkType) throws DataAccessException {
+    public int insertWorkType(Integer workSiteID, WorkType newWorkType) throws DataAccessException {
         connectToDB();
         Connection con = DBConnection.getInstance().getConnection();
         try {
@@ -176,7 +175,7 @@ public class WorkTypeDB implements WorkTypeDBIF {
             throw new DataAccessException("Issue preparing statement", e);
         }
 
-        Integer affectedRows;
+        int affectedRows;
         try {
             PSinsertWorkType.setString(1, newWorkType.getDescOfJob());
             PSinsertWorkType.setString(2, newWorkType.getTypeOfProduce());
@@ -200,7 +199,7 @@ public class WorkTypeDB implements WorkTypeDBIF {
     }
 
     @Override
-    public Integer updateWorkType(int workTypeID, WorkType newWorkType) throws DataAccessException {
+    public int updateWorkType(int workTypeID, WorkType newWorkType) throws DataAccessException {
         connectToDB();
         Connection con = DBConnection.getInstance().getConnection();
         try {
@@ -233,7 +232,7 @@ public class WorkTypeDB implements WorkTypeDBIF {
     }
 
     @Override
-    public Integer deleteWorkType(int workTypeID) throws DataAccessException {
+    public int deleteWorkType(int workTypeID) throws DataAccessException {
         connectToDB();
         Connection con = DBConnection.getInstance().getConnection();
         try {
@@ -243,7 +242,7 @@ public class WorkTypeDB implements WorkTypeDBIF {
             throw new DataAccessException("Issue preparing statement", e);
         }
 
-        Integer affectedRows;
+        int affectedRows;
         try {
             PSdeleteWorkType.setInt(1, workTypeID);
         } catch (SQLException e) {
@@ -265,15 +264,14 @@ public class WorkTypeDB implements WorkTypeDBIF {
      * Generates and returns WorkType objects based on the ResultSet returned by the query
      *
      * @param rs              ResultSet object filled with results of a query
-     * @param fullAssociation specifies whether to build results with the objects the foreign keys point to or not
      * @return ArrayList of built objects
      * @throws DataAccessException
      */
-    private List<WorkType> buildObjects(ResultSet rs, boolean fullAssociation) throws DataAccessException {
+    private List<WorkType> buildObjects(ResultSet rs) throws DataAccessException {
         List<WorkType> res = new ArrayList<>();
         try {
             while (rs.next()) {
-                WorkType currentWorkType = buildObject(rs, fullAssociation);
+                WorkType currentWorkType = buildObject(rs);
                 res.add(currentWorkType);
             }
             DBConnection.disconnect();
@@ -288,11 +286,11 @@ public class WorkTypeDB implements WorkTypeDBIF {
      * Builds a single WorkType object
      *
      * @param rs              ResultSet object filled with results of a query
-     * @param fullAssociation specifies whether to build results with the objects the foreign keys point to or not
+
      * @return new WorkType object
      * @throws DataAccessException
      */
-    private WorkType buildObject(ResultSet rs, boolean fullAssociation) throws DataAccessException {
+    private WorkType buildObject(ResultSet rs) throws DataAccessException {
         WorkType currentWorkType;
         try {
             currentWorkType = new WorkType();
@@ -305,9 +303,6 @@ public class WorkTypeDB implements WorkTypeDBIF {
 //            currentWorkType.setWorkSiteID(rs.getInt("workSiteID"));
 
 //            }
-            if (fullAssociation) {
-                //
-            }
         } catch (SQLException e) {
             e.printStackTrace();
             throw new DataAccessException("Issue with loading work type from the database (in buildObject)", e);

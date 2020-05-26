@@ -55,7 +55,7 @@ public class ClientDB implements ClientDBIF {
     }
 
 
-//    // This should be made obsolete ASAP
+//    // This should be made obsolete ASAP - TODO
 //    // In order to do that, find methods where preparing statements wasn't yet moved into corresponding bodies,
 //    // and move it there
 //    /**
@@ -79,6 +79,13 @@ public class ClientDB implements ClientDBIF {
 //        }
 //    }
 
+    /**
+     * Returns a list of all Clients loaded in the database
+     * @param fullAssociation if true, returns also the Client's associated WorkSites
+     * @param type Requires to be the proper type
+     * @return a list of all Clients loaded in the database
+     * @throws DataAccessException
+     */
     @Override
     public List<Client> findAll(boolean fullAssociation, Type type) throws DataAccessException {
         connectToDB();
@@ -101,6 +108,14 @@ public class ClientDB implements ClientDBIF {
 
     }
 
+    /**
+     * Returns a Client with the appropriate CVR number
+     * @param clientCVR CVR of the client to return
+     * @param fullAssociation If true, returns also the Client's associated WorkSites
+     * @param type Requires to be the proper type
+     * @return a Client with the appropriate CVR number
+     * @throws DataAccessException
+     */
     @Override
     public Client findClientByCVR(String clientCVR, boolean fullAssociation, Type type) throws DataAccessException {
         connectToDB();
@@ -131,6 +146,13 @@ public class ClientDB implements ClientDBIF {
         }
     }
 
+    /**
+     * Inserts a new Client into the database
+     * @param newClient The new Client object to be inserted
+     * @param type Requires to be the proper type
+     * @return Number of rows affected
+     * @throws DataAccessException
+     */
     @Override
     public int insertClient(Client newClient, Type type) throws DataAccessException {
         connectToDB();
@@ -240,13 +262,19 @@ public class ClientDB implements ClientDBIF {
         return affectedRows;
     }
 
+    /**
+     * Used when returning multiple clients at once
+     * @param rs
+     * @param fullAssociation
+     * @param type
+     * @return
+     * @throws DataAccessException
+     */
     private List<Client> buildObjects(ResultSet rs, boolean fullAssociation, Type type) throws DataAccessException {
         List<Client> res = new ArrayList<>();
         try {
             while(rs.next()) {
                 Client currentClient = buildObject(rs,fullAssociation,type);
-//                System.out.println(currentClient.getCountry());
-//                System.out.println(currentClient.toString());
                 res.add(currentClient);
             }
             DBConnection.disconnect();
@@ -257,7 +285,14 @@ public class ClientDB implements ClientDBIF {
         return res;
     }
 
-
+    /**
+     * Get data from the DB and build a Client object
+     * @param rs
+     * @param fullAssociation
+     * @param type
+     * @return
+     * @throws DataAccessException
+     */
     private Client buildObject(ResultSet rs, boolean fullAssociation, Type type) throws DataAccessException {
         Client currentClient = null;
 

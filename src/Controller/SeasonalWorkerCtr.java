@@ -5,6 +5,9 @@ import DB.*;
 
 import java.util.List;
 
+/**
+ * Used to interface between the database and the GUI
+ */
 public class SeasonalWorkerCtr implements SeasonalWorkerCtrIF{
 
     SeasonalWorkerIF seasonalWorkerDB;
@@ -13,6 +16,11 @@ public class SeasonalWorkerCtr implements SeasonalWorkerCtrIF{
         seasonalWorkerDB = new SeasonalWorkerDB();
     }
 
+    /**
+     * Returns a list of all SeasonalWorkers loaded in the database
+     * @return a list of all SeasonalWorkers loaded in the database
+     * @throws DataAccessException
+     */
     @Override
     public List<SeasonalWorker> findAllSeasonalWorkers() throws DataAccessException {
         try {
@@ -22,6 +30,12 @@ public class SeasonalWorkerCtr implements SeasonalWorkerCtrIF{
         }
     }
 
+    /**
+     * Return a SeasonalWorker with the appropriate CPR number
+     * @param cpr CPR of the SeasonalWorker to return
+     * @return SeasonalWorker object with the appropriate CPR number
+     * @throws DataAccessException
+     */
     @Override
     public SeasonalWorker findSeasonalWorkerByCPR(String cpr) throws DataAccessException {
         try {
@@ -31,6 +45,12 @@ public class SeasonalWorkerCtr implements SeasonalWorkerCtrIF{
         }
     }
 
+    /**
+     * Return a SeasonalWorker with the appropriate Work Task ID
+     * @param workTaskID WorkTask ID of the SeasonalWorker to return
+     * @return SeasonalWorker object with the appropriate Work Task ID
+     * @throws DataAccessException
+     */
     @Override
     public SeasonalWorker findSeasonalWorkerByWorkTask(int workTaskID) throws DataAccessException {
         try{
@@ -40,15 +60,29 @@ public class SeasonalWorkerCtr implements SeasonalWorkerCtrIF{
         }
     }
 
+    /**
+     * Inserts a new SeasonalWorker into the database
+     * @param newSeasonalWorker the new SeasonalWorker  to be inserted
+     * @param workSiteID WorkSite ID of the SeasonalWorker
+     * @return Number of rows affected
+     * @throws DataAccessException
+     */
     @Override
-    public int insertSeasonalWorker(SeasonalWorker newSeasonalWorker, int workSiteID) throws DataAccessException {
+    public boolean insertSeasonalWorker(SeasonalWorker newSeasonalWorker, int workSiteID) throws DataAccessException {
         try {
-            return seasonalWorkerDB.insertSeasonalWorker(newSeasonalWorker, workSiteID, SeasonalWorker.class);
+            return (seasonalWorkerDB.insertSeasonalWorker(newSeasonalWorker, workSiteID, SeasonalWorker.class)==1);
         } catch (DataAccessException e) {
         throw new DataAccessException("SeasonalWorkerCtr error.", e);
     }
     }
 
+    /**
+     * Make changes to SeasonalWorkers already in the database
+     * @param cpr CPR number of the SeasonalWorker wished to be changed
+     * @param newSeasonalWorker new SeasonalWorker object to replace the original one
+     * @return Number of rows affected
+     * @throws DataAccessException
+     */
     @Override
     public int updateSeasonalWorker(String cpr, SeasonalWorker newSeasonalWorker) throws DataAccessException {
         try {
@@ -58,10 +92,16 @@ public class SeasonalWorkerCtr implements SeasonalWorkerCtrIF{
         }
     }
 
+    /**
+     * Deletes a SeasonalWorker from the database
+     * @param cpr CPR number of SeasonalWorker to be deleted
+     * @return Number of rows affected
+     * @throws DataAccessException
+     */
     @Override
-    public void deleteSeasonalWorker(String cpr) throws DataAccessException {
+    public int deleteSeasonalWorker(String cpr) throws DataAccessException {
         try {
-            seasonalWorkerDB.deleteSeasonalWorker(cpr, SeasonalWorker.class);
+            return seasonalWorkerDB.deleteSeasonalWorker(cpr, SeasonalWorker.class);
         } catch (DataAccessException e) {
             throw new DataAccessException("SeasonalWorkerCtr error.", e);
         }

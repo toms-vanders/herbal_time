@@ -6,6 +6,9 @@ import Model.Employee;
 
 import java.util.List;
 
+/**
+ * Used to interface between the database and the GUI
+ */
 public class EmployeeCtr implements EmployeeCtrIF {
 
     EmployeeDBIF employeeDB;
@@ -18,6 +21,11 @@ public class EmployeeCtr implements EmployeeCtrIF {
         }
     }
 
+    /**
+     * Returns a List of all Employees in the database
+     * @returns a List of all Employees in the database
+     * @throws DataAccessException
+     */
     @Override
     public List<Employee> findAllEmployees() throws DataAccessException {
         try {
@@ -27,6 +35,12 @@ public class EmployeeCtr implements EmployeeCtrIF {
         }
     }
 
+    /**
+     * Returns an Employee with the appropriate CPR number
+     * @param cpr CPR number of the Employee that is wanted
+     * @return Employee object with appropriate CPR number
+     * @throws DataAccessException
+     */
     @Override
     public Employee findEmployeeByCPR(String cpr) throws DataAccessException {
         try {
@@ -36,15 +50,28 @@ public class EmployeeCtr implements EmployeeCtrIF {
         }
     }
 
+    /**
+     * Inserts a new Employee into the database
+     * @param newEmployee the new Employee object to be inserted
+     * @return Number of rows affected
+     * @throws DataAccessException
+     */
     @Override
-    public int insertEmployee(Employee newEmployee) throws DataAccessException {
+    public boolean insertEmployee(Employee newEmployee) throws DataAccessException {
         try {
-            return employeeDB.insertEmployee(newEmployee);
+            return (employeeDB.insertEmployee(newEmployee)==1);
         } catch (DataAccessException e) {
             throw new DataAccessException("Employee controller unable to execute insertEmployee.", e);
         }
     }
 
+    /**
+     * Make changes to Employees already in the database
+     * @param cpr CPR of the Employee wished to be changed
+     * @param newEmployee new Employee object to replace the original one
+     * @return Number of rows affected
+     * @throws DataAccessException
+     */
     @Override
     public int updateEmployee(String cpr, Employee newEmployee) throws DataAccessException {
         try {
@@ -54,10 +81,16 @@ public class EmployeeCtr implements EmployeeCtrIF {
         }
     }
 
+    /**
+     * Deletes an Employee from the database
+     * @param cpr CPR of the Employee wished to be deleted
+     * @return Number of rows affected
+     * @throws DataAccessException
+     */
     @Override
-    public void deleteEmployee(String cpr) throws DataAccessException {
+    public int deleteEmployee(String cpr) throws DataAccessException {
         try {
-            employeeDB.deleteEmployee(cpr);
+            return employeeDB.deleteEmployee(cpr);
         } catch (DataAccessException e) {
             throw new DataAccessException("Employee controller unable to execute deleteEmployee.", e);
         }

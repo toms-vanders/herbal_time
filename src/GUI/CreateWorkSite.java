@@ -1,15 +1,22 @@
 package GUI;
 
 import Controller.*;
+import DB.ProduceDB;
+import DB.ProduceDBIF;
+import DB.WorkSiteProduceDB;
+import DB.WorkSiteProduceDBIF;
 import Model.Client;
 import Model.WorkSite;
+import Model.WorkSiteProduce;
 
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class CreateWorkSite extends JPanel {
 
@@ -146,8 +153,10 @@ public class CreateWorkSite extends JPanel {
         locationInfoTitle.setText("Location information:");
 
         //TODO: Worker selection
+
+        // final String[] strings = {"Item 1", "Item 2", "Item 3", "Item 4", "Item 5"};
         workerList.setModel(new AbstractListModel<>() {
-            final String[] strings = {"Item 1", "Item 2", "Item 3", "Item 4", "Item 5"};
+            final String[] strings = {" ", " ", " ", " ", " "};
 
             public int getSize() {
                 return strings.length;
@@ -165,6 +174,11 @@ public class CreateWorkSite extends JPanel {
         ComponentsConfigure.metroBtnConfig(createBtn);
 
         collectedProduceBtn.setText("Collected Produce");
+        collectedProduceBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                collectedProduceBtnActionPerformed(evt);
+            }
+        });
         addWorkersBtn.setText("Add/Edit workers");
         createBtn.setText("Create");
         cancelBtn.setText("Cancel");
@@ -306,10 +320,14 @@ public class CreateWorkSite extends JPanel {
         // TODO add your handling code here:
     }
 
+    private void collectedProduceBtnActionPerformed(java.awt.event.ActionEvent evt) {
+        collectedProduce = s -> collectedProduceStringList = s;
+                new ProduceCheckList(collectedProduce).setVisible(true);
+    }
+
     private void createBtnActionPerformed(ActionEvent evt) {
         Client selectClient = (Client) clientComboBox.getSelectedItem();
         String clientCVR = selectClient.getCvr();
-
         String name = nameField.getText();
         String description = descriptionField.getText();
         String streetName = streetNameField.getText();
@@ -317,19 +335,46 @@ public class CreateWorkSite extends JPanel {
         String zip = postalCodeField.getText();
         String typeOfJob = typeOfJobField.getText();
         double pricePerWorker = Double.parseDouble(pricePerWorkerField.getText());
-
         WorkSite newWorkSite = new WorkSite(name, description, streetName, streetNum, zip, "Denmark",
                 "DK", typeOfJob, pricePerWorker);
 
+        WorkSiteProduceDBIF wspDB;
         try {
+            wspDB = new WorkSiteProduceDB();
             if (workSiteCtr.insertWorkSite(clientCVR, newWorkSite)) {
                 new StatusDialog(mainScreen, false, StatusDialog.CONFIRM, "SUCCESS", "Successfully added new work site.");
             } else {
                 new StatusDialog(mainScreen, false, StatusDialog.WARNING, "Error adding a new work site", "Check " +
                         "provided fields");
             }
+
+            // Now we can find the newly created workSite by it's name,
+            // as it is an unique value in the database.
+            WorkSite createdWorkSite = null;
+            try {
+                createdWorkSite = workSiteCtr.findByName(name, false);
+            } catch (DataAccessException e) {
+                // TODO  Alert user
+                // There was an issue fetching the newly created website to associate with the collected produce.
+                // Couldn't associate collected produce with the worksite
+                System.err.println("There was an issue fetching the newly created website to associate with the " +
+                        "collected produce. Couldn't associate collected produce with the worksite");
+                return;
+            }
+
+            Integer workSiteID = createdWorkSite.getWorkSiteID();
+            for (String s: collectedProduceStringList) {
+                WorkSiteProduce wsp = new WorkSiteProduce(workSiteID, s);
+                try {
+                    wspDB.insertWorkSiteProduce(workSiteID, s, wsp, WorkSiteProduce.class);
+                } catch (DataAccessException e) {
+                    new StatusDialog(mainScreen,false, StatusDialog.WARNING,"Error","There was an error associating produce with worksite");
+                    System.err.println("Issue association single produce " + s + " with the worksite of ID: " +
+                            workSiteID);
+                }
+            }
         } catch (DataAccessException e) {
-            // TODO FIXME StatusDialog here
+            new StatusDialog(mainScreen,false, StatusDialog.WARNING,"Error","There was an error creating the worksite");
             // TODO price per worker validation
             System.err.println("DataAccessException");
         }
@@ -379,4 +424,7 @@ public class CreateWorkSite extends JPanel {
     private JList<String> workerList;
 
     private ArrayList<Client> clients;
+
+    private Consumer<ArrayList<String>> collectedProduce;
+    private ArrayList<String> collectedProduceStringList;
 }

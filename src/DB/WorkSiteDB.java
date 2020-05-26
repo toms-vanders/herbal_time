@@ -20,6 +20,7 @@ public class WorkSiteDB implements WorkSiteDBIF {
      */
     private static final String findAll = "SELECT * FROM WorkSite";
     private static final String findByID = "SELECT * FROM WorkSite WHERE workSiteID = ?";
+    private static final String findByName = "SELECT * FROM WorkSite WHERE siteName = ?";
     private static final String findWorkSitesOfClient = "SELECT * FROM WorkSite WHERE cvr = ?";
     private static final String insertWorkSite = "INSERT INTO WorkSite(siteName, siteDescription, streetName, streetNum," +
             " zip, typeOfJob, pricePerWorker, cvr) VALUES (?,?,?,?,?,?,?,?)";
@@ -32,7 +33,7 @@ public class WorkSiteDB implements WorkSiteDBIF {
 //            + "countryCode = ?,"
 //            + "country = ?,"
             + "typeOfJob = ?,"
-            + "pricePerWorker = ?,"
+            + "pricePerWorker = ? "
 //            + "cvr = ? "
             + "WHERE workSiteID = ?";
     private static final String deleteWorkSite = "DELETE FROM Worksite WHERE workSiteID = ?";
@@ -46,6 +47,7 @@ public class WorkSiteDB implements WorkSiteDBIF {
 
     private PreparedStatement PSfindAll;
     private PreparedStatement PSfindByID;
+    private PreparedStatement PSfindByName;
     private PreparedStatement PSinsertWorkSite;
     private PreparedStatement PSupdateWorkSite;
     private PreparedStatement PSdeleteWorkSite;
@@ -72,6 +74,7 @@ public class WorkSiteDB implements WorkSiteDBIF {
 //        try {
 //            PSfindAll = con.prepareStatement(findAll);
 //            PSfindByID = con.prepareStatement(findByID);
+//            PSfindByName = con.prepareStatement(findByName);
 //            PSinsertWorkSite = con.prepareStatement(insertWorkSite);
 //            PSupdateWorkSite = con.prepareStatement(updateWorkSite);
 //            PSdeleteWorkSite = con.prepareStatement(deleteWorkSite);
@@ -219,6 +222,36 @@ public class WorkSiteDB implements WorkSiteDBIF {
         }
     }
 
+    @Override
+    public WorkSite findByName(String siteName, boolean fullAssociation) throws DataAccessException {
+        connectToDB();
+        Connection con = DBConnection.getInstance().getConnection();
+        try {
+            PSfindByName = con.prepareStatement(findByName);
+        } catch (SQLException e) {
+            DBConnection.disconnect();
+            throw new DataAccessException("Issue preparing statement", e);
+        }
+
+        try {
+            PSfindByName.setString(1, siteName);
+        } catch (SQLException e) {
+            DBConnection.disconnect();
+            throw new DataAccessException("WorkSiteDB, findByID prepare error.", e);
+        }
+
+        ResultSet rs;
+        try {
+            rs = PSfindByName.executeQuery();
+            rs.next();
+            WorkSite res = buildObject(rs, fullAssociation);
+            DBConnection.disconnect();
+            return res;
+        } catch (SQLException e) {
+            DBConnection.disconnect();
+            throw new DataAccessException("WorkSiteDB, findByID execute error.", e);
+        }
+    }
 
     /**
      * Inserts work site into database and associates it with client
@@ -229,7 +262,7 @@ public class WorkSiteDB implements WorkSiteDBIF {
      * @throws DataAccessException
      */
     @Override
-    public Integer insertWorkSite(String cvr, WorkSite newWorkSite) throws DataAccessException {
+    public int insertWorkSite(String cvr, WorkSite newWorkSite) throws DataAccessException {
         connectToDB();
         Connection con = DBConnection.getInstance().getConnection();
         try {
@@ -239,7 +272,7 @@ public class WorkSiteDB implements WorkSiteDBIF {
             throw new DataAccessException("Issue preparing statement", e);
         }
 
-        Integer affectedRows;
+        int affectedRows;
         try {
             PSinsertWorkSite.setString(1, newWorkSite.getName());
             PSinsertWorkSite.setString(2, newWorkSite.getDescription());
@@ -265,7 +298,7 @@ public class WorkSiteDB implements WorkSiteDBIF {
     }
 
     @Override
-    public Integer updateWorkSite(int workSiteID, WorkSite newWorkSite) throws DataAccessException {
+    public int updateWorkSite(int workSiteID, WorkSite newWorkSite) throws DataAccessException {
         connectToDB();
         Connection con = DBConnection.getInstance().getConnection();
         try {
@@ -275,7 +308,7 @@ public class WorkSiteDB implements WorkSiteDBIF {
             throw new DataAccessException("Issue preparing statement", e);
         }
 
-        Integer affectedRows;
+        int affectedRows;
         try {
             PSupdateWorkSite.setString(1, newWorkSite.getName());
             PSupdateWorkSite.setString(2, newWorkSite.getDescription());
@@ -303,7 +336,7 @@ public class WorkSiteDB implements WorkSiteDBIF {
     }
 
     @Override
-    public Integer deleteWorkSite(int workSiteID) throws DataAccessException {
+    public int deleteWorkSite(int workSiteID) throws DataAccessException {
         connectToDB();
         Connection con = DBConnection.getInstance().getConnection();
         try {
@@ -320,7 +353,7 @@ public class WorkSiteDB implements WorkSiteDBIF {
             throw new DataAccessException("Issue with setting up query parameters when deleting a work site", e);
         }
 
-        Integer affectedRows;
+        int affectedRows;
         try {
             affectedRows = PSdeleteWorkSite.executeUpdate();
             DBConnection.disconnect();
@@ -382,7 +415,7 @@ public class WorkSiteDB implements WorkSiteDBIF {
             if (fullAssociation) {
                 WorkTypeDB wtDB = new WorkTypeDB();
                 List<WorkType> workTypes = new ArrayList<>(wtDB.findAllWorkTypesOfWorkSite(
-                        rs.getInt("workSiteID"), false));
+                        rs.getInt("workSiteID")));
                 if (!workTypes.isEmpty()) {
                     currentWorkSite.setWorkTypes((ArrayList<WorkType>) workTypes);
                 } else {
