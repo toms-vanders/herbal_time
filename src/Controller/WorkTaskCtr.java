@@ -3,6 +3,7 @@ package Controller;
 import DB.*;
 import Model.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -112,6 +113,15 @@ public class WorkTaskCtr implements WorkTaskCtrIF {
             return workTaskDB.updateWorkTask(newWorkTask, workTaskID);
         } catch(DataAccessException e) {
             throw new DataAccessException("WorkTaskCtr error.", e);
+        }
+    }
+
+    @Override
+    public boolean approveWorkTasks(ArrayList<Integer> idList) throws DataAccessException {
+        try{
+            return workTaskDB.approveWorkTasks(idList);
+        }catch(DataAccessException e){
+            throw new DataAccessException("Unable to execute approval of work tasks. (Control layer)",e);
         }
     }
 

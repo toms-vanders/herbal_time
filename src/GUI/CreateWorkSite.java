@@ -8,6 +8,7 @@ import DB.WorkSiteProduceDBIF;
 import Model.Client;
 import Model.WorkSite;
 import Model.WorkSiteProduce;
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 import javax.swing.*;
 
@@ -55,7 +56,8 @@ public class CreateWorkSite extends JPanel {
 
         clients = new ArrayList<>();
         try {
-            clients = new ArrayList<>(clientCtr.findAllClients());
+            clients = new ArrayList<>(clientCtr.findAllClients(false)); // todo - set fullAssociation to
+                                                                                    // todo - FALSE temporarily
         } catch (DataAccessException e) {
             throw new DataAccessException("Unable to retrieve list of clients.", e);
         }
@@ -338,45 +340,79 @@ public class CreateWorkSite extends JPanel {
         WorkSite newWorkSite = new WorkSite(name, description, streetName, streetNum, zip, "Denmark",
                 "DK", typeOfJob, pricePerWorker);
 
+        WorkSite lookingForDuplicate = null;
+        try {
+            lookingForDuplicate = workSiteCtr.findByName(name, false);
+        } catch (DataAccessException e) {
+            new StatusDialog(mainScreen,false, StatusDialog.WARNING,"Error","" +
+                    "Issue looking for duplicates. Adding worksite terminated.");
+            return;
+        }
+
+
+        if (lookingForDuplicate != null) {
+            new StatusDialog(mainScreen, false, StatusDialog.WARNING, "Error adding a new work site",
+                    "An error occurred while trying to add work site to database. Work site was not added " +
+                            "to database. Make sure the work site you're trying to add does not exist already in " +
+                            "database.");
+            return;
+        }
+
+        Boolean result = false;
+        try {
+            result = workSiteCtr.insertWorkSite(clientCVR, newWorkSite);
+        } catch (java.lang.NumberFormatException e) {
+            new StatusDialog(mainScreen,false, StatusDialog.WARNING,"Error","" +
+                    "Fields were filled incorrectly. Check provided fields and try again.");
+            return;
+        } catch (DataAccessException e ) {
+            new StatusDialog(mainScreen,false, StatusDialog.WARNING,"Error","There was an error " +
+                    "adding worksite to the database. Check your connection and try again.");
+            return;
+        }
+
+        if (result) {
+            // WorkSite was successfully added to database
+            new StatusDialog(mainScreen, false, StatusDialog.CONFIRM, "SUCCESS", "Successfully " +
+                    "added new work site.");
+        } else {
+            // WorkSite was NOT successfully added to database
+            new StatusDialog(mainScreen, false, StatusDialog.WARNING, "Error adding a new work site",
+                    "An error occurred while trying to add work site to database. Work site was not added " +
+                            "to database.");
+            return;
+        }
+
+        // Now we can find the newly created workSite by it's name,
+        // as it is an unique value in the database.
+        WorkSite createdWorkSite;
+        try {
+            createdWorkSite = workSiteCtr.findByName(name, false);
+        } catch (DataAccessException e) {
+            new StatusDialog(mainScreen,false, StatusDialog.WARNING,"Error","There was an issue " +
+                    "fetching the newly created website to associate with the collected produce. Couldn't associate " +
+                    "collected produce with the worksite");
+            return;
+        }
+
         WorkSiteProduceDBIF wspDB;
         try {
             wspDB = new WorkSiteProduceDB();
-            if (workSiteCtr.insertWorkSite(clientCVR, newWorkSite)) {
-                new StatusDialog(mainScreen, false, StatusDialog.CONFIRM, "SUCCESS", "Successfully added new work site.");
-            } else {
-                new StatusDialog(mainScreen, false, StatusDialog.WARNING, "Error adding a new work site", "Check " +
-                        "provided fields");
-            }
-
-            // Now we can find the newly created workSite by it's name,
-            // as it is an unique value in the database.
-            WorkSite createdWorkSite = null;
-            try {
-                createdWorkSite = workSiteCtr.findByName(name, false);
-            } catch (DataAccessException e) {
-                // TODO  Alert user
-                // There was an issue fetching the newly created website to associate with the collected produce.
-                // Couldn't associate collected produce with the worksite
-                System.err.println("There was an issue fetching the newly created website to associate with the " +
-                        "collected produce. Couldn't associate collected produce with the worksite");
-                return;
-            }
-
             Integer workSiteID = createdWorkSite.getWorkSiteID();
+            // TODO Maybe could make a transaction for that, so that either all WorkSiteProduce object is added,
+            //  or none
             for (String s: collectedProduceStringList) {
                 WorkSiteProduce wsp = new WorkSiteProduce(workSiteID, s);
                 try {
                     wspDB.insertWorkSiteProduce(workSiteID, s, wsp, WorkSiteProduce.class);
                 } catch (DataAccessException e) {
-                    new StatusDialog(mainScreen,false, StatusDialog.WARNING,"Error","There was an error associating produce with worksite");
-                    System.err.println("Issue association single produce " + s + " with the worksite of ID: " +
-                            workSiteID);
+                    new StatusDialog(mainScreen,false, StatusDialog.WARNING,"Error","Issue " +
+                            "association single produce " + s + " with worksite of ID: " + workSiteID);
                 }
             }
         } catch (DataAccessException e) {
-            new StatusDialog(mainScreen,false, StatusDialog.WARNING,"Error","There was an error creating the worksite");
-            // TODO price per worker validation
-            System.err.println("DataAccessException");
+            new StatusDialog(mainScreen,false, StatusDialog.WARNING,"Error","Couldn't associate " +
+                    "collected produce with the worksite");
         }
     }
 

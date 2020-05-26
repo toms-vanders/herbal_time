@@ -4,13 +4,11 @@ import Controller.DataAccessException;
 import Model.SeasonalWorker;
 import Model.WorkSite;
 import Model.WorkType;
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 import javax.xml.crypto.Data;
 import java.lang.reflect.Type;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -243,10 +241,13 @@ public class WorkSiteDB implements WorkSiteDBIF {
         ResultSet rs;
         try {
             rs = PSfindByName.executeQuery();
-            rs.next();
-            WorkSite res = buildObject(rs, fullAssociation);
-            DBConnection.disconnect();
-            return res;
+            if (rs.next()) {
+                WorkSite res = buildObject(rs, fullAssociation);
+                DBConnection.disconnect();
+                return res;
+            } else {
+                return null;
+            }
         } catch (SQLException e) {
             DBConnection.disconnect();
             throw new DataAccessException("WorkSiteDB, findByID execute error.", e);

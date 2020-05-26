@@ -2,6 +2,7 @@ package Controller;
 
 import Model.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface WorkTaskCtrIF {
@@ -11,5 +12,6 @@ public interface WorkTaskCtrIF {
     WorkTask findWorkTasks(Integer id) throws DataAccessException;
     boolean insertWorkTask(WorkTask newWorkTask, String workerCpr) throws DataAccessException;
     int updateWorkTask(WorkTask newWorkTask, Integer workTaskID) throws DataAccessException;
+    boolean approveWorkTasks(ArrayList<Integer> idList) throws DataAccessException;
     int deleteWorkTask(Integer id) throws DataAccessException;
 }

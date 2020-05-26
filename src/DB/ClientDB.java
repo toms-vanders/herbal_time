@@ -9,6 +9,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Used to access data from the Client table in the database
+ */
 public class ClientDB implements ClientDBIF {
 
     /**
@@ -193,6 +196,14 @@ public class ClientDB implements ClientDBIF {
         return affectedRows;
     }
 
+    /**
+     * Make changes to Clients already in the database
+     * @param clientCVR CVR of the Client wished to be changed
+     * @param newClient new Client object to replace the original one
+     * @param type Requires to be the proper type
+     * @return
+     * @throws DataAccessException
+     */
     @Override
     public int updateClient(String clientCVR, Client newClient, Type type) throws DataAccessException {
         connectToDB();
@@ -233,6 +244,13 @@ public class ClientDB implements ClientDBIF {
         return affectedRows;
     }
 
+    /**
+     * Deletes a Client from the database
+     * @param clientCVR CVR of the Client wished to be deleted
+     * @param type Requires to be the proper type
+     * @return Number of rows affected
+     * @throws DataAccessException
+     */
     @Override
     public int deleteClient(String clientCVR, Type type) throws DataAccessException {
         connectToDB();
@@ -264,10 +282,10 @@ public class ClientDB implements ClientDBIF {
 
     /**
      * Used when returning multiple clients at once
-     * @param rs
-     * @param fullAssociation
-     * @param type
-     * @return
+     * @param rs The ResultSet from which Client objects are to be assembled
+     * @param fullAssociation If true, returns also the Client's associated WorkSites
+     * @param type Requires to be the proper type
+     * @return A List of Client objects
      * @throws DataAccessException
      */
     private List<Client> buildObjects(ResultSet rs, boolean fullAssociation, Type type) throws DataAccessException {
@@ -287,10 +305,10 @@ public class ClientDB implements ClientDBIF {
 
     /**
      * Get data from the DB and build a Client object
-     * @param rs
-     * @param fullAssociation
-     * @param type
-     * @return
+     * @param rs The ResultSet from which a Client object is to be assembled
+     * @param fullAssociation If true, returns also the Client's associated WorkSites
+     * @param type Requires to be the proper type
+     * @return An assembled Client object
      * @throws DataAccessException
      */
     private Client buildObject(ResultSet rs, boolean fullAssociation, Type type) throws DataAccessException {

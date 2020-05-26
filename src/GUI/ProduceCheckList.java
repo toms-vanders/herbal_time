@@ -225,7 +225,7 @@ public class ProduceCheckList extends javax.swing.JFrame {
             }
         }
         consumer.accept(collectedProduce);
-        dispose();
+        setVisible(false);
     }
 
 //    public void getCollectedProduce(Consumer<HashMap<Object, Object>> consumer) {

@@ -35,8 +35,9 @@ public class PendingTasks extends JPanel {
         //TODO: finish loading workTasks
         scrollableListContainer = new JScrollPane();
         listContainer = new JPanel();
-        topBar = new JPanel();
-        frameTitle = new JLabel();
+        JPanel topBar = new JPanel();
+        // Variables declaration - do not modify
+        JLabel frameTitle = new JLabel();
 
         setBackground(new Color(71, 120, 197));
         setEnabled(false);
@@ -89,12 +90,14 @@ public class PendingTasks extends JPanel {
         // TODO add your handling code here:
     }
 
-    private void approveBtnActionPerformed(ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void viewBtnActionPerformed(ActionEvent evt) {
-        // TODO add your handling code here:
+    private void approveBtnActionPerformed(Integer workTaskId) throws DataAccessException {
+        ArrayList<Integer> idList = new ArrayList<>();
+        idList.add(workTaskId);
+        if(workTaskController.approveWorkTasks(idList)){
+            new StatusDialog(mainScreen,true,StatusDialog.CONFIRM,"Approved","Work task has been successfully approved");
+            loadPendingTasks();
+            scrollableListContainer.validate();
+        }
     }
 
     private void configureLabel(JLabel label, String text) {
@@ -135,13 +138,19 @@ public class PendingTasks extends JPanel {
 
         ComponentsConfigure.metroBtnConfig(approveBtn);
         approveBtn.setIcon(ComponentsConfigure.approveIcon);
-        approveBtn.addActionListener(this::approveBtnActionPerformed);
+        approveBtn.addActionListener((e) -> {
+            try {
+                approveBtnActionPerformed(currentTask.getWorkTaskID());
+            } catch (DataAccessException dataAccessException) {
+                dataAccessException.printStackTrace();
+            }
+        });
 
         ComponentsConfigure.metroBtnConfig(viewBtn);
         viewBtn.setIcon(ComponentsConfigure.viewIcon); // NOI18N
         viewBtn.addActionListener((e) -> {
             try {
-                new ViewWorkTask(currentTask,currentWorker).start(currentTask,currentWorker);
+                new ViewWorkTask(currentTask,currentWorker,this).start(currentTask,currentWorker);
             } catch (DataAccessException dataAccessException) {
                 dataAccessException.printStackTrace();
             }
@@ -156,7 +165,7 @@ public class PendingTasks extends JPanel {
 
     }
 
-    private JPanel createListContainer() throws DataAccessException {
+    private JPanel createListContainer() {
 
         listContainer = new JPanel();
         listContainerLayout = new GroupLayout(listContainer);
@@ -301,7 +310,8 @@ public class PendingTasks extends JPanel {
                 addElementToList(elementToAdd);
             }
         }
-        listContainer.validate();
+        listContainer.revalidate();
+        scrollableListContainer.revalidate();
     }
 
     @Override
@@ -316,19 +326,15 @@ public class PendingTasks extends JPanel {
         }
     }
 
-    private void loadPendingTasks() throws DataAccessException {
+    void loadPendingTasks() throws DataAccessException {
         pendingTasks = new ArrayList<>(workTaskController.findAllPendingTasks(true));
         MAX_TASKS = pendingTasks.size();
+        listContainer.removeAll();
         createElements();
     }
 
-    // Variables declaration - do not modify
-    private JLabel frameTitle;
-    private JScrollPane scrollableListContainer;
-    private JPanel topBar;
-    private MainScreen mainScreen;
-
     private JPanel listContainer;
+    private JScrollPane scrollableListContainer;
 
     private GroupLayout listContainerLayout;
     private GroupLayout.ParallelGroup parallelGroup;
@@ -338,4 +344,5 @@ public class PendingTasks extends JPanel {
     private WorkTaskCtrIF workTaskController;
     private SeasonalWorkerCtrIF seasonalWorkerController;
     private ArrayList<WorkTask> pendingTasks;
+    private final MainScreen mainScreen;
 }

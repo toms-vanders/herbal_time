@@ -1,6 +1,6 @@
 package Controller;
 
-public class DataAccessException extends Exception{
+public class DataAccessException extends Exception {
     private static final long serialVersionUID = 1L;
 
     public DataAccessException(String message,Throwable e){

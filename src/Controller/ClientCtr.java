@@ -20,12 +20,13 @@ public class ClientCtr implements ClientCtrIF {
 
     /**
      * Returns a list of all Clients loaded in the database
+     * @param fullAssociation if true, returns also the Client's associated WorkSites
      * @return a list of all Clients in the database
      * @throws DataAccessException
      */
-    public List<Client> findAllClients() throws DataAccessException {
+    public List<Client> findAllClients(boolean fullAssociation) throws DataAccessException {
         try {
-            return clientDB.findAll(false,Client.class);
+            return clientDB.findAll(fullAssociation,Client.class);
         } catch (DataAccessException e) {
             e.printStackTrace();
             throw new DataAccessException("ClientCtr error.", e);
@@ -73,7 +74,7 @@ public class ClientCtr implements ClientCtrIF {
      */
     public int updateClient(String clientCVR, Client newClient) throws DataAccessException {
         try {
-            return clientDB.updateClient(clientCVR,newClient, Client.class);
+            return clientDB.updateClient(clientCVR, newClient, Client.class);
         } catch(DataAccessException e) {
             throw new DataAccessException("ClientCtr error.", e);
         }

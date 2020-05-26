@@ -15,9 +15,10 @@ import java.util.List;
 
 public class ViewWorkTask extends JFrame {
 
-    public ViewWorkTask(WorkTask currentTask,SeasonalWorker currentWorker) throws DataAccessException {
+    public ViewWorkTask(WorkTask currentTask,SeasonalWorker currentWorker,PendingTasks pendingTasks) throws DataAccessException {
         this.currentTask = currentTask;
         this.currentWorker = currentWorker;
+        this.pendingTasks = pendingTasks;
 
         try {
             workSiteController = new WorkSiteCtr();
@@ -147,10 +148,14 @@ public class ViewWorkTask extends JFrame {
         configureLabel(emailValue,currentWorker.getEmail());
 
         startDatePicker.setBackground(new Color(120, 168, 252));
+        startDatePicker.setDateTimePermissive(currentTask.getDateStart().toLocalDate().atStartOfDay());
         endDatePicker.setBackground(new Color(120, 168, 252));
+        endDatePicker.setDateTimePermissive(currentTask.getDateEnd().toLocalDate().atStartOfDay());
 
+        quantitySpinner.setValue(currentTask.getQuantity());
         quantityPicker.setModel(new DefaultComboBoxModel<>(new String[]{"Kg", "Crates"}));
         statusPicker.setModel(new DefaultComboBoxModel<>(new String[]{"Pending approval", "Approved", "Rejected"}));
+        statusPicker.setSelectedItem(currentTask.getStatus());
 
         locationList.addActionListener(this::locationListActionPerformed);
         produceList.addActionListener(this::configureQuantity);
@@ -158,7 +163,13 @@ public class ViewWorkTask extends JFrame {
         ComponentsConfigure.metroBtnConfig(approveBtn);
         approveBtn.setIcon(ComponentsConfigure.approveIcon);
         approveBtn.setText("Approve");
-        approveBtn.addActionListener((e) -> {});//TODO: ApproveBtn
+        approveBtn.addActionListener((e) -> {
+            try {
+                approveWorkTask(e);
+            } catch (DataAccessException dataAccessException) {
+                dataAccessException.printStackTrace();
+            }
+        });//TODO: ApproveBtn
 
         ComponentsConfigure.metroBtnConfig(saveChangesBtn);
         saveChangesBtn.setIcon(ComponentsConfigure.saveIcon);
@@ -168,7 +179,7 @@ public class ViewWorkTask extends JFrame {
         ComponentsConfigure.metroBtnConfig(cancelBtn);
         cancelBtn.setIcon(ComponentsConfigure.trashIcon);
         cancelBtn.setText("Cancel");
-        cancelBtn.addActionListener((e) -> {});//TODO: cancelBtn
+        cancelBtn.addActionListener((e) -> {this.dispose();});//TODO: cancelBtn
 
         GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -337,7 +348,7 @@ public class ViewWorkTask extends JFrame {
 
         EventQueue.invokeLater(() -> {
             try {
-                new ViewWorkTask(currentTask,currentWorker).setVisible(true);
+                new ViewWorkTask(currentTask,currentWorker,pendingTasks).setVisible(true);
             } catch (DataAccessException e) {
                 e.printStackTrace();
             }
@@ -385,6 +396,16 @@ public class ViewWorkTask extends JFrame {
         }
     }
 
+    private void approveWorkTask(ActionEvent e) throws DataAccessException {
+        ArrayList<Integer> idList = new ArrayList<>();
+        idList.add(currentTask.getWorkTaskID());
+        if(workTaskController.approveWorkTasks(idList)){
+            new StatusDialog(this,true,StatusDialog.CONFIRM,"Approved","Work task has been successfully approved");
+            pendingTasks.loadPendingTasks();
+            this.dispose();
+        }
+    }
+
     private JButton cancelBtn;
     private JLabel emailLabel;
     private JLabel emailValue;
@@ -419,6 +440,7 @@ public class ViewWorkTask extends JFrame {
 
     private WorkTask currentTask;
     private SeasonalWorker currentWorker;
+    private PendingTasks pendingTasks;
 
     private WorkSiteCtrIF workSiteController;
     private WorkTaskCtrIF workTaskController;

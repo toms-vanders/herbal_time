@@ -9,8 +9,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Used to access data from the Employee table in the database
+ */
 public class EmployeeDB implements EmployeeDBIF {
 
+    /**
+     * Pre-made queries for the program
+     */
     private static final String findAll = "SELECT * FROM Employee emp JOIN PERSON ps ON emp.cpr = ps.cpr";
     private static final String findEmployeeByCPR = "SELECT * FROM Employee WHERE cpr = ?";
     private static final String insertEmployee = "INSERT INTO Employee VALUES(?,?,?,?)";
@@ -22,6 +28,9 @@ public class EmployeeDB implements EmployeeDBIF {
             + " WHERE cpr = ?";
     private static final String deleteEmployeeByCPR = "DELETE FROM Employee WHERE cpr = ?";
 
+    /**
+     * Prepared statement declaration for the above queries
+     */
     private PreparedStatement PSfindAll;
     private PreparedStatement PSfindEmployeeByCPR;
     private PreparedStatement PSinsertEmployee;
@@ -45,7 +54,7 @@ public class EmployeeDB implements EmployeeDBIF {
         }
     }
 
-    // UNUSED, see ClientDB
+    // UNUSED, see ClientDB - TODO
 //    private void init() throws DataAccessException {
 //        connectToDB();
 //        Connection con = DBConnection.getInstance().getConnection();
@@ -62,6 +71,11 @@ public class EmployeeDB implements EmployeeDBIF {
 //        }
 //    }
 
+    /**
+     *
+     * @return
+     * @throws DataAccessException
+     */
     @Override
     public List<Employee> findAll() throws DataAccessException {
         connectToDB();
@@ -82,6 +96,12 @@ public class EmployeeDB implements EmployeeDBIF {
         }
     }
 
+    /**
+     *
+     * @param employeeCPR
+     * @return
+     * @throws DataAccessException
+     */
     @Override
     public Employee findEmployeeByCPR(String employeeCPR) throws DataAccessException {
         connectToDB();
@@ -105,6 +125,12 @@ public class EmployeeDB implements EmployeeDBIF {
         }
     }
 
+    /**
+     *
+     * @param newEmployee
+     * @return
+     * @throws DataAccessException
+     */
     @Override
     public int insertEmployee(Employee newEmployee) throws DataAccessException {
         connectToDB();
@@ -135,8 +161,15 @@ public class EmployeeDB implements EmployeeDBIF {
             throw new DataAccessException("Employee insertion failed, unable to retrieve update information.", e);
         }
         return affectedRows;
-    }
 
+    }
+/**
+     * 
+     * @param employeeCPR
+     * @param newEmployee
+     * @return
+     * @throws DataAccessException
+     */
     @Override
     public int updateEmployee(String employeeCPR, Employee newEmployee) throws DataAccessException {
         connectToDB();
@@ -169,6 +202,12 @@ public class EmployeeDB implements EmployeeDBIF {
         return affectedRows;
     }
 
+    /**
+     *
+     * @param employeeCPR
+     * @return
+     * @throws DataAccessException
+     */
     @Override
     public int deleteEmployee(String employeeCPR) throws DataAccessException {
         connectToDB();
@@ -196,8 +235,15 @@ public class EmployeeDB implements EmployeeDBIF {
             throw new DataAccessException("Employee deletion failed to execute.", e);
         }
         return affectedRows;
+
     }
 
+    /**
+     *
+     * @param rs
+     * @return
+     * @throws DataAccessException
+     */
     private List<Employee> buildObjects(ResultSet rs) throws DataAccessException {
         List<Employee> res = new ArrayList<>();
         try {
@@ -213,7 +259,12 @@ public class EmployeeDB implements EmployeeDBIF {
         }
     }
 
-
+    /**
+     * Get data from the DB and build an Employee object
+     * @param rs The ResultSet from which an Employee object is to be assembled
+     * @return An assembled Employee object
+     * @throws DataAccessException
+     */
     private Employee buildObject(ResultSet rs) throws DataAccessException {
         Employee currentEmployee;
         try {
