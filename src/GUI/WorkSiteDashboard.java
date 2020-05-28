@@ -1,8 +1,9 @@
 package GUI;
 
-import DB.Exception.DataAccessException;
+import DB.DataAccessException;
 import Controller.WorkSiteCtr;
 import Controller.WorkSiteCtrIF;
+import GUI.Components.BackgroundWorker;
 import GUI.Components.ComponentsConfigure;
 import Model.WorkSite;
 import org.netbeans.lib.awtextra.AbsoluteConstraints;
@@ -18,6 +19,8 @@ public class WorkSiteDashboard extends JPanel {
     private static int MAX_SITES;
     private final MainScreen mainScreen;
     private JPanel listContainer;
+    private JScrollPane scrollableListContainer;
+    private WorkSiteCtrIF workSitesCtr;
 
     private GroupLayout listContainerLayout;
     private GroupLayout.ParallelGroup parallelGroup;
@@ -40,7 +43,6 @@ public class WorkSiteDashboard extends JPanel {
     
     private void initComponents() throws DataAccessException {
 
-        WorkSiteCtrIF workSitesCtr;
         workSitesCtr = new WorkSiteCtr();
         workSites = new ArrayList<>();
         try {
@@ -53,7 +55,7 @@ public class WorkSiteDashboard extends JPanel {
         JPanel topBar = new JPanel();
         JLabel taskTitle = new JLabel();
         JPanel mainContainer = new JPanel();
-        JScrollPane scrollablePanel = new JScrollPane();
+        scrollableListContainer = new JScrollPane();
         listContainer = new JPanel();
         JButton createWorkSite = new JButton();
         JButton searchWorkSite = new JButton();
@@ -92,8 +94,8 @@ public class WorkSiteDashboard extends JPanel {
 
         mainContainer.setBackground(new Color(71, 120, 197));
 
-        scrollablePanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollablePanel.setMinimumSize(new Dimension(900, 600));
+        scrollableListContainer.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollableListContainer.setMinimumSize(new Dimension(900, 600));
 
         listContainer.setBackground(new Color(71, 120, 197));
         listContainer.setMinimumSize(new Dimension(900, 600));
@@ -101,7 +103,7 @@ public class WorkSiteDashboard extends JPanel {
 
         listContainer = createListContainer();
 
-        scrollablePanel.setViewportView(listContainer);
+        scrollableListContainer.setViewportView(listContainer);
 
         ComponentsConfigure.metroBtnConfig(createWorkSite);
         createWorkSite.setText("Create work site");
@@ -133,7 +135,7 @@ public class WorkSiteDashboard extends JPanel {
                                         .addGroup(mainContainerLayout.createSequentialGroup()
                                                 .addComponent(createWorkSite, GroupLayout.PREFERRED_SIZE, 285, GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(scrollablePanel, GroupLayout.PREFERRED_SIZE, 658, GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(scrollableListContainer, GroupLayout.PREFERRED_SIZE, 658, GroupLayout.PREFERRED_SIZE)
                                                 .addGap(10, 10, 10))
                                         .addGroup(mainContainerLayout.createSequentialGroup()
                                                 .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -146,7 +148,7 @@ public class WorkSiteDashboard extends JPanel {
                 mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(mainContainerLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(scrollablePanel, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                .addComponent(scrollableListContainer, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                                 .addContainerGap())
                         .addGroup(mainContainerLayout.createSequentialGroup()
                                 .addGap(100, 100, 100)
@@ -236,7 +238,10 @@ public class WorkSiteDashboard extends JPanel {
 
         sequentialGroup = listContainerLayout.createSequentialGroup();
         listContainerLayout.setVerticalGroup(sequentialGroup);
+        return listContainer;
+    }
 
+    private void createElements(){
         for(int i = 0; i < MAX_SITES; i++){
             JPanel elementToAdd = new JPanel();
             JLabel workSiteName = new JLabel();
@@ -248,6 +253,44 @@ public class WorkSiteDashboard extends JPanel {
             setElementGroupsPosition(elementToAdd, workSiteName, viewBtn, editBtn, removeBtn);
             addElementToList(elementToAdd);
         }
-        return listContainer;
+        scrollableListContainer.revalidate();
+        listContainer.revalidate();
+        scrollableListContainer.repaint();
+        listContainer.repaint();
+    }
+
+    private void loadWorkSites() throws DataAccessException {
+        if(!(workSites == null)){
+            if(!workSites.isEmpty()){
+                workSites.clear();
+            }
+        }
+        workSites = new ArrayList<>(workSitesCtr.listAllWorkSites(false));
+        MAX_SITES = workSites.size();
+        listContainer.removeAll();
+        createElements();
+    }
+
+    @Override
+    public void setVisible(boolean aFlag) {
+        super.setVisible(aFlag);
+        new BackgroundWorker(() -> {
+            if(aFlag){
+                try {
+                    loadWorkSites();
+                } catch (DataAccessException e) {
+                    e.printStackTrace();
+                }
+            }else{
+                if(!(workSites == null)){
+                    if(!workSites.isEmpty()){
+                        workSites.clear();
+                    }
+                }
+                listContainer.removeAll();
+                listContainer.revalidate();
+                listContainer.repaint();
+            }
+        },"Loading work sites","Loading work sites from database, please wait.");
     }
 }

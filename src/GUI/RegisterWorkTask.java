@@ -1,7 +1,7 @@
 package GUI;
 
 import Controller.*;
-import DB.Exception.DataAccessException;
+import DB.DataAccessException;
 import GUI.Components.BackgroundWorker;
 import GUI.Components.ComponentsConfigure;
 import GUI.Components.StatusDialog;

@@ -1,6 +1,6 @@
 package GUI.DBStatus;
 
-import DB.Exception.DataAccessException;
+import DB.DataAccessException;
 import DB.DBConnection;
 import GUI.MainScreen;
 
@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class StatusThread extends Thread {
     private DBConnection dbConnection;
@@ -18,15 +19,19 @@ public class StatusThread extends Thread {
     private Status lastChangedStatus;
     private final JLabel statusLabel = MainScreen.getConnectionStatusLabel();
     private final JLabel statusIcon = MainScreen.getConnectionStatusIcon();
+    public AtomicBoolean connectionStatus = new AtomicBoolean(false);
 
     public StatusThread() {
         this.status = Status.UNCHECKED;
     }
 
+    public AtomicBoolean getConnectionStatus(){
+        return connectionStatus;
+    }
+
     @SuppressWarnings({"InfiniteLoopStatement", "BusyWait"})
     @Override
     public void run() {
-//        System.out.println("Current connection status: " + this.status);
         while (true) {
             try {
                 checkDBConnection();
@@ -44,10 +49,13 @@ public class StatusThread extends Thread {
 
     private ImageIcon getIcon(Status status) {
         if (status == Status.WORKING) {
+            connectionStatus.set(true);
             return new ImageIcon(getClass().getResource("/icons8_connection_status_on_24px.png"));
         } else if (status == Status.UNABLE_TO_READ) {
+            connectionStatus.set(false);
             return new ImageIcon(getClass().getResource("icons8_connection_status_meh_24px.png"));
         } else {
+            connectionStatus.set(false);
             return new ImageIcon(getClass().getResource("/icons8_connection_status_off_24px.png"));
         }
     }

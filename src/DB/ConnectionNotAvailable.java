@@ -1,4 +1,4 @@
-package DB.Exception;
+package DB;
 
 public class ConnectionNotAvailable extends Exception {
     private static final long serialVersionUID = 2L;

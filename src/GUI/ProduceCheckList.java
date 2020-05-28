@@ -2,7 +2,7 @@ package GUI;
 
 import javax.swing.*;
 import Controller.*;
-import DB.Exception.DataAccessException;
+import DB.DataAccessException;
 import DB.ProduceDB;
 import GUI.Components.ComponentsConfigure;
 import Model.*;

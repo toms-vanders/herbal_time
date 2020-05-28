@@ -1,6 +1,6 @@
 package Controller;
 
-import DB.Exception.DataAccessException;
+import DB.DataAccessException;
 import Model.WorkTask;
 
 import java.util.ArrayList;

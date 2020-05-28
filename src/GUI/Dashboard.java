@@ -1,7 +1,7 @@
 package GUI;
 
 import Controller.*;
-import DB.Exception.DataAccessException;
+import DB.DataAccessException;
 import GUI.Components.ComponentsConfigure;
 import Model.SeasonalWorker;
 import org.netbeans.lib.awtextra.AbsoluteConstraints;
@@ -21,27 +21,8 @@ import Controller.DataModel.*;
 
 public class Dashboard extends JPanel {
     private final MainScreen mainScreen;
-    private JLabel calendarBtn;
-    private JButton contactLeaderBtn;
-    private JLabel contactsBtn;
-    private JLabel exitBtn;
-    private JScrollPane workListView;
-    private JSeparator buttonSeparator;
-    private JLabel logoutBtn;
-    private JLabel mailBtn;
-    private JLabel monthYearLabel;
-    private JPanel overviewBtns;
-    private JPanel overviewPane;
-    private JPanel overviewProfile;
-    private JLabel profileNameLabel;
-    private JLabel profilePicture;
-    private JLabel readableDayLabel;
-    private JButton registerTaskBtn;
     private RegisterWorkTask registerWorkTask;
-    private JButton viewTaskBtn;
-    private JTable workTaskListTable;
     private WorkTaskDataModel workTaskModel;
-    private WorkTaskCtrIF workTaskController;
     private final SeasonalWorker currentWorker;
     private JPanel subDashboard;
     static final String WorkListScreen = "WorkListScreen";
@@ -50,31 +31,44 @@ public class Dashboard extends JPanel {
     public Dashboard(MainScreen mainScreen,SeasonalWorker currentWorker) throws DataAccessException {
         this.currentWorker = currentWorker;
         this.mainScreen = mainScreen;
-        initComponents();
-        registerWorkTask.setVisible(false);
+        try {
+            initComponents();
+            registerWorkTask.setVisible(false);
+        } catch (DataAccessException e) {
+            System.err.println("Issue obtaining connection.");
+//            e.printStackTrace();
+            // Alert the user here with e.g JDialog saying there was an issue connecting to the database.
+            // TODO
+            // Add a refresh button.
+        }
+
     }
 
     private void initComponents() throws DataAccessException {
-        overviewPane = new JPanel();
-        overviewProfile = new JPanel();
-        overviewBtns = new JPanel();
-        mailBtn = new JLabel();
-        contactsBtn = new JLabel();
-        calendarBtn = new JLabel();
-        logoutBtn = new JLabel();
-        buttonSeparator = new JSeparator();
-        exitBtn = new JLabel();
-        profileNameLabel = new JLabel();
-        profilePicture = new JLabel();
-        viewTaskBtn = new JButton();
-        readableDayLabel = new JLabel();
-        monthYearLabel = new JLabel();
-        registerTaskBtn = new JButton();
-        contactLeaderBtn = new JButton();
+        JPanel overviewPane = new JPanel();
+        JPanel overviewProfile = new JPanel();
+        JPanel overviewBtns = new JPanel();
+        JLabel mailBtn = new JLabel();
+        JLabel contactsBtn = new JLabel();
+        JLabel calendarBtn = new JLabel();
+        JLabel logoutBtn = new JLabel();
+        JSeparator buttonSeparator = new JSeparator();
+        JLabel exitBtn = new JLabel();
+        JLabel profileNameLabel = new JLabel();
+        JLabel profilePicture = new JLabel();
+        JButton viewTaskBtn = new JButton();
+        JLabel readableDayLabel = new JLabel();
+        JLabel monthYearLabel = new JLabel();
+        JButton registerTaskBtn = new JButton();
+        JButton contactLeaderBtn = new JButton();
         registerWorkTask = new RegisterWorkTask(this,mainScreen);
-        workListView = new JScrollPane();
-        workTaskListTable = new JTable();
-        workTaskController = new WorkTaskCtr();
+        JScrollPane workListView = new JScrollPane();
+        JTable workTaskListTable = new JTable();
+        JPopupMenu taskListPopupMenu = new JPopupMenu();
+        JMenuItem taskAdd = new JMenuItem("Register new work task.");
+        JMenuItem taskView = new JMenuItem("View work task");
+        JMenuItem taskEdit = new JMenuItem("Edit work task");
+        WorkTaskCtrIF workTaskController = new WorkTaskCtr();
         workTaskModel = new WorkTaskDataModel(
                 new ArrayList<>(workTaskController.findAllWorkTasksOfWorker(true, "1451684849")),
                 "1451684849");
@@ -240,6 +234,25 @@ public class Dashboard extends JPanel {
         workTaskListTable.setRowHeight(32);
         workTaskListTable.setSelectionBackground(new Color(0, 120, 215));
         workListView.setViewportView(workTaskListTable);
+        taskListPopupMenu.add(taskAdd);
+        taskListPopupMenu.add(taskView);
+        taskListPopupMenu.add(taskEdit);
+        workTaskListTable.setComponentPopupMenu(taskListPopupMenu);
+        taskAdd.addActionListener(this::registerTaskBtnActionPerformed);
+        taskView.addActionListener((l) ->{
+
+        });
+        taskEdit.addActionListener((l) ->{
+
+        });
+        workTaskListTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                Point point = e.getPoint();
+                int currentRow = workTaskListTable.rowAtPoint(point);
+                workTaskListTable.setRowSelectionInterval(currentRow,currentRow);
+            }
+        });
 
         add(overviewPane, new AbsoluteConstraints(0, 0, 310, 720));
         add(subDashboard, new AbsoluteConstraints(310, 0, -1, -1));

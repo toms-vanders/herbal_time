@@ -1,6 +1,6 @@
 package Controller.DataModel;
 
-import DB.Exception.DataAccessException;
+import DB.DataAccessException;
 import Controller.WorkTaskCtr;
 import Controller.WorkTaskCtrIF;
 import Model.WorkTask;

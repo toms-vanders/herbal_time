@@ -1,6 +1,6 @@
 package GUI;
 
-import DB.Exception.DataAccessException;
+import DB.DataAccessException;
 import Controller.SeasonalWorkerCtr;
 import Controller.SeasonalWorkerCtrIF;
 import GUI.Components.ComponentsConfigure;
@@ -143,7 +143,7 @@ public class WorkersScreen extends JFrame {
                         .addComponent(mainContainer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        setIconImage(new ImageIcon(getClass().getResource("/icons8_potted_plant_50px_1.png")).getImage());
+        setIconImage(ComponentsConfigure.plantIcon.getImage());
         setResizable(false);
         pack();
         setLocationRelativeTo(null);
@@ -155,21 +155,21 @@ public class WorkersScreen extends JFrame {
         listElement.setPreferredSize(new Dimension(770, 112));
         listElement.setMinimumSize(new Dimension(770, 112));
 
-        profilePicture.setIcon(new ImageIcon(getClass().getResource("/icons8_github_96px.png"))); // NOI18N
+        profilePicture.setIcon(ComponentsConfigure.defaultProfile); // NOI18N
 
         personName.setFont(ComponentsConfigure.defaultFont); // NOI18N
         personName.setForeground(Color.WHITE);
         personName.setText(name);
 
         editBtn.setBackground(new Color(23, 35, 51));
-        editBtn.setIcon(new ImageIcon(getClass().getResource("/icons8_edit_32px.png"))); // NOI18N
+        editBtn.setIcon(ComponentsConfigure.editIcon); // NOI18N
         editBtn.setText("Edit");
         ComponentsConfigure.metroBtnConfig(editBtn);
         //TODO: edit button action listener
         editBtn.addActionListener(e -> {});
 
         removeBtn.setBackground(new Color(23, 35, 51));
-        removeBtn.setIcon(new ImageIcon(getClass().getResource("/icons8_trash_can_32px.png"))); // NOI18N
+        removeBtn.setIcon(ComponentsConfigure.trashIcon); // NOI18N
         removeBtn.setText("Remove");
         ComponentsConfigure.metroBtnConfig(removeBtn);
         //TODO: remove button action listener

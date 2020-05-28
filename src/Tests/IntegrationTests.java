@@ -1,6 +1,6 @@
 package Tests;
 
-import DB.Exception.DataAccessException;
+import DB.DataAccessException;
 import DB.ClientDB;
 import DB.DBConnection;
 import DB.SeasonalWorkerDB;
@@ -92,8 +92,10 @@ public class IntegrationTests {
         wtaDB.insertWorkTask(testWorkTask,randomGeneratedNumString);
 
         /* Test for update & delete (cascade) */
-        // TODO, make this part
+        // remove client, see what happens to the worksite
+        cDB.deleteClient(randomGeneratedNumString);
 
+        System.out.println(wsDB.findByName("site"+randomGeneratedNumString, true));
 
         /* Additional cleanup that was not covered by the previous part*/
     }

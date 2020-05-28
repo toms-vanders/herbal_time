@@ -1,6 +1,6 @@
 package Tests;
 
-import DB.Exception.DataAccessException;
+import DB.DataAccessException;
 import DB.DBConnection;
 import DB.WorkSiteDB;
 import Model.WorkSite;

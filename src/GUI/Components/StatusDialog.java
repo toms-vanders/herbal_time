@@ -21,7 +21,9 @@ public class StatusDialog extends JDialog {
         this.msg = msg;
         this.typeOfDialog = typeOfDialog;
         initComponents();
-        loadingIcon.start();
+        if(typeOfDialog.equals(LOADING)){
+            loadingIcon.start();
+        }
         setVisible(true);
     }
 

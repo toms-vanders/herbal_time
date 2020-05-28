@@ -1,7 +1,8 @@
 package GUI;
 
 import Controller.*;
-import DB.Exception.DataAccessException;
+import DB.DataAccessException;
+import GUI.Components.BackgroundWorker;
 import GUI.Components.ComponentsConfigure;
 import GUI.Components.StatusDialog;
 import Model.SeasonalWorker;
@@ -33,7 +34,7 @@ public class PendingTasks extends JPanel {
         initComponents();
     }
 
-    private void initComponents() throws DataAccessException {
+    private void initComponents() {
 
         workTaskController = new WorkTaskCtr();
         seasonalWorkerController = new SeasonalWorkerCtr();
@@ -106,31 +107,17 @@ public class PendingTasks extends JPanel {
     private void approveBtnActionPerformed(Integer workTaskID) {
         ArrayList<Integer> idList = new ArrayList<>();
         idList.add(workTaskID);
-        SwingWorker<Void,Void> loadingSwingWorker = new SwingWorker<Void, Void>() {
-            @Override
-            protected Void doInBackground() {
-                try {
-                    if(workTaskController.approveWorkTasks(idList)){
-                        SwingUtilities.invokeLater(() -> new StatusDialog(mainScreen,true,StatusDialog.CONFIRM,"Approved","Work task has been successfully approved"));
-                        loadPendingTasks();
-                        scrollableListContainer.validate();
-                    }
-                } catch (DataAccessException e) {
-                    e.printStackTrace();
+        new BackgroundWorker(() -> {
+            try {
+                if(workTaskController.approveWorkTasks(idList)){
+                    SwingUtilities.invokeLater(() -> new StatusDialog(mainScreen,true,StatusDialog.CONFIRM,"Approved","Work task has been successfully approved"));
+                    loadPendingTasks();
+                    scrollableListContainer.validate();
                 }
-                return null;
+            } catch (DataAccessException e) {
+                e.printStackTrace();
             }
-        };
-        final StatusDialog loadingTask = new StatusDialog(mainScreen,false,StatusDialog.CONFIRM,"Approved","Work task is being processed");
-
-        loadingSwingWorker.addPropertyChangeListener(evt -> {
-            if(evt.getPropertyName().equals("state")){
-                if(evt.getNewValue() == SwingWorker.StateValue.DONE){
-                    loadingTask.dispose();
-                }
-            }
-        });
-        loadingSwingWorker.execute();
+        },"Approved","Work task is being processed");
     }
 
     private void configureLabel(JLabel label, String text) {
@@ -354,38 +341,25 @@ public class PendingTasks extends JPanel {
     @Override
     public void setVisible(boolean aFlag) {
         super.setVisible(aFlag);
-        SwingWorker<Void,Void> loadingSwingWorker = new SwingWorker<Void,Void>() {
-            @Override
-            protected Void doInBackground() {
-                if(aFlag){
-                    try {
-                        loadPendingTasks();
-                    } catch (DataAccessException e) {
-                        e.printStackTrace();
-                    }
-                }else{
-                    if(!(pendingTasks == null)){
-                        if(!pendingTasks.isEmpty()){
-                            pendingTasks.clear();
-                        }
-                    }
-                    listContainer.removeAll();
-                    listContainer.revalidate();
-                    listContainer.repaint();
+        new BackgroundWorker(()->{
+            if(aFlag){
+                try {
+                    loadPendingTasks();
+                } catch (DataAccessException e) {
+                    e.printStackTrace();
                 }
-                return null;
-            }
-        };
-        final StatusDialog loadingTask = new StatusDialog(mainScreen,false,StatusDialog.LOADING,"Loading tasks","Loading pending tasks from the database, please wait.");
-
-        loadingSwingWorker.addPropertyChangeListener(evt -> {
-            if(evt.getPropertyName().equals("state")){
-                if(evt.getNewValue() == SwingWorker.StateValue.DONE){
-                    loadingTask.dispose();
+            }else{
+                if(!(pendingTasks == null)){
+                    if(!pendingTasks.isEmpty()){
+                        pendingTasks.clear();
+                    }
                 }
+                listContainer.removeAll();
+                listContainer.revalidate();
+                listContainer.repaint();
             }
-        });
-        loadingSwingWorker.execute();
+        }
+        ,"Loading tasks","Loading pending tasks from the database, please wait.");
     }
 
     void loadPendingTasks() throws DataAccessException {

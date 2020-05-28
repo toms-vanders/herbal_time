@@ -2,7 +2,7 @@ package GUI;
 
 import Controller.ClientCtr;
 import Controller.ClientCtrIF;
-import DB.Exception.DataAccessException;
+import DB.DataAccessException;
 import GUI.Components.BackgroundWorker;
 import GUI.Components.ComponentsConfigure;
 import Model.Client;
@@ -26,8 +26,8 @@ public class ClientScreen extends JPanel {
     private GroupLayout.SequentialGroup sequentialGroup;
 
     public ClientScreen(MainScreen mainScreen) {
-        this.mainScreen = mainScreen;
         initComponents();
+        this.mainScreen = mainScreen;
     }
 
     private void initComponents() {

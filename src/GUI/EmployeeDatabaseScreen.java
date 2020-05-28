@@ -1,6 +1,6 @@
 package GUI;
 
-import DB.Exception.DataAccessException;
+import DB.DataAccessException;
 import Controller.EmployeeCtr;
 import Controller.EmployeeCtrIF;
 import GUI.Components.ComponentsConfigure;

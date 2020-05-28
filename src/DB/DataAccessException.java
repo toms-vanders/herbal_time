@@ -1,4 +1,4 @@
-package DB.Exception;
+package DB;
 
 public class DataAccessException extends Exception {
     private static final long serialVersionUID = 1L;

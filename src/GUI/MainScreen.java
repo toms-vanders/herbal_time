@@ -1,6 +1,6 @@
 package GUI;
 
-import DB.Exception.DataAccessException;
+import DB.DataAccessException;
 import Controller.SeasonalWorkerCtr;
 import Controller.SeasonalWorkerCtrIF;
 import GUI.Components.BackgroundWorker;
@@ -42,6 +42,7 @@ public class MainScreen extends JFrame {
     // Declarations for the status bar
     private static JLabel connectionStatusIcon = new JLabel();
     private static JLabel connectionStatusLabel = new JLabel();
+    private static StatusThread sT;
 
     // Declarations for the various frames and panels
     private static boolean isLogged;
@@ -56,7 +57,7 @@ public class MainScreen extends JFrame {
     static PendingTasks pendingTasks;
     private Dashboard dashboard;
 
-    // Declarations for the MainScreen componenets
+    // Declarations for the MainScreen components
     private JPanel ind,ind1,ind2,ind3,ind4,ind5,ind6,ind7;
     private JPanel sidePanelBtnHome;
     private JPanel sidePanelBtnWorkSites;
@@ -80,10 +81,21 @@ public class MainScreen extends JFrame {
      * @throws DataAccessException if controllers cannot be instantiated
      */
     public MainScreen() throws DataAccessException {
-        setUndecorated(true);
-        initComponents();
-        StatusThread sT = new StatusThread();
-        sT.start();
+        try {
+            sT = new StatusThread();
+            sT.start();
+            setUndecorated(true);
+            initComponents();
+        } catch (DataAccessException e) {
+            System.err.println("Issue obtaining connection.");
+            new StatusDialog(this,true,StatusDialog.WARNING,"Internet connection is required.",
+                    "The system is unable to connect to the internet. " +
+                            "We are sorry for the inconvenience please try again later.");
+//            e.printStackTrace();
+            // Alert the user here with e.g JDialog saying there was an issue connecting to the database.
+            // TODO
+            // Add a refresh button.
+        }
     }
 
     /**
@@ -105,14 +117,12 @@ public class MainScreen extends JFrame {
         }
 
         new BackgroundWorker(() -> {
-                try {
-                    new MainScreen().setVisible(true);
-                } catch (DataAccessException e) {
-                    e.printStackTrace();
-                }
+            try {
+                new MainScreen().setVisible(true);
+            } catch (DataAccessException e) {
+                e.printStackTrace();
             }
-        ,"Loading herbal time","Herbal time is loading, please wait.");
-
+        },"Loading herbal time","Herbal time is loading, please wait.");
     }
 
     /**
@@ -175,8 +185,8 @@ public class MainScreen extends JFrame {
 
         try {
             currentWorker = seasonalWorkerController.findSeasonalWorkerByCPR(userCPR);
-        } catch(DataAccessException e) {
-            throw new DataAccessException("Unable to retrieve seasonal worker from CPR",e);
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Unable to retrieve seasonal worker from CPR", e);
         }
 
         JPanel sidePanel = new JPanel();

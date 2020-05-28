@@ -1,6 +1,6 @@
 package GUI.Components;
 
-import DB.Exception.DataAccessException;
+import DB.DataAccessException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,7 +8,7 @@ import java.awt.*;
 public class BackgroundWorker {
 
     public BackgroundWorker(BackgroundOperation operation,String title,String msg) {
-        SwingWorker<Void,Void> loadingSwingWorker = new SwingWorker<>() {
+        SwingWorker<Void,Void> loadingSwingWorker = new SwingWorker<Void,Void>() {
             @Override
             protected Void doInBackground() throws DataAccessException {
                 EventQueue.invokeLater(() -> {

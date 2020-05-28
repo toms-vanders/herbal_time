@@ -1,5 +1,4 @@
 package DB;
-import DB.Exception.DataAccessException;
 import Model.Client;
 
 import java.lang.reflect.Type;

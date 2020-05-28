@@ -2,7 +2,7 @@ package Controller;
 
 import DB.ClientDB;
 import DB.ClientDBIF;
-import DB.Exception.DataAccessException;
+import DB.DataAccessException;
 import Model.Client;
 
 import java.lang.reflect.Type;

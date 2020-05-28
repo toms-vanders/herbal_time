@@ -2,7 +2,7 @@ package Controller;
 
 import DB.EmployeeDB;
 import DB.EmployeeDBIF;
-import DB.Exception.DataAccessException;
+import DB.DataAccessException;
 import Model.Employee;
 
 import java.util.List;

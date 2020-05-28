@@ -1,6 +1,5 @@
 package DB;
 
-import DB.Exception.DataAccessException;
 import Model.Employee;
 
 import java.util.List;

@@ -1,7 +1,7 @@
 package GUI;
 
 import Controller.*;
-import DB.Exception.DataAccessException;
+import DB.DataAccessException;
 import DB.WorkSiteProduceDB;
 import DB.WorkSiteProduceDBIF;
 import GUI.Components.ComponentsConfigure;
@@ -190,7 +190,7 @@ public class CreateWorkSite extends JPanel {
         //TODO: Worker selection
 
         // final String[] strings = {"Item 1", "Item 2", "Item 3", "Item 4", "Item 5"};
-        workerList.setModel(new AbstractListModel<>() {
+        workerList.setModel(new AbstractListModel<String>() {
             final String[] strings = {" ", " ", " ", " ", " "};
 
             public int getSize() {
