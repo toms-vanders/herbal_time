@@ -5,6 +5,15 @@ import java.sql.SQLException;
 
 /**
  * Provides a fixed connection to UCN's hildur server, and our personal database.
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0
+ *
+ * Date: 29.05.2020
  */
 public class DBConnection {
 
@@ -55,6 +64,10 @@ public class DBConnection {
         }
     }
 
+    /**
+     * Returns an instance of DBConnection class
+     * @return an instance of DBConnection class
+     */
     public static synchronized DBConnection getInstance() {
         if (dbConnection == null) {
             dbConnection = new DBConnection();
@@ -62,10 +75,17 @@ public class DBConnection {
         return dbConnection;
     }
 
+    /**
+     * Returns Connection object from DBConnection
+     * @return Connection object
+     */
     public Connection getConnection() {
         return connection;
     }
 
+    /**
+     * Closes database connection and sets it to to null.
+     */
     public static void disconnect() {
         try {
             connection.close();
@@ -76,6 +96,10 @@ public class DBConnection {
         }
     }
 
+    /**
+     * Checks whether there is an active database connection running.
+     * @return true if there is an active database connection running, otherwise false
+     */
     public static boolean instanceIsNull() {
         return (connection == null);
     }

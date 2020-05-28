@@ -11,7 +11,19 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProduceDB implements ProduceDBIF{
+/**
+ * Used to access data from the Produce table in the database.
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0
+ *
+ * Date: 29.05.2020
+ */
+public class ProduceDB implements ProduceDBIF {
 
     /**
      * Pre-made queries for the program
@@ -36,11 +48,20 @@ public class ProduceDB implements ProduceDBIF{
     private PreparedStatement PSupdateProduce;
     private PreparedStatement PSdeleteProduce;
 
-    public ProduceDB() throws DataAccessException {
-        init();
+    /**
+     * Constructor for ProduceDB
+     * @throws DataAccessException
+     */
+    public ProduceDB() {
+
     }
 
-    private void connectToDB() throws DataAccessException{
+    /**
+     * Initializes DB connection and prepares SQL statements.
+     *
+     * @throws DataAccessException On statements that cannot be prepared
+     */
+    private void connectToDB() throws DataAccessException {
         DBConnection.connect();
         if (DBConnection.instanceIsNull()) {
             throw new DataAccessException("Couldn't connect and read from database; throwing to GUI", new Exception());
@@ -48,29 +69,14 @@ public class ProduceDB implements ProduceDBIF{
     }
 
     /**
-     * Initialize DB connection and prepare SQL statements
+     * Returns list of all produces stored in the database.
      *
-     * @throws DataAccessException Throw an exception on statements that cannot be prepared
+     * @param type requires to be the proper type.
+     * @return list of all produces stored in the database if found, otherwise empty list
+     * @throws DataAccessException
      */
-    private void init() throws DataAccessException {
-        connectToDB();
-        Connection con = DBConnection.getInstance().getConnection();
-        try {
-            PSfindAll = con.prepareStatement(findAll);
-            PSfindProduce = con.prepareStatement(findProduce);
-            PSfindWorkSiteProduce = con.prepareStatement(findWorkSiteProduce);
-            PSinsertProduce = con.prepareStatement(insertProduce);
-            PSupdateProduce = con.prepareStatement(updateProduce);
-            PSdeleteProduce = con.prepareStatement(deleteProduce);
-            DBConnection.disconnect();
-        } catch (SQLException e) {
-            DBConnection.disconnect();
-            throw new DataAccessException("ProduceDB could not initialize.", e);
-        }
-    }
-
     @Override
-    public List<Produce> findAll(boolean fullAssociation, Type type) throws DataAccessException {
+    public List<Produce> findAll(Type type) throws DataAccessException {
         connectToDB();
         Connection con = DBConnection.getInstance().getConnection();
         try {
@@ -83,7 +89,7 @@ public class ProduceDB implements ProduceDBIF{
         ResultSet rs;
         try {
             rs = this.PSfindAll.executeQuery();
-            return buildObjects(rs,fullAssociation,type);
+            return buildObjects(rs, type);
         } catch (SQLException e) {
             DBConnection.disconnect();
             throw new DataAccessException("Error with fetching all Produce from DB.", e);
@@ -91,8 +97,16 @@ public class ProduceDB implements ProduceDBIF{
 
     }
 
+    /**
+     * Returns Produce object with a specific name stored in the database.
+     *
+     * @param produceName name of produce to be searched for
+     * @param type requires to be a proper type
+     * @return built Produce object if database query found a match, otherwise null
+     * @throws DataAccessException
+     */
     @Override
-    public Produce findProduce(String produceName, boolean fullAssociation, Type type) throws DataAccessException {
+    public Produce findProduce(String produceName,Type type) throws DataAccessException {
         connectToDB();
         Connection con = DBConnection.getInstance().getConnection();
         try {
@@ -111,16 +125,28 @@ public class ProduceDB implements ProduceDBIF{
         ResultSet rs;
         try {
             rs = PSfindProduce.executeQuery();
-            rs.next();
-            Produce res = buildObject(rs, fullAssociation, type);
-            DBConnection.disconnect();
-            return res;
+            if (rs.next()) {
+                Produce res = buildObject(rs, type);
+                DBConnection.disconnect();
+                return res;
+            } else {
+                DBConnection.disconnect();
+                return null;
+            }
         } catch (SQLException e) {
             DBConnection.disconnect();
             throw new DataAccessException("Issue retrieving produce info from database.", e);
         }
     }
 
+    /**
+     * Returns list of produces collected on worksite with a specific ID.
+     *
+     * @param workSiteID ID of worksite to look for produces in the database
+     * @param type requires to be of proper type
+     * @return list of found Produce objects if query found matches, otherwise empty list
+     * @throws DataAccessException
+     */
     @Override
     public List<Produce> findWorkSiteProduce(int workSiteID, Type type) throws DataAccessException {
         connectToDB();
@@ -146,10 +172,17 @@ public class ProduceDB implements ProduceDBIF{
             DBConnection.disconnect();
             throw new DataAccessException("Issue with retrieving WorkSiteProduce from the database (executeQuery)", e);
         }
-        return buildObjects(rs, false, type);
-
+        return buildObjects(rs, type);
     }
 
+    /**
+     * Inserts produce into database.
+     *
+     * @param newProduce instance of new Employee to be inserted into database
+     * @param type requires to be of proper type
+     * @return count of affected rows in database after executing operation
+     * @throws DataAccessException
+     */
     @Override
     public int insertProduce(Produce newProduce, Type type) throws DataAccessException {
         connectToDB();
@@ -180,6 +213,15 @@ public class ProduceDB implements ProduceDBIF{
         return affectedRows;
     }
 
+    /**
+     * Updates record of produce with a specific name stored in database.
+     *
+     * @param produceName name of the produce that is going to be updated
+     * @param newProduce a new instance of Produce to be updated into database where the old record was
+     * @param type requires to be of proper type
+     * @return count of affected rows in database after executing operation
+     * @throws DataAccessException
+     */
     @Override
     public int updateProduce(String produceName, Produce newProduce, Type type) throws DataAccessException {
         connectToDB();
@@ -209,6 +251,14 @@ public class ProduceDB implements ProduceDBIF{
         return affectedRows;
     }
 
+    /**
+     * Removes produce of specific name from database.
+     *
+     * @param produceName name of produce that is going to be removed
+     * @param type requires to be of proper type
+     * @return count of affected rows in database after executing operation
+     * @throws DataAccessException
+     */
     @Override
     public int deleteProduce(String produceName, Type type) throws DataAccessException {
         connectToDB();
@@ -238,11 +288,19 @@ public class ProduceDB implements ProduceDBIF{
         return affectedRows;
     }
 
-    private List<Produce> buildObjects(ResultSet rs, boolean fullAssociation, Type type) throws DataAccessException {
+    /**
+     * Returns list of Produce objects after finding matching cases in database.
+     *
+     * @param rs ResultSet object returned after executing query
+     * @param type requires to be of proper type
+     * @return list of Produce objects
+     * @throws DataAccessException
+     */
+    private List<Produce> buildObjects(ResultSet rs, Type type) throws DataAccessException {
         List<Produce> res = new ArrayList<>();
         try {
             while(rs.next()) {
-                Produce currentProduce = buildObject(rs,fullAssociation,type);
+                Produce currentProduce = buildObject(rs, type);
 //                System.out.println(currentClient.getCountry());
 //                System.out.println(currentClient.toString());
                 res.add(currentProduce);
@@ -255,18 +313,21 @@ public class ProduceDB implements ProduceDBIF{
         return res;
     }
 
-
-    private Produce buildObject(ResultSet rs, boolean fullAssociation, Type type) throws DataAccessException {
+    /**
+     * Gets data from the DB and builds a Produce object.
+     *
+     * @param rs The ResultSet from which a Produce object is to be assembled
+     * @param type requires to be of proper type
+     * @return an assembled Employee object
+     * @throws DataAccessException
+     */
+    private Produce buildObject(ResultSet rs, Type type) throws DataAccessException {
         Produce currentProduce = null;
 
         try {
             if (type.equals(Produce.class)) {
                 currentProduce = new Produce();
                 currentProduce.setProduceName(rs.getString("produceName"));
-
-                if (fullAssociation) {
-
-                }
             } else {
                 throw new DataAccessException("Could not determine type.", new Exception());
             }

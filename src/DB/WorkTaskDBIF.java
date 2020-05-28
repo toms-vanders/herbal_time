@@ -7,6 +7,18 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * User of this interface implements access to data from the WorkTask table in the database.
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0
+ *
+ * Date: 29.05.2020
+ */
 public interface WorkTaskDBIF {
     List<WorkTask> findAll(boolean fullAssociation) throws DataAccessException;
     List<WorkTask> findAllWorkTasksOfWorker(boolean fullAssociation, String workerCpr) throws DataAccessException;

@@ -89,7 +89,7 @@ public class ClientCtr implements ClientCtrIF {
     @Override
     public int deleteClient(String clientCVR) throws DataAccessException {
         try {
-            return clientDB.deleteClient(clientCVR, Client.class);
+            return clientDB.deleteClient(clientCVR);
         } catch (DataAccessException e) {
             throw new DataAccessException("ClientCtr error.", e);
         }

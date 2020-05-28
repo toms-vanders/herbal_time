@@ -1,4 +1,4 @@
-package GUI;
+package GUI.Components;
 
 import javax.swing.*;
 import java.awt.*;
@@ -7,8 +7,11 @@ public class StatusDialog extends JDialog {
 
     public static final ImageIcon WARNING = new ImageIcon(StatusDialog.class.getResource("/icons8_error_100px.png"));
     public static final ImageIcon CONFIRM = new ImageIcon(StatusDialog.class.getResource("/icons8_ok_100px_1.png"));
+    public static final ImageIcon ABOUT = new ImageIcon(StatusDialog.class.getResource("/icons8_about_100px.png"));
+    public static final ImageIcon LOADING = new ImageIcon(StatusDialog.class.getResource("/icons8_loading_100px.png"));
 
     private final String msg;
+    private AnimatedIcon loadingIcon;
 
     public ImageIcon typeOfDialog;
 
@@ -18,10 +21,11 @@ public class StatusDialog extends JDialog {
         this.msg = msg;
         this.typeOfDialog = typeOfDialog;
         initComponents();
+        loadingIcon.start();
         setVisible(true);
     }
 
-    private void initComponents() {
+    private void initComponents(){
         setUndecorated(true);
         getContentPane().setBackground(new Color(60,63,65));
         GridBagConstraints gridBagConstraints;
@@ -29,49 +33,50 @@ public class StatusDialog extends JDialog {
         JLabel errorIcon = new JLabel();
         JTextArea dialogText = new JTextArea();
         JButton okBtn = new JButton();
-
+        loadingIcon = new AnimatedIcon(errorIcon,40,18);
+        for(int angle = 0; angle <= 360; angle+=20){
+            loadingIcon.addIcon(new RotatedIcon(typeOfDialog,angle));
+        }
         setMaximumSize(new Dimension(400, 200));
         setMinimumSize(new Dimension(400, 200));
         setPreferredSize(new Dimension(400, 200));
         setLayout(new GridBagLayout());
 
-        errorIcon.setIcon(typeOfDialog); // NOI18N
+        if(typeOfDialog.equals(LOADING)){
+            errorIcon.setIcon(loadingIcon);
+        }else{
+            errorIcon.setIcon(typeOfDialog);
+        }
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = GridBagConstraints.CENTER;
-        gridBagConstraints.insets = new Insets(20, 150, 0, 150);
+        gridBagConstraints.insets = new Insets(60, 150, 0, 150);
         add(errorIcon, gridBagConstraints);
 
-        dialogText.setText(msg);
-        dialogText.setWrapStyleWord(true);
-        dialogText.setForeground(Color.WHITE);
-        dialogText.setLineWrap(true);
-        dialogText.setOpaque(false);
-        dialogText.setEditable(false);
-        dialogText.setFocusable(false);
-        dialogText.setBackground(UIManager.getColor("Label.background"));
-        dialogText.setFont(UIManager.getFont("Label.font"));
-        dialogText.setBorder(UIManager.getBorder("Label.border"));
+        ComponentsConfigure.configureWordWrapLabel(dialogText,msg);
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = GridBagConstraints.CENTER;
-        gridBagConstraints.insets = new Insets(10, 15, 0, 15);
+        gridBagConstraints.insets = new Insets(10, 30, 0, 30);
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         add(dialogText, gridBagConstraints);
         gridBagConstraints.fill = GridBagConstraints.NONE;
 
         okBtn.setText("Ok");
         ComponentsConfigure.metroBtnConfig(okBtn);
-        okBtn.setPreferredSize(new Dimension(100, 40));
+        okBtn.setPreferredSize(new Dimension(100, 20));
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = GridBagConstraints.CENTER;
-        gridBagConstraints.insets = new Insets(30, 150, 80, 150);
+        gridBagConstraints.insets = new Insets(10, 150, 80, 150);
         okBtn.addActionListener((e)-> this.dispose());
+        if(typeOfDialog.equals(LOADING)){
+            okBtn.setText("");
+        }
         add(okBtn, gridBagConstraints);
 
         pack();

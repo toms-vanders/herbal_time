@@ -4,9 +4,17 @@ import java.util.ArrayList;
 
 /**
  * Used to represent individual work sites of clients where seasonal workers go work
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0
+ *
+ * Date: 29.05.2020
  */
 public class WorkSite {
-
     private Integer wSiteID;
     private String name;
     private String description;
@@ -20,11 +28,27 @@ public class WorkSite {
     private ArrayList<WorkType> workTypes;
     private ArrayList<SeasonalWorker> seasonalWorkers;
 
+    /**
+     * Constructor of worksite.
+     */
     public WorkSite() {
         this.workTypes = new ArrayList<>();
         this.seasonalWorkers = new ArrayList<>();
     }
 
+    /**
+     * Constructor of WorkSite.
+     *
+     * @param name unique name of work site
+     * @param description description of work site
+     * @param streetName street name of work site
+     * @param streetNum street number of work site
+     * @param zip zip code of work site
+     * @param country country of work site
+     * @param countryCode ISO country code of work site
+     * @param typeOfJob type of job of worksite
+     * @param pricePerWorker price the work site pays Herbal Time for a seasonal worker
+     */
     public WorkSite(String name, String description, String streetName, String streetNum, String zip,
                     String country, String countryCode, String typeOfJob, double pricePerWorker) {
         this.name = name;
@@ -40,6 +64,20 @@ public class WorkSite {
         this.seasonalWorkers = new ArrayList<>();
     }
 
+    /**
+     * Constructor of WorkSite.
+     *
+     * @param wSiteID ID number of work site
+     * @param name unique name of work site
+     * @param description description of work site
+     * @param streetName street name of work site
+     * @param streetNum street number of work site
+     * @param zip zip code of work site
+     * @param country country of work site
+     * @param countryCode ISO country code of work site
+     * @param typeOfJob type of job of work site
+     * @param pricePerWorker price the work site pays Herbal Time for a seasonal worker
+     */
     public WorkSite(Integer wSiteID, String name, String description, String streetName, String streetNum, String zip,
                     String country, String countryCode, String typeOfJob, double pricePerWorker) {
         this.wSiteID = wSiteID;

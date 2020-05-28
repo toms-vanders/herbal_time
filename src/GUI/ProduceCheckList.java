@@ -3,22 +3,31 @@ package GUI;
 import javax.swing.*;
 import Controller.*;
 import DB.ProduceDB;
+import GUI.Components.ComponentsConfigure;
 import Model.*;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 
 public class ProduceCheckList extends javax.swing.JFrame {
+    private static Consumer<ArrayList<String>> consumer;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel maximizeBtn;
+    private javax.swing.JLabel exitBtn;
+    private javax.swing.JLabel minimizeBtn;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JList<Produce> jList1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel topBar;
+    private javax.swing.JScrollPane jScrollPane1;
 
-    WorkTypeCtr workTypeCtr;
-    List<WorkType> produceList;
-    String[] x;
+    private WorkTypeCtr workTypeCtr;
+    private List<WorkType> produceList;
+    private String[] x;
 
     /**
      * Creates new form produceCheckList
@@ -29,9 +38,26 @@ public class ProduceCheckList extends javax.swing.JFrame {
             loadProduce();
         } catch (DataAccessException e) {
             e.printStackTrace();
-            // Alert to user
+            // TODO alert user
+            // TODO need to discuss loading and also refresh button
+            // probably should also return or something
         }
         initComponents();
+    }
+
+    public static void main(String[] args) {
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Windows".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(ProduceCheckList.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+
+        java.awt.EventQueue.invokeLater(() -> new ProduceCheckList(consumer).setVisible(true));
     }
 
     private void loadProduce() throws DataAccessException {
@@ -39,15 +65,11 @@ public class ProduceCheckList extends javax.swing.JFrame {
         produceList = workTypeCtr.findAll();
 
         ProduceDB pDB;
-        try {
-            pDB = new ProduceDB();
-        } catch (DataAccessException e) {
-            throw new DataAccessException("Unable to obtain produce database access object.", e);
-        }
+        pDB = new ProduceDB();
 
         // Setting the list model.
         // Populating with all products found in the database.
-        ArrayList<Produce> allProduces = new ArrayList<>(pDB.findAll(false, Produce.class));
+        ArrayList<Produce> allProduces = new ArrayList<>(pDB.findAll(Produce.class));
         jList1 = new javax.swing.JList();
         for (Produce produce: allProduces) {
             produce.setCollectedOnWorksite(false);
@@ -80,9 +102,6 @@ public class ProduceCheckList extends javax.swing.JFrame {
                 list.repaint(list.getCellBounds(index, index));
             }
         });
-
-
-        // todo tick those that are collected on the worksite
     }
 
     private void initComponents() {
@@ -201,61 +220,27 @@ public class ProduceCheckList extends javax.swing.JFrame {
     // Always call this when you edit WorkSite's collected produce
     private void updateProduceCheckList(Integer workSiteID) throws DataAccessException {
         ProduceDB pDB;
-        try {
-            pDB = new ProduceDB();
-        } catch (DataAccessException e) {
-            throw new DataAccessException("Unable to obtain produce database access object.", e);
-        }
+        pDB = new ProduceDB();
 
         ArrayList<Produce> workSiteCollectedProduce = new ArrayList<>(pDB.findWorkSiteProduce(workSiteID,
                 Produce.class));
 
         // TBC
-
     }
 
     // Confirm button
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
-        // Should accept an Array of String maybe
         ArrayList<String> collectedProduce = new ArrayList<>();
-
         for (int i = 0;  i < jList1.getModel().getSize(); i++) {
             if (jList1.getModel().getElementAt(i).getCollectedOnWorksite()) {
                 collectedProduce.add(jList1.getModel().getElementAt(i).getProduceName());
             }
         }
         consumer.accept(collectedProduce);
-        setVisible(false);
+        dispose();
     }
 
 //    public void getCollectedProduce(Consumer<HashMap<Object, Object>> consumer) {
 //
 //    }
-
-    public static void main(String[] args) {
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Windows".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ProduceCheckList.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-
-        java.awt.EventQueue.invokeLater(() -> new ProduceCheckList(consumer).setVisible(true));
-    }
-
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel maximizeBtn;
-    private javax.swing.JLabel exitBtn;
-    private javax.swing.JLabel minimizeBtn;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JList<Produce> jList1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel topBar;
-    private javax.swing.JScrollPane jScrollPane1;
-
-    private static Consumer<ArrayList<String>> consumer;
 }

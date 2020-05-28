@@ -3,6 +3,8 @@ package GUI;
 import Controller.DataAccessException;
 import Controller.SeasonalWorkerCtr;
 import Controller.SeasonalWorkerCtrIF;
+import GUI.Components.ComponentsConfigure;
+import GUI.Components.StatusDialog;
 import Model.SeasonalWorker;
 
 import javax.swing.*;
@@ -12,6 +14,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class WorkersScreen extends JFrame {
+    private static Integer MAX_WORKERS;
+    private JPanel listContainer;
+
+    private GroupLayout listContainerLayout;
+    private GroupLayout.ParallelGroup parallelGroup;
+    private GroupLayout.SequentialGroup sequentialGroup;
+
+    private ArrayList<SeasonalWorker> seasonalWorkers;
 
     public WorkersScreen() {
         try {
@@ -19,10 +29,39 @@ public class WorkersScreen extends JFrame {
         } catch (DataAccessException e) {
             System.err.println("Issue obtaining connection.");
 //            e.printStackTrace();
-            // Alert the user here with e.g JDialog saying there was an issue connecting to the database.
-            // TODO
-            // Add a refresh button.
+            new GUI.Components.StatusDialog(this,true, StatusDialog.WARNING,"Error connecting",
+            "There was an error obtaining connection. Please try again later.");
+            // added the StatusDialog here
+            // TODO need to discuss loading and also refresh button
+            // probably should also return or something
         }
+    }
+
+    public static void main(String[] args) {
+
+        try {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Windows".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(WorkersScreen.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        EventQueue.invokeLater(() -> {
+//            try {
+//                new WorkersScreen().setVisible(true);
+//            } catch (DataAccessException e) {
+//                e.printStackTrace();
+//            }
+            new WorkersScreen().setVisible(true);
+        });
+    }
+
+    public void start(){
+        main(null);
     }
 
     private void initComponents() throws DataAccessException {
@@ -237,40 +276,4 @@ public class WorkersScreen extends JFrame {
                                                 .addGap(33, 33, 33))))
         );
     }
-
-    public static void main(String[] args) {
-
-        try {
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if ("Windows".equals(info.getName())) {
-                    UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(WorkersScreen.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        EventQueue.invokeLater(() -> {
-//            try {
-//                new WorkersScreen().setVisible(true);
-//            } catch (DataAccessException e) {
-//                e.printStackTrace();
-//            }
-            new WorkersScreen().setVisible(true);
-        });
-    }
-
-    public void start(){
-        main(null);
-    }
-
-    private JPanel listContainer;
-
-    private GroupLayout listContainerLayout;
-    private GroupLayout.ParallelGroup parallelGroup;
-    private GroupLayout.SequentialGroup sequentialGroup;
-
-    private static Integer MAX_WORKERS;
-    private ArrayList<SeasonalWorker> seasonalWorkers;
 }

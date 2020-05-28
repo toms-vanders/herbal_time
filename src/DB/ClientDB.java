@@ -10,10 +10,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Used to access data from the Client table in the database
+ * Used to access data from the Client table in the database.
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0
+ *
+ * Date: 29.05.2020
  */
 public class ClientDB implements ClientDBIF {
-
     /**
      * Pre-made queries for the program
      */
@@ -44,12 +52,17 @@ public class ClientDB implements ClientDBIF {
     private PreparedStatement PSupdateClient;
     private PreparedStatement PSdeleteClientByCVR;
 
-
-
+    /**
+     * Constructor for ClientDB
+     */
     public ClientDB() {
-//        init();
+
     }
 
+    /**
+     * Establishes communication with database
+     * @throws DataAccessException
+     */
     private void connectToDB() throws DataAccessException{
         DBConnection.connect();
         if (DBConnection.instanceIsNull()) {
@@ -57,36 +70,12 @@ public class ClientDB implements ClientDBIF {
         }
     }
 
-
-//    // This should be made obsolete ASAP - TODO
-//    // In order to do that, find methods where preparing statements wasn't yet moved into corresponding bodies,
-//    // and move it there
-//    /**
-//     * Initialize DB connection and prepare SQL statements
-//     *
-//     * @throws DataAccessException Throw an exception on statements that cannot be prepared
-//     */
-//    private void init() throws DataAccessException {
-//        connectToDB();
-//        Connection con = DBConnection.getInstance().getConnection();
-//        try {
-//            PSfindAll = con.prepareStatement(findAll);
-//            PSfindClientByCVR = con.prepareStatement(findClientByCVR);
-//            PSinsertClient = con.prepareStatement(insertClient);
-//            PSupdateClient = con.prepareStatement(updateClient);
-//            PSdeleteClientByCVR = con.prepareStatement(deleteClientByCVR);
-//            DBConnection.disconnect();
-//        } catch (SQLException e) {
-//            DBConnection.disconnect();
-//            throw new DataAccessException("ClientDB could not initialize.", e);
-//        }
-//    }
-
     /**
-     * Returns a list of all Clients loaded in the database
+     * Returns list of all Clients loaded in the database.
+     *
      * @param fullAssociation if true, returns also the Client's associated WorkSites
      * @param type Requires to be the proper type
-     * @return a list of all Clients loaded in the database
+     * @return list of all Clients loaded in the database
      * @throws DataAccessException
      */
     @Override
@@ -112,11 +101,12 @@ public class ClientDB implements ClientDBIF {
     }
 
     /**
-     * Returns a Client with the appropriate CVR number
+     * Returns Client object with the appropriate CVR number.
+     *
      * @param clientCVR CVR of the client to return
      * @param fullAssociation If true, returns also the Client's associated WorkSites
      * @param type Requires to be the proper type
-     * @return a Client with the appropriate CVR number
+     * @return Client object with the appropriate CVR number if found,therwise null
      * @throws DataAccessException
      */
     @Override
@@ -139,10 +129,14 @@ public class ClientDB implements ClientDBIF {
         ResultSet rs;
         try {
             rs = PSfindClientByCVR.executeQuery();
-            rs.next();
-            Client res = buildObject(rs, fullAssociation, type);
-            DBConnection.disconnect();
-            return res;
+            if (rs.next()) {
+                Client res = buildObject(rs, fullAssociation, type);
+                DBConnection.disconnect();
+                return res;
+            } else {
+                DBConnection.disconnect();
+                return null;
+            }
         } catch (SQLException e) {
             DBConnection.disconnect();
             throw new DataAccessException("Issue retrieving client info from database.", e);
@@ -150,7 +144,8 @@ public class ClientDB implements ClientDBIF {
     }
 
     /**
-     * Inserts a new Client into the database
+     * Inserts new Client into the database.
+     *
      * @param newClient The new Client object to be inserted
      * @param type Requires to be the proper type
      * @return Number of rows affected
@@ -197,7 +192,8 @@ public class ClientDB implements ClientDBIF {
     }
 
     /**
-     * Make changes to Clients already in the database
+     * Make changes to Clients already in the database.
+     *
      * @param clientCVR CVR of the Client wished to be changed
      * @param newClient new Client object to replace the original one
      * @param type Requires to be the proper type
@@ -245,14 +241,14 @@ public class ClientDB implements ClientDBIF {
     }
 
     /**
-     * Deletes a Client from the database
+     * Deletes a Client from the database.
+     *
      * @param clientCVR CVR of the Client wished to be deleted
-     * @param type Requires to be the proper type
      * @return Number of rows affected
      * @throws DataAccessException
      */
     @Override
-    public int deleteClient(String clientCVR, Type type) throws DataAccessException {
+    public int deleteClient(String clientCVR) throws DataAccessException {
         connectToDB();
         Connection con = DBConnection.getInstance().getConnection();
         try {
@@ -281,7 +277,8 @@ public class ClientDB implements ClientDBIF {
     }
 
     /**
-     * Used when returning multiple clients at once
+     * Used when returning multiple clients at once.
+     *
      * @param rs The ResultSet from which Client objects are to be assembled
      * @param fullAssociation If true, returns also the Client's associated WorkSites
      * @param type Requires to be the proper type
@@ -304,7 +301,8 @@ public class ClientDB implements ClientDBIF {
     }
 
     /**
-     * Get data from the DB and build a Client object
+     * Get data from the DB and build a Client object.
+     *
      * @param rs The ResultSet from which a Client object is to be assembled
      * @param fullAssociation If true, returns also the Client's associated WorkSites
      * @param type Requires to be the proper type
@@ -346,9 +344,8 @@ public class ClientDB implements ClientDBIF {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-           throw new DataAccessException("buildObject: There was an Error with the Client.", e);
+            throw new DataAccessException("buildObject: There was an Error with the Client.", e);
         }
-
         return currentClient;
     }
 }

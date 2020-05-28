@@ -8,6 +8,18 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Used to access data from the WorkType table in the database.
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0
+ *
+ * Date: 29.05.2020
+ */
 public class WorkTypeDB implements WorkTypeDBIF {
 
     /**
@@ -16,6 +28,7 @@ public class WorkTypeDB implements WorkTypeDBIF {
     private static final String findAll = "SELECT * FROM WorkType";
     private static final String findByID = "SELECT * FROM WorkType where workTypeID = ?";
     private static final String findByWorkSite = "SELECT * FROM WorkType where workSiteID = ?";
+    private static final String findWorkTypeIDByDescription = "SELECT TOP 1 * FROM WorkType where descOfJob = ?";
     private static final String insertWorkType = "INSERT INTO WorkType VALUES(?,?,?,?,?)";
     private static final String updateWorkType = "UPDATE WorkType SET "
             + "descOfJob = ?,"
@@ -28,39 +41,26 @@ public class WorkTypeDB implements WorkTypeDBIF {
     /**
      * PreparedStatement declaration for the above queries
      */
-
     private PreparedStatement PSfindAll;
     private PreparedStatement PSfindByID;
     private PreparedStatement PSinsertWorkType;
     private PreparedStatement PSupdateWorkType;
     private PreparedStatement PSdeleteWorkType;
     private PreparedStatement PSfindByWorkSite;
+    private PreparedStatement PSfindWorkTypeIDByDescription;
 
-    public WorkTypeDB() throws DataAccessException {
-//        init();
+    /**
+     * Constructor of WorkTypeDB
+     */
+    public WorkTypeDB()  {
+
     }
 
-
-//    /**
-//     * Initialize DB connection and prepare SQL statements
-//     *
-//     * @throws DataAccessException Throw an exception on statements that cannot be prepared
-//     */
-//    private void init() throws DataAccessException {
-//        connectToDB();
-//        Connection con = DBConnection.getInstance().getConnection();
-//        try {
-//            PSfindAll = con.prepareStatement(findAll);
-//            PSfindByID = con.prepareStatement(findByID);
-//            PSinsertWorkType = con.prepareStatement(insertWorkType);
-//            PSupdateWorkType = con.prepareStatement(updateWorkType);
-//            PSdeleteWorkType = con.prepareStatement(deleteWorkType);
-//            PSfindByWorkSite = con.prepareStatement(findByWorkSite);
-//        } catch (SQLException e) {
-//            throw new DataAccessException("Issue with preparing database statement", e);
-//        }
-//    }
-
+    /**
+     * Initializes DB connection and prepares SQL statements.
+     *
+     * @throws DataAccessException On statements that cannot be prepared
+     */
     private void connectToDB() throws DataAccessException{
         DBConnection.connect();
         if (DBConnection.instanceIsNull()) {
@@ -68,6 +68,12 @@ public class WorkTypeDB implements WorkTypeDBIF {
         }
     }
 
+    /**
+     * Returns list of all WorkTypes stored in the database.
+     *
+     * @return list of all workTypes stored in the database if found, otherwise empty list
+     * @throws DataAccessException
+     */
     @Override
     public List<WorkType> findAll() throws DataAccessException {
         connectToDB();
@@ -124,6 +130,13 @@ public class WorkTypeDB implements WorkTypeDBIF {
         return buildObjects(rs);
     }
 
+    /**
+     * Returns WorkType object with a specific ID stored in the database.
+     *
+     * @param workTypeID ID of work type to be searched for
+     * @return built WorkType object if database query found a match, otherwise null
+     * @throws DataAccessException
+     */
     @Override
     public WorkType findWorkTypeByID(int workTypeID) throws DataAccessException {
         connectToDB();
@@ -146,13 +159,57 @@ public class WorkTypeDB implements WorkTypeDBIF {
 
         try {
             rs = PSfindByID.executeQuery();
-            rs.next();
-            WorkType res = buildObject(rs);
-            DBConnection.disconnect();
-            return res;
+            if (rs.next()) {
+                WorkType res = buildObject(rs);
+                DBConnection.disconnect();
+                return res;
+            } else {
+                DBConnection.disconnect();
+                return null;
+            }
         } catch (SQLException e) {
             DBConnection.disconnect();
             throw new DataAccessException("Issue with retrieving work types from the database (executeQuery)", e);
+        }
+    }
+
+    /**
+     * Only used for TestWorkType
+     *
+     * @param jobDescription String to search the descOfJob column
+     * @return workTypeID of WorkType with that descOfJob
+     * @throws DataAccessException
+     */
+    @Override
+    public int findWorkTypeIDByDescription(String jobDescription) throws DataAccessException {
+        connectToDB();
+        Connection con = DBConnection.getInstance().getConnection();
+        try {
+            PSfindWorkTypeIDByDescription = con.prepareStatement(findWorkTypeIDByDescription);
+        } catch (SQLException e) {
+            DBConnection.disconnect();
+            throw new DataAccessException("Issue preparing statement", e);
+        }
+
+        try {
+            PSfindWorkTypeIDByDescription.setString(1, jobDescription);
+        } catch (SQLException e) {
+            DBConnection.disconnect();
+            throw new DataAccessException("Issue with setting up query parameters when searching work types by descOfJob.", e);
+        }
+        ResultSet rs;
+        try {
+            rs = PSfindWorkTypeIDByDescription.executeQuery();
+            if (rs.next()) {
+                DBConnection.disconnect();
+                return rs.getInt(1);
+            } else {
+                DBConnection.disconnect();
+                return 0;
+            }
+        } catch (SQLException e) {
+            DBConnection.disconnect();
+            throw new DataAccessException("Issue with retrieving work types by descOfJob from the database (executeQuery)", e);
         }
     }
 
@@ -198,6 +255,14 @@ public class WorkTypeDB implements WorkTypeDBIF {
         return affectedRows;
     }
 
+    /**
+     * Updates record of work type with a specific ID number stored in database.
+     *
+     * @param workTypeID ID number of the work type that is going to be updated
+     * @param newWorkType a new instance of WorkType to be updated into database where the old record was
+     * @return count of affected rows in database after executing operation
+     * @throws DataAccessException
+     */
     @Override
     public int updateWorkType(int workTypeID, WorkType newWorkType) throws DataAccessException {
         connectToDB();
@@ -231,6 +296,13 @@ public class WorkTypeDB implements WorkTypeDBIF {
         return affectedRows;
     }
 
+    /**
+     * Removes work site of specific ID number from database.
+     *
+     * @param workTypeID ID number of work type that is going to be removed
+     * @return count of affected rows in database after executing operation
+     * @throws DataAccessException
+     */
     @Override
     public int deleteWorkType(int workTypeID) throws DataAccessException {
         connectToDB();

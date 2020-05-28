@@ -4,20 +4,36 @@ import Controller.DataAccessException;
 import DB.DBConnection;
 import DB.WorkSiteDB;
 import Model.WorkSite;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Random;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+
+/**
+ * Tests the WorkSite table of the database
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0
+ *
+ * Date: 29.05.2020
+ */
 public class TestWorkSite {
-    private static DBConnection dbConnection;
 
-    private static final String deleteWorkSite = "DELETE FROM WorkSite where typeOfJob = 'test'";
+    private Random r = new Random();
+    private Integer randomGeneratedNum = 10000000 + r.nextInt(90000000);
+    private String randomGeneratedNumString = Integer.toString(randomGeneratedNum);
+    private static DBConnection dbConnection;
+    private int wSiteID;
+    private WorkSite ws;
 
     @BeforeEach
     public void testDBWorkSite() {
@@ -26,16 +42,28 @@ public class TestWorkSite {
         System.out.println(dbConnection.toString() + "\n");
     }
 
+    /**
+     * Inserts a WorkSite into the database
+     *
+     * @throws DataAccessException
+     */
     @Test
-    public void createNewWorkSite() throws DataAccessException {
-        WorkSite ws = new WorkSite("The best work site", "Come work with us, you'll be in good hands",
+    @Order(1)
+    public void testInsertWorkSite() throws DataAccessException {
+        ws = new WorkSite("site"+randomGeneratedNumString, "Come work with us, you'll be in good hands",
                 "Egensevej", "155", "9270", "Denmark", "DK", "test",
                 7250.6);
         WorkSiteDB wsDB = new WorkSiteDB();
-        wsDB.insertWorkSite("45678932", ws);
+        wSiteID = wsDB.insertWorkSite("45678932", ws);
     }
 
+    /**
+     * Lists all WorkSites from the database
+     *
+     * @throws DataAccessException
+     */
     @Test
+    @Order(2)
     public void testGetAllWorkSites() throws DataAccessException {
         WorkSiteDB wsDB = new WorkSiteDB();
         List<WorkSite> res1 = wsDB.findAll(false);
@@ -44,9 +72,14 @@ public class TestWorkSite {
         }
     }
 
+    /**
+     * Lists all WorkSites belonging to a Client from the database
+     *
+     * @throws DataAccessException
+     */
     @Test
+    @Order(3)
     public void testGetAllWorkSitesFromClient() throws DataAccessException {
-        createNewWorkSite();
         WorkSiteDB wsDB = new WorkSiteDB();
         List<WorkSite> res1 = wsDB.findWorkSitesOfClient("45678932", false);
         for (WorkSite ws : res1) {
@@ -54,25 +87,32 @@ public class TestWorkSite {
         }
     }
 
-    @AfterAll
-    static void cleanUp() throws DataAccessException {
-        PreparedStatement ps = null;
-        Integer affectedRows = 0;
-        Connection con = dbConnection.getConnection();
-        try {
-            ps = con.prepareStatement(deleteWorkSite);
-        } catch (SQLException e) {
-            throw new DataAccessException("Issue cleaning up after the tests (preparing statement).", e);
-        }
-
-        try {
-            affectedRows += ps.executeUpdate();
-            System.out.println("cleanUp() affected rows: " + affectedRows);
-        } catch (SQLException e) {
-            throw new DataAccessException("Issue cleaning up after the tests (executing update).", e);
-        }
-
-        Assertions.assertEquals(1, affectedRows);
+    /**
+     * Updates an existing WorkSite in the database
+     *
+     * @throws DataAccessException
+     */
+    @Test
+    @Order(4)
+    public void testUpdateWorkSite() throws DataAccessException {
+        WorkSiteDB wsDB = new WorkSiteDB();
+        ws = new WorkSite("UPDATED"+randomGeneratedNumString, "Come work with us, you'll be in good hands",
+                "Egensevej", "155", "9270", "Denmark", "DK", "test",
+                7250.6);
+        wsDB.updateWorkSiteByName("site"+randomGeneratedNumString, ws);
     }
+
+    /**
+     * Deletes an existing WorkSite from the database
+     *
+     * @throws DataAccessException
+     */
+    @Test
+    @Order(5)
+    public void testCleanUp() throws DataAccessException {
+        WorkSiteDB wsDB = new WorkSiteDB();
+        wsDB.deleteWorkSiteByName("UPDATED"+randomGeneratedNumString);
+    }
+
 
 }

@@ -14,11 +14,7 @@ public class EmployeeCtr implements EmployeeCtrIF {
     EmployeeDBIF employeeDB;
 
     public EmployeeCtr() throws DataAccessException{
-        try{
-            employeeDB = new EmployeeDB();
-        }catch(DataAccessException e){
-            throw new DataAccessException("Unable to obtain employee database connection instance." , e);
-        }
+        employeeDB = new EmployeeDB();
     }
 
     /**

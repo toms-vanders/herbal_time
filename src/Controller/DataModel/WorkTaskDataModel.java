@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class WorkTaskDataModel extends DefaultTableModel {
 
     private ArrayList<WorkTask> workTasks = new ArrayList<>();
-    private String[] columnNames = {"Date start", "Date end", "Work type", "Hours worked", "Quantity", "Status"};
+    private String[] columnNames = {"Date", "Work type", "Hours worked", "Quantity", "Status"};
     private WorkTaskCtrIF workTaskController;
     private String workerCPR;
 
@@ -48,7 +48,7 @@ public class WorkTaskDataModel extends DefaultTableModel {
 
     @Override
     public int getColumnCount() {
-        return 6;
+        return 5;
     }
 
     @Override
@@ -58,14 +58,12 @@ public class WorkTaskDataModel extends DefaultTableModel {
             case 0:
                 return workTask.getDateStart();
             case 1:
-                return workTask.getDateEnd();
-            case 2:
                 return workTask.getWorkType().getDescOfJob();
-            case 3:
+            case 2:
                 return workTask.getHoursWorked();
-            case 4:
+            case 3:
                 return workTask.getQuantity();
-            case 5:
+            case 4:
                 return workTask.getStatus();
             default:
                 return null;

@@ -13,6 +13,18 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Used to access data from the WorkTask table in the database.
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0
+ *
+ * Date: 29.05.2020
+ */
 public class WorkTaskDB implements WorkTaskDBIF {
     /**
      * Pre-made queries for the program
@@ -45,29 +57,18 @@ public class WorkTaskDB implements WorkTaskDBIF {
     private PreparedStatement PSapproveWorkTask;
     private PreparedStatement PSfindAllPending;
 
-    public WorkTaskDB() throws DataAccessException {
+    /**
+     * Constructor of WorkTaskDB
+     */
+    public WorkTaskDB() {
 
     }
 
-
-////     This should be made obsolete ASAP
-////     In order to do that, find methods where preparing statements wasn't yet moved into corresponding bodies,
-////     and move it there
-//    private void init() throws DataAccessException {
-//        connectToDB();
-//        Connection con = DBConnection.getInstance().getConnection();
-//        try {
-//            PSfindAll = con.prepareStatement(findAll);
-//            PSfindAllWorkTasksOfWorker = con.prepareStatement(findAllWorkTasksOfWorker);
-//            PSfindByID = con.prepareStatement(findByID);
-//            PSinsertWorkTask = con.prepareStatement(insertWorkTask);
-//            PSupdateWorkTask = con.prepareStatement(updateWorkTask);
-//            PSdeleteWorkTask = con.prepareStatement(deleteWorkTask);
-//        } catch (SQLException e) {
-//            throw new DataAccessException("WorkTaskDB error.", e);
-//        }
-//    }
-
+    /**
+     * Initializes DB connection and prepares SQL statements.
+     *
+     * @throws DataAccessException On statements that cannot be prepared
+     */
     private void connectToDB() throws DataAccessException{
         DBConnection.connect();
         if (DBConnection.instanceIsNull()) {
@@ -75,6 +76,15 @@ public class WorkTaskDB implements WorkTaskDBIF {
         }
     }
 
+    /**
+     * Returns list of all work tasks of a seasonal worker.
+     *
+     * @param fullAssociation if True, build also work task's WorkType object,
+     *                        and associates it with the returned object
+     * @param workerCpr CPR number of seasonal worker
+     * @return list of work tasks a seasonal worker has if found, otherwise an empty list
+     * @throws DataAccessException
+     */
     @Override
     public List<WorkTask> findAllWorkTasksOfWorker(boolean fullAssociation, String workerCpr) throws DataAccessException {
         connectToDB();
@@ -103,6 +113,14 @@ public class WorkTaskDB implements WorkTaskDBIF {
         return buildObjects(rs, fullAssociation);
     }
 
+    /**
+     * Returns list of all work tasks with a pending status.
+     *
+     * @param fullAssociation if True, build also work task's WorkType object,
+     *                        and associates it with the returned object
+     * @return list of work tasks with a pending status if found, otherwise an empty list
+     * @throws DataAccessException
+     */
     @Override
     public List<WorkTask> findAllPendingTasks(boolean fullAssociation) throws DataAccessException {
         connectToDB();
@@ -123,6 +141,14 @@ public class WorkTaskDB implements WorkTaskDBIF {
         return buildObjects(rs, fullAssociation);
     }
 
+    /**
+     * Returns list of all work tasks stored in the database.
+     *
+     * @param fullAssociation if True, build also work task's WorkType object,
+     *                        and associates it with the returned object
+     * @return list of all work tasks stored in the database if found, otherwise empty list
+     * @throws DataAccessException
+     */
     @Override
     public List<WorkTask> findAll(boolean fullAssociation) throws DataAccessException {
         connectToDB();
@@ -144,6 +170,15 @@ public class WorkTaskDB implements WorkTaskDBIF {
         return buildObjects(rs,fullAssociation);
     }
 
+    /**
+     * Returns WorkTask object with a specific ID stored in the database.
+     *
+     * @param id ID of work task to be searched for
+     * @param fullAssociation if True, build also work task's WorkType object,
+     *                        and associates it with the returned object
+     * @return built WorkTask object if database query found a match, otherwise null
+     * @throws DataAccessException
+     */
     @Override
     public WorkTask findByID(int id, boolean fullAssociation) throws DataAccessException {
         connectToDB();
@@ -155,8 +190,6 @@ public class WorkTaskDB implements WorkTaskDBIF {
             throw new DataAccessException("Issue preparing statement", e);
         }
 
-
-
         try {
             PSfindByID.setInt(1, id);
         } catch (SQLException e) {
@@ -167,15 +200,28 @@ public class WorkTaskDB implements WorkTaskDBIF {
         ResultSet rs;
         try {
             rs = PSfindByID.executeQuery();
-            rs.next();
-            WorkTask res = buildObject(rs, fullAssociation);
-            DBConnection.disconnect();
-            return res;
+            if (rs.next()) {
+                WorkTask res = buildObject(rs, fullAssociation);
+                DBConnection.disconnect();
+                return res;
+            } else {
+                DBConnection.disconnect();
+                return null;
+            }
         } catch (SQLException e) {
+            DBConnection.disconnect();
             throw new DataAccessException("Issue with retrieving work types from the database (executeQuery)", e);
         }
     }
 
+    /**
+     * Inserts work task into database and associates it with seasonal worker.
+     *
+     * @param workTask WorkSite object to be added to database
+     * @param workerCpr CPR of seasonal worker
+     * @return count of affected rows in database after executing operation
+     * @throws DataAccessException
+     */
     @Override
     public int insertWorkTask(WorkTask workTask, String workerCpr) throws DataAccessException {
         connectToDB();
@@ -211,6 +257,14 @@ public class WorkTaskDB implements WorkTaskDBIF {
         return affectedRows;
     }
 
+    /**
+     * Updates record of work task with a specific ID number stored in database.
+     *
+     * @param workTask a new instance of WorkTask to be updated into database where the old record was
+     * @param workTaskID ID number of the work task that is going to be updated
+     * @return count of affected rows in database after executing operation
+     * @throws DataAccessException
+     */
     @Override
     public int updateWorkTask(WorkTask workTask, int workTaskID) throws DataAccessException {
         connectToDB();
@@ -249,6 +303,13 @@ public class WorkTaskDB implements WorkTaskDBIF {
         return affectedRows;
     }
 
+    /**
+     * Approves multiple tasks at once. Changes tasks' state to Approved in database.
+     *
+     * @param idList list work ID numbers of work tasks that are to be updated
+     * @return true if operation succeeded, false otherwise
+     * @throws DataAccessException
+     */
     @Override
     public boolean approveWorkTasks(ArrayList<Integer> idList) throws DataAccessException {
         connectToDB();
@@ -276,6 +337,13 @@ public class WorkTaskDB implements WorkTaskDBIF {
         }
     }
 
+    /**
+     * Removes work task of specific ID number from database.
+     *
+     * @param id ID number of work task that is going to be removed
+     * @return count of affected rows in database after executing operation
+     * @throws DataAccessException
+     */
     @Override
     public int deleteWorkTask(int id) throws DataAccessException {
         connectToDB();
@@ -305,6 +373,14 @@ public class WorkTaskDB implements WorkTaskDBIF {
         return affectedRows;
     }
 
+    /**
+     * Generates and returns WorkTask objects based on the ResultSet returned by the query
+     * @param rs ResultSet object filled with results of a query
+     * @param fullAssociation if True, build also work task's WorkType object,
+     *                        and associates it with the returned object
+     * @return list of built WorkTask objects if found, otherwise empty list
+     * @throws DataAccessException
+     */
     private List<WorkTask> buildObjects(ResultSet rs, boolean fullAssociation) throws DataAccessException {
         List<WorkTask> res = new ArrayList<>();
         try {
@@ -322,6 +398,15 @@ public class WorkTaskDB implements WorkTaskDBIF {
         }
     }
 
+    /**
+     * Gets data from the DB and builds a Produce object.
+     *
+     * @param rs The ResultSet from which a WorkTask object is to be assembled
+     * @param fullAssociation if True, build also work task's WorkType object,
+     *                        and associates it with the returned object
+     * @return an assembled WorkTask object
+     * @throws DataAccessException
+     */
     private WorkTask buildObject(ResultSet rs, boolean fullAssociation) throws DataAccessException {
         WorkTask currentWorkTask = null;
 

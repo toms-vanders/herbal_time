@@ -3,7 +3,7 @@ package Model;
 import java.sql.Date;
 
 /**
- * Interface used for Employee and SeasonalWorker classes. Holds mainly personal information
+ * Abstract class used for Employee and SeasonalWorker classes. Holds mainly personal information
  * about the person in question.
  */
 public abstract class Person {

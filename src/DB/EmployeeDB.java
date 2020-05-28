@@ -10,7 +10,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Used to access data from the Employee table in the database
+ * Used to access data from the Employee table in the database.
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0
+ *
+ * Date: 29.05.2020
  */
 public class EmployeeDB implements EmployeeDBIF {
 
@@ -37,16 +46,18 @@ public class EmployeeDB implements EmployeeDBIF {
     private PreparedStatement PSupdateEmployee;
     private PreparedStatement PSdeleteEmployeeByCPR;
 
-    public EmployeeDB() throws DataAccessException {
-//        init();
+    /**
+     * Constructor for EmployeeDB
+     */
+    public EmployeeDB() {
+
     }
 
     /**
-     * Initialize DB connection and prepare SQL statements
+     * Initialize DB connection and prepare SQL statements.
      *
      * @throws DataAccessException Throw an exception on statements that cannot be prepared
      */
-
     private void connectToDB() throws DataAccessException {
         DBConnection.connect();
         if (DBConnection.instanceIsNull()) {
@@ -54,26 +65,10 @@ public class EmployeeDB implements EmployeeDBIF {
         }
     }
 
-    // UNUSED, see ClientDB - TODO
-//    private void init() throws DataAccessException {
-//        connectToDB();
-//        Connection con = DBConnection.getInstance().getConnection();
-//        try {
-//            PSfindAll = con.prepareStatement(findAll);
-//            PSfindEmployeeByCPR = con.prepareStatement(findEmployeeByCPR);
-//            PSinsertEmployee = con.prepareStatement(insertEmployee);
-//            PSupdateEmployee = con.prepareStatement(updateEmployee);
-//            PSdeleteEmployeeByCPR = con.prepareStatement(deleteEmployeeByCPR);
-//            DBConnection.disconnect();
-//        } catch (SQLException e) {
-//            DBConnection.disconnect();
-//            throw new DataAccessException("EmployeeDB could not initialize.", e);
-//        }
-//    }
-
     /**
+     * Returns list of all employees stored in the database.
      *
-     * @return
+     * @return list of employees if found, otherwise an empty List
      * @throws DataAccessException
      */
     @Override
@@ -97,9 +92,10 @@ public class EmployeeDB implements EmployeeDBIF {
     }
 
     /**
+     * Returns Employee object with a specific CPR number stored in the database.
      *
-     * @param employeeCPR
-     * @return
+     * @param employeeCPR CPR of employee to be searched for
+     * @return Employee object with a specific CPR number if found, otherwise null
      * @throws DataAccessException
      */
     @Override
@@ -113,12 +109,24 @@ public class EmployeeDB implements EmployeeDBIF {
             throw new DataAccessException("Issue preparing statement", e);
         }
 
+        try {
+            PSfindEmployeeByCPR.setString(1, employeeCPR);
+        } catch (SQLException e) {
+            DBConnection.disconnect();
+            throw new DataAccessException("Could not prepare statement.", e);
+        }
+
         ResultSet rs;
         try {
             rs = this.PSfindEmployeeByCPR.executeQuery();
-            Employee res = buildObject(rs);
-            DBConnection.disconnect();
-            return res;
+            if (rs.next()) {
+                Employee res = buildObject(rs);
+                DBConnection.disconnect();
+                return res;
+            } else {
+                DBConnection.disconnect();
+                return null;
+            }
         } catch (SQLException e) {
             DBConnection.disconnect();
             throw new DataAccessException("Error with fetching a specific Employee from DB.", e);
@@ -126,9 +134,10 @@ public class EmployeeDB implements EmployeeDBIF {
     }
 
     /**
+     * Inserts employee into database.
      *
-     * @param newEmployee
-     * @return
+     * @param newEmployee instance of new employee to be inserted into database
+     * @return count of affected rows in database after executing operation
      * @throws DataAccessException
      */
     @Override
@@ -163,11 +172,13 @@ public class EmployeeDB implements EmployeeDBIF {
         return affectedRows;
 
     }
-/**
-     * 
-     * @param employeeCPR
-     * @param newEmployee
-     * @return
+
+    /**
+     * Updates record of employee with a specific CPR stored in database.
+     *
+     * @param employeeCPR CPR number of the employee that is going to be updated
+     * @param newEmployee a new instance of employee to be updated into database where the old record was
+     * @return count of affected rows in database after executing operation
      * @throws DataAccessException
      */
     @Override
@@ -203,9 +214,10 @@ public class EmployeeDB implements EmployeeDBIF {
     }
 
     /**
+     * Removes employee of specific CPR number from database.
      *
-     * @param employeeCPR
-     * @return
+     * @param employeeCPR CPR number of employee that is going to be removed
+     * @return count of affected rows in database after executing operation
      * @throws DataAccessException
      */
     @Override
@@ -239,9 +251,10 @@ public class EmployeeDB implements EmployeeDBIF {
     }
 
     /**
+     * Returns list of Employee objects after finding matching cases in database.
      *
-     * @param rs
-     * @return
+     * @param rs ResultSet object returned after executing query
+     * @return list of Employee objects
      * @throws DataAccessException
      */
     private List<Employee> buildObjects(ResultSet rs) throws DataAccessException {
@@ -260,7 +273,8 @@ public class EmployeeDB implements EmployeeDBIF {
     }
 
     /**
-     * Get data from the DB and build an Employee object
+     * Gets data from the DB and builds an Employee object.
+     *
      * @param rs The ResultSet from which an Employee object is to be assembled
      * @return An assembled Employee object
      * @throws DataAccessException

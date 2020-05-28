@@ -1,20 +1,37 @@
 package Tests;
 
 import Controller.DataAccessException;
-import DB.DBConnection;
-import DB.WorkTypeDB;
-import Model.WorkType;
+import DB.*;
+import Model.*;
 import org.junit.jupiter.api.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Random;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+
+/**
+ * Tests the WorkType table of the database
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0
+ *
+ * Date: 29.05.2020
+ */
 public class TestWorkType {
-    private static DBConnection dbConnection;
 
-    private static final String deleteWorkType = "DELETE FROM WorkType WHERE typeOfProduce = 'test'";
+    private Random r = new Random();
+    private Integer randomGeneratedNum = 10000000 + r.nextInt(90000000);
+    private String randomGeneratedNumString = Integer.toString(randomGeneratedNum);
+    private static DBConnection dbConnection;
+    private WorkType wt;
 
     @BeforeEach
     public void testDBWorkType() {
@@ -23,45 +40,73 @@ public class TestWorkType {
         System.out.println(dbConnection.toString() + "\n");
     }
 
+    /**
+     * Inserts a WorkType into the database
+     *
+     * @throws DataAccessException
+     */
     @Test
-    public void createNewWorkType() throws DataAccessException {
-        WorkType wt = new WorkType("cotton picking", "test", "Amount", 100);
+    @Order(1)
+    public void testInsertWorkType() throws DataAccessException {
+        wt = new WorkType(1, "d"+randomGeneratedNumString,"typeofProduce","hourly",70.00);
         WorkTypeDB wtDB = new WorkTypeDB();
         wtDB.insertWorkType(1, wt);
-        WorkType wt2 = new WorkType("cotton picking days", "test", "Amount", 100);
-        wtDB.insertWorkType(1, wt2);
+        System.out.println("Successfully inserted test WorkType");
     }
 
+    /**
+     * Lists all WorkTypes from the database
+     *
+     * @throws DataAccessException
+     */
     @Test
-    public void testGetAllWorkTypesFromWorkSite() throws DataAccessException {
-        createNewWorkType();
+    @Order(2)
+    public void testGetAllWorkTypes() throws DataAccessException {
         WorkTypeDB wtDB = new WorkTypeDB();
-        List<WorkType> res1 = wtDB.findAllWorkTypesOfWorkSite(1);
-        for (WorkType wt : res1) {
-            System.out.println(wt.toString());
-        }
+        System.out.println(wtDB.findAll());
+        System.out.println("Successfully fetched all WorkTypes");
     }
 
-    @AfterAll
-    static void cleanUp() throws DataAccessException {
-        PreparedStatement ps = null;
-        Integer affectedRows = 0;
-        Connection con = dbConnection.getConnection();
-        try {
-            ps = con.prepareStatement(deleteWorkType);
-        } catch (SQLException e) {
-            throw new DataAccessException("Issue cleaning up after the tests (preparing statement).", e);
-        }
-
-        try {
-            affectedRows += ps.executeUpdate();
-            System.out.println("cleanUp() affected rows: " + affectedRows);
-        } catch (SQLException e) {
-            throw new DataAccessException("Issue cleaning up after the tests (executing update).", e);
-        }
-
-        Assertions.assertEquals(2, affectedRows);
+    /**
+     * Lists all WorkTypes belonging to a WorkSite from the database
+     *
+     * @throws DataAccessException
+     */
+    @Test
+    @Order(3)
+    public void testGetAllWorkTypesFromWorkSite() throws DataAccessException {
+        WorkTypeDB wtDB = new WorkTypeDB();
+        System.out.println(wtDB.findAllWorkTypesOfWorkSite(1));
+        System.out.println("Successfully fetched all WorkTypes from WorkSite #1");
     }
 
+    /**
+     * Updates an existing WorkType in the database
+     *
+     * @throws DataAccessException
+     */
+    @Test
+    @Order(4)
+    public void testUpdateWorkType() throws DataAccessException {
+        WorkTypeDB wtDB = new WorkTypeDB();
+        wt = new WorkType(1, "UPDATED"+randomGeneratedNumString,"typeofProduce","hourly",70.00);
+        // This first finds workTypeID of inserted test WorkType, then updates it with Updated WorkType
+        wtDB.updateWorkType(wtDB.findWorkTypeIDByDescription("d"+randomGeneratedNumString), wt);
+        System.out.println("Successfully updated test WorkType");
+    }
+
+    /**
+     * Deletes an existing WorkType from the database
+     *
+     * @throws DataAccessException
+     */
+    @Test
+    @Order(5)
+    public void testCleanUp() throws DataAccessException {
+        WorkTypeDB wtDB = new WorkTypeDB();
+        int wtID = wtDB.findWorkTypeIDByDescription("UPDATED"+randomGeneratedNumString);
+        wtDB.deleteWorkType(wtID);
+        System.out.println("Successfully deleted test WorkType");
+    }
 
 }

@@ -3,7 +3,7 @@ package GUI;
 import Controller.DataAccessException;
 import Controller.EmployeeCtr;
 import Controller.EmployeeCtrIF;
-import Controller.SeasonalWorkerCtr;
+import GUI.Components.ComponentsConfigure;
 import Model.Employee;
 
 import javax.swing.*;
@@ -12,6 +12,17 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
 public class EmployeeDatabaseScreen extends JFrame {
+    private static int MAX_EMPLOYEES;
+    private JPanel listContainer;
+    private ViewEmployee viewEmployee;
+
+    private GroupLayout listContainerLayout;
+    private GroupLayout.ParallelGroup parallelGroup;
+    private GroupLayout.SequentialGroup sequentialGroup;
+
+    private EmployeeCtrIF employeeCtr;
+    private ArrayList<Employee> employees;
+
 
     public EmployeeDatabaseScreen() throws DataAccessException {
         try {
@@ -19,10 +30,35 @@ public class EmployeeDatabaseScreen extends JFrame {
         } catch (DataAccessException e) {
             System.err.println("Issue obtaining connection.");
 //            e.printStackTrace();
-            // Alert the user here with e.g JDialog saying there was an issue connecting to the database.
-            // TODO
-            // Add a refresh button.
+            // TODO alert user
+            // TODO need to discuss loading and also refresh button
+            // probably should also return or something
         }
+    }
+
+    public static void main(String[] args) {
+        try {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Windows".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(EmployeeDatabaseScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+
+        EventQueue.invokeLater(() -> {
+            try {
+                new EmployeeDatabaseScreen().setVisible(true);
+            } catch (DataAccessException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public void start(){
+        main(null);
     }
 
     private void initComponents() throws DataAccessException {
@@ -359,7 +395,7 @@ public class EmployeeDatabaseScreen extends JFrame {
         sequentialGroup = listContainerLayout.createSequentialGroup();
         listContainerLayout.setVerticalGroup(sequentialGroup);
 
-        for(int i = 0; i < MAX_EMPLOYEES; i++){
+        for (int i = 0; i < MAX_EMPLOYEES; i++) {
             JPanel listElement = new JPanel();
             JLabel profilePicture = new JLabel();
             JLabel personName = new JLabel();
@@ -377,50 +413,13 @@ public class EmployeeDatabaseScreen extends JFrame {
             setElementGroupsPosition(listElement, profilePicture,personName,settingsBtn,generatedBtn,removeBtn,msgBtn,infoBtn,mailBtn,generateBtn);
             addElementToList(listElement);
         }
-
         return listContainer;
     }
 
-    private void addElementToList(JPanel listElement){
+    private void addElementToList(JPanel listElement) {
         parallelGroup.addGroup(listContainerLayout.createSequentialGroup()
                 .addComponent(listElement));
         sequentialGroup.addGroup(listContainerLayout.createParallelGroup()
                 .addComponent(listElement));
     }
-
-    public static void main(String[] args) {
-        try {
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if ("Windows".equals(info.getName())) {
-                    UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(EmployeeDatabaseScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-
-        EventQueue.invokeLater(() -> {
-            try {
-                new EmployeeDatabaseScreen().setVisible(true);
-            } catch (DataAccessException e) {
-                e.printStackTrace();
-            }
-        });
-    }
-
-    public void start(){
-        main(null);
-    }
-
-    private JPanel listContainer;
-    private ViewEmployee viewEmployee;
-
-    private GroupLayout listContainerLayout;
-    private GroupLayout.ParallelGroup parallelGroup;
-    private GroupLayout.SequentialGroup sequentialGroup;
-
-    private EmployeeCtrIF employeeCtr;
-    private ArrayList<Employee> employees;
-    private static int MAX_EMPLOYEES;
 }

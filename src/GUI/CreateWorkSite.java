@@ -1,25 +1,53 @@
 package GUI;
 
 import Controller.*;
-import DB.ProduceDB;
-import DB.ProduceDBIF;
 import DB.WorkSiteProduceDB;
 import DB.WorkSiteProduceDBIF;
+import GUI.Components.ComponentsConfigure;
+import GUI.Components.StatusDialog;
 import Model.Client;
 import Model.WorkSite;
 import Model.WorkSiteProduce;
-import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 
 public class CreateWorkSite extends JPanel {
+    private JButton addWorkersBtn;
+    private JButton cancelBtn;
+    private JComboBox<Client> clientComboBox;
+    private JLabel clientLabel;
+    private JButton collectedProduceBtn;
+    private JButton createBtn;
+    private JTextField descriptionField;
+    private JLabel descriptionLabel;
+    private JLabel locationInfoTitle;
+    private JPanel mainContainer;
+    private JTextField nameField;
+    private JLabel nameLabel;
+    private JTextField postalCodeField;
+    private JLabel postalCodeLabel;
+    private JTextField pricePerWorkerField;
+    private JLabel pricePerWorkerLabel;
+    private JScrollPane scrollableListContainer;
+    private JLabel streetLabel;
+    private JTextField streetNameField;
+    private JTextField streetNoField;
+    private JLabel taskTitle;
+    private JPanel topBar;
+    private JTextField typeOfJobField;
+    private JLabel typeOfJobLabel;
+    private JList<String> workerList;
+
+    private ArrayList<Client> clients;
+
+    private Consumer<ArrayList<String>> collectedProduce;
+    private ArrayList<String> collectedProduceStringList;
 
     private WorkSiteCtrIF workSiteCtr;
     private MainScreen mainScreen;
@@ -176,18 +204,14 @@ public class CreateWorkSite extends JPanel {
         ComponentsConfigure.metroBtnConfig(createBtn);
 
         collectedProduceBtn.setText("Collected Produce");
-        collectedProduceBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                collectedProduceBtnActionPerformed(evt);
-            }
-        });
+        collectedProduceBtn.addActionListener(evt -> collectedProduceBtnActionPerformed());
         addWorkersBtn.setText("Add/Edit workers");
         createBtn.setText("Create");
         cancelBtn.setText("Cancel");
 
         addWorkersBtn.addActionListener(this::addWorkersBtnActionPerformed);
         createBtn.addActionListener(this::createBtnActionPerformed);
-        cancelBtn.addActionListener((e)-> mainScreen.returnNav());
+        cancelBtn.addActionListener((e)-> mainScreen.showWorkSiteDashboard());
 
         GroupLayout mainContainerLayout = new GroupLayout(mainContainer);
         mainContainer.setLayout(mainContainerLayout);
@@ -322,13 +346,14 @@ public class CreateWorkSite extends JPanel {
         // TODO add your handling code here:
     }
 
-    private void collectedProduceBtnActionPerformed(java.awt.event.ActionEvent evt) {
+    private void collectedProduceBtnActionPerformed() {
         collectedProduce = s -> collectedProduceStringList = s;
                 new ProduceCheckList(collectedProduce).setVisible(true);
     }
 
     private void createBtnActionPerformed(ActionEvent evt) {
         Client selectClient = (Client) clientComboBox.getSelectedItem();
+        assert selectClient != null;
         String clientCVR = selectClient.getCvr();
         String name = nameField.getText();
         String description = descriptionField.getText();
@@ -336,11 +361,19 @@ public class CreateWorkSite extends JPanel {
         String streetNum = streetNoField.getText();
         String zip = postalCodeField.getText();
         String typeOfJob = typeOfJobField.getText();
-        double pricePerWorker = Double.parseDouble(pricePerWorkerField.getText());
+        double pricePerWorker;
+        try {
+            pricePerWorker = Double.parseDouble(pricePerWorkerField.getText());
+        } catch (java.lang.NumberFormatException e) {
+            new StatusDialog(mainScreen,false, StatusDialog.WARNING,"Error","" +
+                    "Price per worker field filled incorrectly. Check provided field and try again.");
+            return;
+        }
+
         WorkSite newWorkSite = new WorkSite(name, description, streetName, streetNum, zip, "Denmark",
                 "DK", typeOfJob, pricePerWorker);
 
-        WorkSite lookingForDuplicate = null;
+        WorkSite lookingForDuplicate;
         try {
             lookingForDuplicate = workSiteCtr.findByName(name, false);
         } catch (DataAccessException e) {
@@ -349,25 +382,18 @@ public class CreateWorkSite extends JPanel {
             return;
         }
 
-
         if (lookingForDuplicate != null) {
             new StatusDialog(mainScreen, false, StatusDialog.WARNING, "Error adding a new work site",
-                    "An error occurred while trying to add work site to database. Work site was not added " +
-                            "to database. Make sure the work site you're trying to add does not exist already in " +
-                            "database.");
+                    "Worksite with such name already exists in database, choose a different name and try again.");
             return;
         }
 
-        Boolean result = false;
+        Boolean result;
         try {
             result = workSiteCtr.insertWorkSite(clientCVR, newWorkSite);
-        } catch (java.lang.NumberFormatException e) {
-            new StatusDialog(mainScreen,false, StatusDialog.WARNING,"Error","" +
-                    "Fields were filled incorrectly. Check provided fields and try again.");
-            return;
-        } catch (DataAccessException e ) {
+        } catch (DataAccessException e) {
             new StatusDialog(mainScreen,false, StatusDialog.WARNING,"Error","There was an error " +
-                    "adding worksite to the database. Check your connection and try again.");
+                    "adding worksite to the database. Check provided fields and your connection, then try again.");
             return;
         }
 
@@ -404,13 +430,13 @@ public class CreateWorkSite extends JPanel {
             for (String s: collectedProduceStringList) {
                 WorkSiteProduce wsp = new WorkSiteProduce(workSiteID, s);
                 try {
-                    wspDB.insertWorkSiteProduce(workSiteID, s, wsp, WorkSiteProduce.class);
+                    wspDB.insertWorkSiteProduce(wsp, WorkSiteProduce.class);
                 } catch (DataAccessException e) {
                     new StatusDialog(mainScreen,false, StatusDialog.WARNING,"Error","Issue " +
                             "association single produce " + s + " with worksite of ID: " + workSiteID);
                 }
             }
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             new StatusDialog(mainScreen,false, StatusDialog.WARNING,"Error","Couldn't associate " +
                     "collected produce with the worksite");
         }
@@ -433,34 +459,5 @@ public class CreateWorkSite extends JPanel {
         label.setIcon(ComponentsConfigure.locationIcon);
         label.setFocusable(false);
     }
-    private JButton addWorkersBtn;
-    private JButton cancelBtn;
-    private JComboBox<Client> clientComboBox;
-    private JLabel clientLabel;
-    private JButton collectedProduceBtn;
-    private JButton createBtn;
-    private JTextField descriptionField;
-    private JLabel descriptionLabel;
-    private JLabel locationInfoTitle;
-    private JPanel mainContainer;
-    private JTextField nameField;
-    private JLabel nameLabel;
-    private JTextField postalCodeField;
-    private JLabel postalCodeLabel;
-    private JTextField pricePerWorkerField;
-    private JLabel pricePerWorkerLabel;
-    private JScrollPane scrollableListContainer;
-    private JLabel streetLabel;
-    private JTextField streetNameField;
-    private JTextField streetNoField;
-    private JLabel taskTitle;
-    private JPanel topBar;
-    private JTextField typeOfJobField;
-    private JLabel typeOfJobLabel;
-    private JList<String> workerList;
 
-    private ArrayList<Client> clients;
-
-    private Consumer<ArrayList<String>> collectedProduce;
-    private ArrayList<String> collectedProduceStringList;
 }

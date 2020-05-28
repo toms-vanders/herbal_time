@@ -5,6 +5,15 @@ import java.util.ArrayList;
 
 /**
  * Used to represent clients of CS Works
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0
+ *
+ * Date: 29.05.2020
  */
 public class Client {
 
@@ -28,6 +37,20 @@ public class Client {
         workSites = new ArrayList<>();
     }
 
+    /**
+     * Constructur for Client
+     * @param cvr CVR number of client
+     * @param name name of Client
+     * @param email email of Client
+     * @param phoneNum phone number of client
+     * @param streetName street name of client
+     * @param streetNum street number of client
+     * @param zip zip code of client
+     * @param countryCode ISO country code of client's country
+     * @param country country of client
+     * @param dateStart start date of client contract
+     * @param dateEnd end date of client contract
+     */
     public Client(String cvr, String name, String email, String phoneNum, String streetName, String streetNum,
                   String zip, String countryCode, String country, Date dateStart, Date dateEnd) {
 

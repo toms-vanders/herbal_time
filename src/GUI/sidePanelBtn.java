@@ -8,7 +8,7 @@ public class sidePanelBtn extends JPanel {
     private JPanel sidePanelBtn = new JPanel();
     private JLabel sidePanelBtnLabel = new JLabel();
 
-    public sidePanelBtn(String text){
+    public sidePanelBtn(String text) {
 
         sidePanelBtnLabel.setText(text);
         sidePanelBtnLabel.setForeground(Color.WHITE);
@@ -57,6 +57,7 @@ public class sidePanelBtn extends JPanel {
     public JPanel getIndicator(){
         return indicator;
     }
+
     public JPanel getSidePanelBtn(){
         return sidePanelBtn;
     }

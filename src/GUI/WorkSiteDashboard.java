@@ -3,20 +3,27 @@ package GUI;
 import Controller.DataAccessException;
 import Controller.WorkSiteCtr;
 import Controller.WorkSiteCtrIF;
+import GUI.Components.ComponentsConfigure;
 import Model.WorkSite;
 import org.netbeans.lib.awtextra.AbsoluteConstraints;
 import org.netbeans.lib.awtextra.AbsoluteLayout;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 public class WorkSiteDashboard extends JPanel {
-
+    private static int MAX_SITES;
     private final MainScreen mainScreen;
+    private JPanel listContainer;
+
+    private GroupLayout listContainerLayout;
+    private GroupLayout.ParallelGroup parallelGroup;
+    private GroupLayout.SequentialGroup sequentialGroup;
+
+    private ArrayList<WorkSite> workSites;
 
     public WorkSiteDashboard(MainScreen mainScreen) throws DataAccessException {
         this.mainScreen = mainScreen;
@@ -104,7 +111,7 @@ public class WorkSiteDashboard extends JPanel {
         createWorkSite.setText("Create work site");
         createWorkSite.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
-                mainScreen.createWorkSite();
+                mainScreen.showCreateWorkSite();
             }
         });
 
@@ -247,13 +254,4 @@ public class WorkSiteDashboard extends JPanel {
         }
         return listContainer;
     }
-
-    private JPanel listContainer;
-
-    private GroupLayout listContainerLayout;
-    private GroupLayout.ParallelGroup parallelGroup;
-    private GroupLayout.SequentialGroup sequentialGroup;
-
-    private static int MAX_SITES;
-    private ArrayList<WorkSite> workSites;
 }

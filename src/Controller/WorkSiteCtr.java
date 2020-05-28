@@ -14,11 +14,7 @@ public class WorkSiteCtr implements WorkSiteCtrIF{
     WorkSiteDB workSiteDB;
 
     public WorkSiteCtr() throws DataAccessException {
-        try {
-            workSiteDB = new WorkSiteDB();
-        } catch (DataAccessException e) {
-            throw new DataAccessException("Unable to obtain seasonal worker database instance.", e);
-        }
+        workSiteDB = new WorkSiteDB();
     }
 
     /**

@@ -5,6 +5,15 @@ import java.sql.Date;
 /**
  * Used to represent work tasks performed by seasonal workers. Workers are to register
  * their shifts as work tasks performed (hence the hoursWorked field)
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0
+ *
+ * Date: 29.05.2020
  */
 public class WorkTask {
     private int wTaskID;
@@ -16,10 +25,24 @@ public class WorkTask {
     private WorkType workType;
 //    private String workerCpr;
 
+    /**
+     * Constructor of WorkTask
+     */
     public WorkTask() {
 
     }
 
+    /**
+     * Constructor of WorkTask.
+     *
+     * @param wTaskID ID number of work task
+     * @param hoursWorked report hours worked on the task
+     * @param quantity measurement of collected produce
+     * @param dateStart start date of executing work task
+     * @param dateEnd end date of executing work task
+     * @param status status of work task
+     * @param workType type of work
+     */
     public WorkTask(int wTaskID, double hoursWorked, double quantity, Date dateStart, Date dateEnd,
                     String status, WorkType workType) {
         this.wTaskID = wTaskID;

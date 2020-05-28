@@ -1,6 +1,8 @@
 package GUI;
 
 import Controller.*;
+import GUI.Components.ComponentsConfigure;
+import GUI.Components.StatusDialog;
 import Model.SeasonalWorker;
 import Model.WorkTask;
 import org.netbeans.lib.awtextra.AbsoluteConstraints;
@@ -8,11 +10,22 @@ import org.netbeans.lib.awtextra.AbsoluteLayout;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.sql.Date;
 import java.util.ArrayList;
 
 public class PendingTasks extends JPanel {
+    private final MainScreen mainScreen;
+    private JPanel listContainer;
+    private JScrollPane scrollableListContainer;
+
+    private GroupLayout listContainerLayout;
+    private GroupLayout.ParallelGroup parallelGroup;
+    private GroupLayout.SequentialGroup sequentialGroup;
+
+    private int MAX_TASKS = 0;
+    private WorkTaskCtrIF workTaskController;
+    private SeasonalWorkerCtrIF seasonalWorkerController;
+    private ArrayList<WorkTask> pendingTasks;
 
     public PendingTasks(MainScreen mainScreen) throws DataAccessException {
         this.mainScreen = mainScreen;
@@ -36,7 +49,6 @@ public class PendingTasks extends JPanel {
         scrollableListContainer = new JScrollPane();
         listContainer = new JPanel();
         JPanel topBar = new JPanel();
-        // Variables declaration - do not modify
         JLabel frameTitle = new JLabel();
 
         setBackground(new Color(71, 120, 197));
@@ -64,7 +76,7 @@ public class PendingTasks extends JPanel {
 
         frameTitle.setText("Pending work tasks");
         frameTitle.setForeground(Color.white);
-        frameTitle.setFont(new Font("Dialog", Font.BOLD, 24)); // NOI18N
+        frameTitle.setFont(new Font("Dialog", Font.BOLD, 24));
 
         GroupLayout topBarLayout = new GroupLayout(topBar);
         topBar.setLayout(topBarLayout);
@@ -86,18 +98,46 @@ public class PendingTasks extends JPanel {
         add(topBar, new AbsoluteConstraints(0, 0, -1, -1));
     }
 
-    private void removeBtnActionPerformed(ActionEvent evt) {
-        // TODO add your handling code here:
+    private void removeBtnActionPerformed(Integer workTaskID) throws DataAccessException {
+        try{
+            if(workTaskController.deleteWorkTask(workTaskID)){
+                new StatusDialog(mainScreen,true,StatusDialog.CONFIRM,"Approved","Work task has been successfully deleted.");
+                loadPendingTasks();
+                scrollableListContainer.validate();
+            }
+        }catch(DataAccessException e){
+            throw new DataAccessException("Unable to remove work task from the system.",e);
+        }
     }
 
-    private void approveBtnActionPerformed(Integer workTaskId) throws DataAccessException {
+    private void approveBtnActionPerformed(Integer workTaskID) throws DataAccessException {
         ArrayList<Integer> idList = new ArrayList<>();
-        idList.add(workTaskId);
-        if(workTaskController.approveWorkTasks(idList)){
-            new StatusDialog(mainScreen,true,StatusDialog.CONFIRM,"Approved","Work task has been successfully approved");
-            loadPendingTasks();
-            scrollableListContainer.validate();
-        }
+        idList.add(workTaskID);
+        SwingWorker<Void,Void> loadingSwingWorker = new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() {
+                try {
+                    if(workTaskController.approveWorkTasks(idList)){
+                        SwingUtilities.invokeLater(() -> new StatusDialog(mainScreen,true,StatusDialog.CONFIRM,"Approved","Work task has been successfully approved"));
+                        loadPendingTasks();
+                        scrollableListContainer.validate();
+                    }
+                } catch (DataAccessException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        };
+        final StatusDialog loadingTask = new StatusDialog(mainScreen,false,StatusDialog.CONFIRM,"Approved","Work task is being processed");
+
+        loadingSwingWorker.addPropertyChangeListener(evt -> {
+            if(evt.getPropertyName().equals("state")){
+                if(evt.getNewValue() == SwingWorker.StateValue.DONE){
+                    loadingTask.dispose();
+                }
+            }
+        });
+        loadingSwingWorker.execute();
     }
 
     private void configureLabel(JLabel label, String text) {
@@ -130,11 +170,17 @@ public class PendingTasks extends JPanel {
         listElement.setPreferredSize(new Dimension(960, 112));
         listElement.setMinimumSize(new Dimension(960, 112));
 
-        profilePicture.setIcon(new ImageIcon(getClass().getResource("/icons8_github_96px.png"))); // NOI18N
+        profilePicture.setIcon(ComponentsConfigure.defaultProfile);
 
         ComponentsConfigure.metroBtnConfig(removeBtn);
         removeBtn.setIcon(ComponentsConfigure.trashIcon);
-        removeBtn.addActionListener(this::removeBtnActionPerformed);
+        removeBtn.addActionListener((e) -> {
+            try {
+                removeBtnActionPerformed(currentTask.getWorkTaskID());
+            } catch (DataAccessException dataAccessException) {
+                dataAccessException.printStackTrace();
+            }
+        });
 
         ComponentsConfigure.metroBtnConfig(approveBtn);
         approveBtn.setIcon(ComponentsConfigure.approveIcon);
@@ -147,7 +193,7 @@ public class PendingTasks extends JPanel {
         });
 
         ComponentsConfigure.metroBtnConfig(viewBtn);
-        viewBtn.setIcon(ComponentsConfigure.viewIcon); // NOI18N
+        viewBtn.setIcon(ComponentsConfigure.viewIcon);
         viewBtn.addActionListener((e) -> {
             try {
                 new ViewWorkTask(currentTask,currentWorker,this).start(currentTask,currentWorker);
@@ -310,39 +356,58 @@ public class PendingTasks extends JPanel {
                 addElementToList(elementToAdd);
             }
         }
-        listContainer.revalidate();
         scrollableListContainer.revalidate();
+        listContainer.revalidate();
+        scrollableListContainer.repaint();
+        listContainer.repaint();
     }
 
     @Override
     public void setVisible(boolean aFlag) {
         super.setVisible(aFlag);
-        if(aFlag){
-            try {
-                loadPendingTasks();
-            } catch (DataAccessException e) {
-                e.printStackTrace();
+        SwingWorker<Void,Void> loadingSwingWorker = new SwingWorker<Void,Void>() {
+            @Override
+            protected Void doInBackground() {
+                if(aFlag){
+                    try {
+                        loadPendingTasks();
+                    } catch (DataAccessException e) {
+                        e.printStackTrace();
+                    }
+                }else{
+                    if(!(pendingTasks == null)){
+                        if(!pendingTasks.isEmpty()){
+                            pendingTasks.clear();
+                        }
+                    }
+                    listContainer.removeAll();
+                    listContainer.revalidate();
+                    listContainer.repaint();
+                }
+                return null;
             }
-        }
+        };
+        final StatusDialog loadingTask = new StatusDialog(mainScreen,false,StatusDialog.LOADING,"Loading tasks","Loading pending tasks from the database, please wait.");
+
+        loadingSwingWorker.addPropertyChangeListener(evt -> {
+            if(evt.getPropertyName().equals("state")){
+                if(evt.getNewValue() == SwingWorker.StateValue.DONE){
+                    loadingTask.dispose();
+                }
+            }
+        });
+        loadingSwingWorker.execute();
     }
 
     void loadPendingTasks() throws DataAccessException {
+        if(!(pendingTasks == null)){
+            if(!pendingTasks.isEmpty()){
+                pendingTasks.clear();
+            }
+        }
         pendingTasks = new ArrayList<>(workTaskController.findAllPendingTasks(true));
         MAX_TASKS = pendingTasks.size();
         listContainer.removeAll();
         createElements();
     }
-
-    private JPanel listContainer;
-    private JScrollPane scrollableListContainer;
-
-    private GroupLayout listContainerLayout;
-    private GroupLayout.ParallelGroup parallelGroup;
-    private GroupLayout.SequentialGroup sequentialGroup;
-
-    private int MAX_TASKS = 0;
-    private WorkTaskCtrIF workTaskController;
-    private SeasonalWorkerCtrIF seasonalWorkerController;
-    private ArrayList<WorkTask> pendingTasks;
-    private final MainScreen mainScreen;
 }

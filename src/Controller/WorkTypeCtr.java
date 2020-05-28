@@ -18,7 +18,7 @@ public class WorkTypeCtr implements WorkTypeCtrIF{
     public WorkTypeCtr() throws DataAccessException {
         try {
             workTypeDB = new WorkTypeDB();
-        } catch(DataAccessException e) {
+        } catch(Exception e) {
             throw new DataAccessException("WorkTaskCtr error.", e);
         }
     }

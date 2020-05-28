@@ -15,11 +15,7 @@ public class WorkTaskCtr implements WorkTaskCtrIF {
 
     public WorkTaskCtr() throws DataAccessException
     {
-        try {
-            workTaskDB = new WorkTaskDB();
-        } catch(DataAccessException e) {
-            throw new DataAccessException("WorkTaskCtr error.", e);
-        }
+        workTaskDB = new WorkTaskDB();
     }
 
     /**
@@ -108,9 +104,9 @@ public class WorkTaskCtr implements WorkTaskCtrIF {
      * @throws DataAccessException
      */
     @Override
-    public int updateWorkTask(WorkTask newWorkTask, Integer workTaskID) throws DataAccessException {
+    public boolean updateWorkTask(WorkTask newWorkTask, Integer workTaskID) throws DataAccessException {
         try {
-            return workTaskDB.updateWorkTask(newWorkTask, workTaskID);
+            return workTaskDB.updateWorkTask(newWorkTask, workTaskID) == 1;
         } catch(DataAccessException e) {
             throw new DataAccessException("WorkTaskCtr error.", e);
         }
@@ -132,9 +128,9 @@ public class WorkTaskCtr implements WorkTaskCtrIF {
      * @throws DataAccessException
      */
     @Override
-    public int deleteWorkTask(Integer id) throws DataAccessException {
+    public boolean deleteWorkTask(Integer id) throws DataAccessException {
         try {
-            return workTaskDB.deleteWorkTask(id);
+            return workTaskDB.deleteWorkTask(id) == 1;
         } catch(DataAccessException e) {
             throw new DataAccessException("WorkTaskCtr error.", e);
         }

@@ -6,6 +6,15 @@ import java.util.ArrayList;
 
 /**
  * Used to represent the seasonal workers employed by CS Works to perform tasks for clients
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0
+ *
+ * Date: 29.05.2020
  */
 public class SeasonalWorker extends Person{
 
@@ -17,11 +26,36 @@ public class SeasonalWorker extends Person{
     private SeasonalWorker leadBy;
     private ArrayList<WorkTask> workTasks;
 
+    /**
+     * Constructor of SeasonalWorker
+     * assigns all values inherited from Person class to null except for CPR number
+     * @param cpr CPR number of seasonal worker
+     */
     public SeasonalWorker(String cpr) {
         super(cpr, null, null, null, null, null, null, null,
                 null, null, null, null);
     }
 
+    /**
+     * Constructor of SeasonalWorker
+     * @param cpr CPR number of seasonal worker
+     * @param fname first name of seasonal worker
+     * @param lname last name of seasonal worker
+     * @param dob date of birth of seasonal worker
+     * @param sex sex of seasonal worker
+     * @param email email of seasonal worker
+     * @param phoneNum phone number of seasonal worker
+     * @param streetName street name of seasonal worker
+     * @param streetNum street number of seasonal worker
+     * @param zip zip code of seasonal worker
+     * @param countryCode ISO country code of seasonal worker
+     * @param country country of seasonl worker
+     * @param passportNum passport number of seasonal worker
+     * @param swift swift bank code of seasonal worker
+     * @param iban IBAN code of seasonal worker
+     * @param ssn social security number of seasonal worker
+     * @param workedBefore specifies whether seasonal worker used to work in the previous fiscal year
+     */
     public SeasonalWorker(String cpr, String fname, String lname, Date dob, char sex, String email,
                           String phoneNum, String streetName, String streetNum, String zip, String countryCode,
                           String country, String passportNum, String swift, String iban, String ssn,
@@ -39,6 +73,19 @@ public class SeasonalWorker extends Person{
 
     /**
      * Only makes the Interface (Person) part of SeasonalWorker
+     *
+     * @param cpr CPR number of seasonal worker
+     * @param fname first name of seasonal worker
+     * @param lname last name of seasonal worker
+     * @param dob date of birth of seasonal worker
+     * @param sex sex of seasonal worker
+     * @param email email of seasonal worker
+     * @param phoneNum phone number of seasonal worker
+     * @param streetName street name of seasonal worker
+     * @param streetNum street number of seasonal worker
+     * @param zip zip code of seasonal worker
+     * @param countryCode ISO country code of seasonal worker
+     * @param country country of seasonal worker
      */
     public SeasonalWorker(String cpr, String fname, String lname, Date dob, char sex, String email,
                           String phoneNum, String streetName, String streetNum, String zip, String countryCode,
@@ -75,6 +122,10 @@ public class SeasonalWorker extends Person{
 
     @Override
     public String toString() {
+        String leadByCPR = null;
+        if (getLeadBy()!=null) {
+            leadByCPR = getLeadBy().getCpr();
+        }
         return "{Person: (" +
                 "cpr='" + getCpr() + '\'' +
                 ", fname='" + getFname() + '\'' +
@@ -95,7 +146,7 @@ public class SeasonalWorker extends Person{
                 ", iban='" + iban + '\'' +
                 ", ssn='" + ssn + '\'' +
                 ", workedBefore=" + workedBefore +
-                ", leadBy='" + getLeadBy().getCpr() + '\'' +
+                ", leadBy='" + leadByCPR + '\'' +
                 ")}";
     }
 }

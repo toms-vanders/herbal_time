@@ -1,17 +1,61 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package GUI;
 
 import Model.Employee;
 
 /**
  *
- * @author dmich
+ *
  */
 public class ViewEmployee extends javax.swing.JFrame {
+    // TODO a lot of unused components
+    private javax.swing.JLabel addressLabel;
+    private javax.swing.JLabel addressValue;
+    private javax.swing.JLabel countryLabel;
+    private javax.swing.JLabel countryValue;
+    private javax.swing.JLabel cprLabel;
+    private javax.swing.JLabel cprValue;
+    private javax.swing.JLabel dobLabel;
+    private javax.swing.JLabel dobValue;
+    private javax.swing.JLabel emailLabel;
+    private javax.swing.JLabel emailValue;
+    private javax.swing.JLabel exitBtn;
+    private javax.swing.JLabel exitBtn1;
+    private javax.swing.JLabel exitBtn2;
+    private javax.swing.JLabel exitBtn3;
+    private javax.swing.JLabel fnameLabel;
+    private javax.swing.JLabel fnameValue;
+    private javax.swing.JLabel frameTitle;
+    private javax.swing.JLabel frameTitle1;
+    private javax.swing.JLabel frameTitle2;
+    private javax.swing.JLabel frameTitle3;
+    private javax.swing.JLabel lnameLabel;
+    private javax.swing.JLabel lnameValue;
+    private javax.swing.JPanel mainContainer;
+    private javax.swing.JLabel maximizeBtn;
+    private javax.swing.JLabel maximizeBtn1;
+    private javax.swing.JLabel maximizeBtn2;
+    private javax.swing.JLabel maximizeBtn3;
+    private javax.swing.JLabel minimizeBtn;
+    private javax.swing.JLabel minimizeBtn1;
+    private javax.swing.JLabel minimizeBtn2;
+    private javax.swing.JLabel minimizeBtn3;
+    private javax.swing.JList<String> paymentslipsList;
+    private javax.swing.JLabel phoneLabel;
+    private javax.swing.JLabel phoneValue;
+    private javax.swing.JLabel postalCodeLabel;
+    private javax.swing.JLabel postalCodeValue;
+    private javax.swing.JLabel profilePicture;
+    private javax.swing.JScrollPane scrollabelPaymentSlips;
+    private javax.swing.JScrollPane scrollableSeasonalWorkers;
+    private javax.swing.JList<String> seasonalWorkersList;
+    private javax.swing.JLabel sexLabel;
+    private javax.swing.JLabel sexValue;
+    private javax.swing.JPanel topBar;
+    private javax.swing.JPanel topBar1;
+    private javax.swing.JPanel topBar2;
+    private javax.swing.JPanel topBar3;
+
+    private Employee employee;
 
     /**
      * Creates new form ViewEmployee
@@ -24,7 +68,40 @@ public class ViewEmployee extends javax.swing.JFrame {
     public ViewEmployee() {
     }
 
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(ViewEmployee.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(ViewEmployee.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(ViewEmployee.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(ViewEmployee.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
 
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new ViewEmployee().setVisible(true);
+            }
+        });
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -360,90 +437,4 @@ public class ViewEmployee extends javax.swing.JFrame {
     private void profilePictureMousePressed(java.awt.event.MouseEvent evt) {
         // TODO add your handling code here:
     }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ViewEmployee.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ViewEmployee.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ViewEmployee.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ViewEmployee.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ViewEmployee().setVisible(true);
-            }
-        });
-    }
-
-    // Variables declaration - do not modify
-    private javax.swing.JLabel addressLabel;
-    private javax.swing.JLabel addressValue;
-    private javax.swing.JLabel countryLabel;
-    private javax.swing.JLabel countryValue;
-    private javax.swing.JLabel cprLabel;
-    private javax.swing.JLabel cprValue;
-    private javax.swing.JLabel dobLabel;
-    private javax.swing.JLabel dobValue;
-    private javax.swing.JLabel emailLabel;
-    private javax.swing.JLabel emailValue;
-    private javax.swing.JLabel exitBtn;
-    private javax.swing.JLabel exitBtn1;
-    private javax.swing.JLabel exitBtn2;
-    private javax.swing.JLabel exitBtn3;
-    private javax.swing.JLabel fnameLabel;
-    private javax.swing.JLabel fnameValue;
-    private javax.swing.JLabel frameTitle;
-    private javax.swing.JLabel frameTitle1;
-    private javax.swing.JLabel frameTitle2;
-    private javax.swing.JLabel frameTitle3;
-    private javax.swing.JLabel lnameLabel;
-    private javax.swing.JLabel lnameValue;
-    private javax.swing.JPanel mainContainer;
-    private javax.swing.JLabel maximizeBtn;
-    private javax.swing.JLabel maximizeBtn1;
-    private javax.swing.JLabel maximizeBtn2;
-    private javax.swing.JLabel maximizeBtn3;
-    private javax.swing.JLabel minimizeBtn;
-    private javax.swing.JLabel minimizeBtn1;
-    private javax.swing.JLabel minimizeBtn2;
-    private javax.swing.JLabel minimizeBtn3;
-    private javax.swing.JList<String> paymentslipsList;
-    private javax.swing.JLabel phoneLabel;
-    private javax.swing.JLabel phoneValue;
-    private javax.swing.JLabel postalCodeLabel;
-    private javax.swing.JLabel postalCodeValue;
-    private javax.swing.JLabel profilePicture;
-    private javax.swing.JScrollPane scrollabelPaymentSlips;
-    private javax.swing.JScrollPane scrollableSeasonalWorkers;
-    private javax.swing.JList<String> seasonalWorkersList;
-    private javax.swing.JLabel sexLabel;
-    private javax.swing.JLabel sexValue;
-    private javax.swing.JPanel topBar;
-    private javax.swing.JPanel topBar1;
-    private javax.swing.JPanel topBar2;
-    private javax.swing.JPanel topBar3;
-
-    private Employee employee;
-    // End of variables declaration
 }

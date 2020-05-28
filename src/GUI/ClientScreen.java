@@ -1,253 +1,275 @@
 package GUI;
 
-public class ClientScreen extends javax.swing.JPanel {
-    private MainScreen mainScreen;
+import Controller.ClientCtr;
+import Controller.ClientCtrIF;
+import Controller.DataAccessException;
+import GUI.Components.ComponentsConfigure;
+import Model.Client;
 
-    public ClientScreen(MainScreen mainScreen) {
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+
+public class ClientScreen extends JPanel {
+
+    private MainScreen mainScreen;
+    private JPanel listContainer;
+    private ClientCtrIF clientController;
+    private Client currentClient;
+    private int MAX_CLIENTS;
+    private ArrayList<Client> clientsList;
+
+    private GroupLayout listContainerLayout;
+    private GroupLayout.ParallelGroup parallelGroup;
+    private GroupLayout.SequentialGroup sequentialGroup;
+
+    public ClientScreen(MainScreen mainScreen) throws DataAccessException {
         this.mainScreen = mainScreen;
         initComponents();
     }
 
-    private void initComponents() {
+    private void initComponents() throws DataAccessException {
 
-        topBar = new javax.swing.JPanel();
-        taskTitle = new javax.swing.JLabel();
-        addBtn = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jPanel1 = new javax.swing.JPanel();
-        listElement = new javax.swing.JPanel();
-        profilePicture = new javax.swing.JLabel();
-        personName = new javax.swing.JLabel();
-        infoBtn = new javax.swing.JButton();
-        msgBtn = new javax.swing.JButton();
-        removeBtn = new javax.swing.JButton();
-        settingsBtn = new javax.swing.JButton();
+        try{
+            clientController = new ClientCtr();
+        }catch(DataAccessException e){
+            throw new DataAccessException("Unable to retrieve client controller.",e);
+        }
 
-        setBackground(new java.awt.Color(71, 120, 197));
-        setForeground(new java.awt.Color(255, 255, 255));
-        setMaximumSize(new java.awt.Dimension(1000, 720));
-        setMinimumSize(new java.awt.Dimension(1000, 720));
-        setName(""); // NOI18N
-        setPreferredSize(new java.awt.Dimension(1000, 720));
+        JPanel topBar = new JPanel();
+        JLabel taskTitle = new JLabel();
+        JButton addBtn = new JButton();
+        JScrollPane scrollableListContainer = new JScrollPane();
 
-        topBar.setBackground(new java.awt.Color(120, 168, 252));
-        topBar.setPreferredSize(new java.awt.Dimension(1000, 110));
+        setBackground(new Color(71, 120, 197));
+        setForeground(new Color(255, 255, 255));
+        setMaximumSize(new Dimension(1000, 720));
+        setMinimumSize(new Dimension(1000, 720));
+        setName("");
+        setPreferredSize(new Dimension(1000, 720));
 
-        taskTitle.setBackground(new java.awt.Color(249, 249, 249));
-        taskTitle.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
-        taskTitle.setForeground(new java.awt.Color(249, 249, 249));
-        taskTitle.setText("CSWorks work sites");
-        taskTitle.setPreferredSize(new java.awt.Dimension(450, 50));
+        topBar.setBackground(new Color(120, 168, 252));
+        topBar.setPreferredSize(new Dimension(1000, 110));
 
-        javax.swing.GroupLayout topBarLayout = new javax.swing.GroupLayout(topBar);
+        taskTitle.setBackground(new Color(249, 249, 249));
+        taskTitle.setFont(new Font("Dialog", Font.BOLD, 36));
+        taskTitle.setForeground(new Color(249, 249, 249));
+        taskTitle.setText("CSWorks clients");
+        taskTitle.setPreferredSize(new Dimension(450, 50));
+
+        GroupLayout topBarLayout = new GroupLayout(topBar);
         topBar.setLayout(topBarLayout);
         topBarLayout.setHorizontalGroup(
-                topBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                topBarLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(topBarLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(taskTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(taskTitle, GroupLayout.PREFERRED_SIZE, 460, GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap(534, Short.MAX_VALUE))
         );
         topBarLayout.setVerticalGroup(
-                topBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                topBarLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(topBarLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(taskTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(taskTitle, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        addBtn.setBackground(new java.awt.Color(71, 120, 197));
+        scrollableListContainer.setBorder(null);
+        scrollableListContainer.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+        listContainer = createListContainer();
+
+
+        ComponentsConfigure.metroBtnConfig(addBtn);
         addBtn.setText("Add");
-        addBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addBtnActionPerformed(evt);
-            }
-        });
+        addBtn.addActionListener(evt -> addBtnActionPerformed());
 
-        jScrollPane1.setBorder(null);
-        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollableListContainer.setViewportView(listContainer);
 
-        jPanel1.setBackground(new java.awt.Color(71, 120, 197));
-        jPanel1.setForeground(new java.awt.Color(255, 255, 255));
-
-        listElement.setBackground(new java.awt.Color(23, 35, 51));
-        listElement.setMaximumSize(new java.awt.Dimension(970, 112));
-        listElement.setMinimumSize(new java.awt.Dimension(970, 112));
-        listElement.setPreferredSize(new java.awt.Dimension(970, 112));
-
-        profilePicture.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons8_github_96px.png"))); // NOI18N
-        profilePicture.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                profilePictureMousePressed(evt);
-            }
-        });
-
-        personName.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        personName.setText("John Doe");
-
-        infoBtn.setBackground(new java.awt.Color(23, 35, 51));
-        infoBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons8_information_32px.png"))); // NOI18N
-        infoBtn.setMaximumSize(new java.awt.Dimension(70, 50));
-        infoBtn.setMinimumSize(new java.awt.Dimension(70, 50));
-        infoBtn.setPreferredSize(new java.awt.Dimension(70, 50));
-        infoBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                infoBtnActionPerformed(evt);
-            }
-        });
-
-        msgBtn.setBackground(new java.awt.Color(23, 35, 51));
-        msgBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons8_sent_32px.png"))); // NOI18N
-        msgBtn.setMaximumSize(new java.awt.Dimension(70, 50));
-        msgBtn.setMinimumSize(new java.awt.Dimension(70, 50));
-        msgBtn.setPreferredSize(new java.awt.Dimension(70, 50));
-        msgBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                msgBtnActionPerformed(evt);
-            }
-        });
-
-        removeBtn.setBackground(new java.awt.Color(23, 35, 51));
-        removeBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons8_trash_can_32px.png"))); // NOI18N
-        removeBtn.setMaximumSize(new java.awt.Dimension(70, 50));
-        removeBtn.setMinimumSize(new java.awt.Dimension(70, 50));
-        removeBtn.setPreferredSize(new java.awt.Dimension(70, 50));
-        removeBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                removeBtnActionPerformed(evt);
-            }
-        });
-
-        settingsBtn.setBackground(new java.awt.Color(23, 35, 51));
-        settingsBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons8_settings_32px_1.png"))); // NOI18N
-        settingsBtn.setMaximumSize(new java.awt.Dimension(70, 50));
-        settingsBtn.setMinimumSize(new java.awt.Dimension(70, 50));
-        settingsBtn.setPreferredSize(new java.awt.Dimension(70, 50));
-        settingsBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                settingsBtnActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout listElementLayout = new javax.swing.GroupLayout(listElement);
-        listElement.setLayout(listElementLayout);
-        listElementLayout.setHorizontalGroup(
-                listElementLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(listElementLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(profilePicture, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(personName)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 534, Short.MAX_VALUE)
-                                .addComponent(msgBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(settingsBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(infoBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(removeBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap())
-        );
-        listElementLayout.setVerticalGroup(
-                listElementLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(listElementLayout.createSequentialGroup()
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(listElementLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(listElementLayout.createSequentialGroup()
-                                                .addComponent(profilePicture, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, listElementLayout.createSequentialGroup()
-                                                .addGroup(listElementLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                        .addComponent(infoBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addComponent(msgBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addComponent(removeBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addComponent(settingsBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addComponent(personName, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                                .addGap(33, 33, 33))))
-        );
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(listElement, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 57, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(listElement, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 1329, Short.MAX_VALUE))
-        );
-
-        jScrollPane1.setViewportView(jPanel1);
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(topBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(topBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addComponent(scrollableListContainer, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                                 .addGap(0, 0, Short.MAX_VALUE)
-                                                .addComponent(addBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addComponent(addBtn, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)))
                                 .addContainerGap())
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
-                                .addComponent(topBar, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 590, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(addBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(topBar, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(scrollableListContainer, GroupLayout.PREFERRED_SIZE, 590, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(addBtn, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>
 
-    private void profilePictureMousePressed(java.awt.event.MouseEvent evt) {
+    private void infoBtnActionPerformed() {
         // TODO add your handling code here:
     }
 
-    private void infoBtnActionPerformed(java.awt.event.ActionEvent evt) {
+    private void msgBtnActionPerformed() {
         // TODO add your handling code here:
     }
 
-    private void msgBtnActionPerformed(java.awt.event.ActionEvent evt) {
+    private void removeBtnActionPerformed() {
         // TODO add your handling code here:
     }
 
-    private void removeBtnActionPerformed(java.awt.event.ActionEvent evt) {
+    private void settingsBtnActionPerformed() {
         // TODO add your handling code here:
     }
 
-    private void settingsBtnActionPerformed(java.awt.event.ActionEvent evt) {
+    private void addBtnActionPerformed() {
         // TODO add your handling code here:
     }
 
-    private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+    private void configureButton(JButton button, ImageIcon icon){
+        button.setBackground(new Color(23, 35, 51));
+        button.setMaximumSize(new Dimension(70, 50));
+        button.setMinimumSize(new Dimension(70, 50));
+        button.setPreferredSize(new Dimension(70, 50));
+        button.setIcon(icon);
     }
 
+    public JPanel createListContainer() {
+        JPanel listContainer = new JPanel();
+        listContainerLayout = new GroupLayout(listContainer);
+        listContainer.setLayout(listContainerLayout);
+        listContainer.setBackground(new Color(71, 120, 197));
+        listContainerLayout.setAutoCreateGaps(true);
 
-    // Variables declaration - do not modify
-    private javax.swing.JButton addBtn;
-    private javax.swing.JButton infoBtn;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JPanel listElement;
-    private javax.swing.JButton msgBtn;
-    private javax.swing.JLabel personName;
-    private javax.swing.JLabel profilePicture;
-    private javax.swing.JButton removeBtn;
-    private javax.swing.JButton settingsBtn;
-    private javax.swing.JLabel taskTitle;
-    private javax.swing.JPanel topBar;
-    // End of variables declaration
+        parallelGroup = listContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING);
+        listContainerLayout.setHorizontalGroup(listContainerLayout.createSequentialGroup().addGroup(parallelGroup));
+
+        sequentialGroup = listContainerLayout.createSequentialGroup();
+        listContainerLayout.setVerticalGroup(sequentialGroup);
+
+        return listContainer;
+    }
+
+    private void addElementToList(JPanel listElement){
+        parallelGroup.addGroup(listContainerLayout.createSequentialGroup()
+                .addComponent(listElement));
+        sequentialGroup.addGroup(listContainerLayout.createParallelGroup()
+                .addComponent(listElement));
+    }
+
+    private void loadClients() throws DataAccessException {
+        clientsList = new ArrayList<>(clientController.findAllClients(false));
+        MAX_CLIENTS = clientsList.size();
+        listContainer.removeAll();
+        createElements();
+    }
+
+    private void createElements(){
+        if(MAX_CLIENTS > 0){
+            for(int i = 0; i < MAX_CLIENTS; i++){
+                JPanel listElement = new JPanel();
+                JLabel profilePicture = new JLabel();
+                String pName = clientsList.get(i).getName();
+                JLabel personName = new JLabel();
+                JButton infoBtn = new JButton();
+                JButton msgBtn = new JButton();
+                JButton removeBtn = new JButton();
+                JButton settingsBtn = new JButton();
+
+                setElementComponents(listElement,profilePicture,personName,pName,infoBtn,msgBtn,removeBtn,settingsBtn);
+                setElementGroupsPosition(listElement,profilePicture,personName,infoBtn,msgBtn,removeBtn,settingsBtn);
+                addElementToList(listElement);
+
+            }
+        }
+    }
+
+    private void setElementComponents(JPanel listElement, JLabel profilePicture, JLabel personName, String pName, JButton infoBtn, JButton msgBtn, JButton removeBtn, JButton settingsBtn){
+
+        listElement.setBackground(new Color(23, 35, 51));
+        listElement.setMaximumSize(new Dimension(970, 112));
+        listElement.setMinimumSize(new Dimension(970, 112));
+        listElement.setPreferredSize(new Dimension(970, 112));
+
+        profilePicture.setIcon(new ImageIcon(getClass().getResource("/icons8_github_96px.png")));
+
+        personName.setFont(new Font("Dialog", Font.BOLD, 24));
+        personName.setForeground(Color.WHITE);
+        personName.setText(pName);
+
+        ComponentsConfigure.metroBtnConfig(infoBtn);
+        configureButton(infoBtn,ComponentsConfigure.infoIcon);
+        infoBtn.addActionListener(evt -> infoBtnActionPerformed());
+
+        ComponentsConfigure.metroBtnConfig(msgBtn);
+        configureButton(msgBtn,ComponentsConfigure.sentIcon);
+        msgBtn.addActionListener(evt -> msgBtnActionPerformed());
+
+        ComponentsConfigure.metroBtnConfig(removeBtn);
+        configureButton(removeBtn,ComponentsConfigure.trashIcon);
+        removeBtn.addActionListener(evt -> removeBtnActionPerformed());
+
+        ComponentsConfigure.metroBtnConfig(settingsBtn);
+        configureButton(settingsBtn,ComponentsConfigure.settingsIcon);
+        settingsBtn.addActionListener(evt -> settingsBtnActionPerformed());
+    }
+
+    private void setElementGroupsPosition(JPanel listElement,JLabel profilePicture, JLabel personName, JButton infoBtn, JButton msgBtn, JButton removeBtn, JButton settingsBtn){
+        GroupLayout listElementLayout = new GroupLayout(listElement);
+        listElement.setLayout(listElementLayout);
+        listElementLayout.setHorizontalGroup(
+                listElementLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(listElementLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(profilePicture, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(personName)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 534, Short.MAX_VALUE)
+                                .addComponent(msgBtn, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(settingsBtn, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(infoBtn, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(removeBtn, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap())
+        );
+        listElementLayout.setVerticalGroup(
+                listElementLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(listElementLayout.createSequentialGroup()
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(listElementLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addGroup(listElementLayout.createSequentialGroup()
+                                                .addComponent(profilePicture, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+                                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGroup(GroupLayout.Alignment.TRAILING, listElementLayout.createSequentialGroup()
+                                                .addGroup(listElementLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                                        .addComponent(infoBtn, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(msgBtn, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(removeBtn, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(settingsBtn, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(personName, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                .addGap(33, 33, 33))))
+        );
+    }
+
+    @Override
+    public void setVisible(boolean aFlag) {
+        super.setVisible(aFlag);
+        if(aFlag){
+            try {
+                loadClients();
+            } catch (DataAccessException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

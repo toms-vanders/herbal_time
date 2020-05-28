@@ -11,7 +11,7 @@ public interface WorkTaskCtrIF {
     List<WorkTask> findAllPendingTasks(boolean fullAssociation) throws DataAccessException;
     WorkTask findWorkTasks(Integer id) throws DataAccessException;
     boolean insertWorkTask(WorkTask newWorkTask, String workerCpr) throws DataAccessException;
-    int updateWorkTask(WorkTask newWorkTask, Integer workTaskID) throws DataAccessException;
+    boolean updateWorkTask(WorkTask newWorkTask, Integer workTaskID) throws DataAccessException;
     boolean approveWorkTasks(ArrayList<Integer> idList) throws DataAccessException;
-    int deleteWorkTask(Integer id) throws DataAccessException;
+    boolean deleteWorkTask(Integer id) throws DataAccessException;
 }

@@ -1,12 +1,22 @@
 package GUI;
 
+import GUI.Components.ComponentsConfigure;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class LoginScreen extends JPanel {
-
     private final MainScreen mainScreen;
+    private JButton exitBtn;
+    private JButton loginBtn;
+    private JLabel loginLabel;
+    private JLabel loginLogo;
+    private JPanel loginPanel;
+    private JPasswordField passwordField;
+    private JPanel passwordPanel;
+    private JPanel userPanel;
+    private JTextField userTextField;
 
     public LoginScreen(MainScreen mainScreen) {
         this.mainScreen = mainScreen;
@@ -147,13 +157,5 @@ public class LoginScreen extends JPanel {
         System.exit(0);
     }
     
-    private JButton exitBtn;
-    private JButton loginBtn;
-    private JLabel loginLabel;
-    private JLabel loginLogo;
-    private JPanel loginPanel;
-    private JPasswordField passwordField;
-    private JPanel passwordPanel;
-    private JPanel userPanel;
-    private JTextField userTextField;
+
 }

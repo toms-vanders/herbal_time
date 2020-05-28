@@ -13,6 +13,18 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Used to access data about work site produce from the database.
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0
+ *
+ * Date: 29.05.2020
+ */
 public class WorkSiteProduceDB implements WorkSiteProduceDBIF{
 
     /**
@@ -38,11 +50,18 @@ public class WorkSiteProduceDB implements WorkSiteProduceDBIF{
     private PreparedStatement PSupdateWorkSiteProduce;
     private PreparedStatement PSdeleteWorkSiteProduce;
 
+    /**
+     * Constructor of WorkSiteProduce
+     */
+    public WorkSiteProduceDB() {
 
-    public WorkSiteProduceDB() throws DataAccessException {
-        init();
     }
 
+    /**
+     * Initialize DB connection and prepare SQL statements
+     *
+     * @throws DataAccessException Throw an exception on statements that cannot be prepared
+     */
     private void connectToDB() throws DataAccessException{
         DBConnection.connect();
         if (DBConnection.instanceIsNull()) {
@@ -51,29 +70,14 @@ public class WorkSiteProduceDB implements WorkSiteProduceDBIF{
     }
 
     /**
-     * Initialize DB connection and prepare SQL statements
+     * Returns list of all work site produce stored in the database.
      *
-     * @throws DataAccessException Throw an exception on statements that cannot be prepared
+     * @param type requires to be of proper type
+     * @return list of all work site produce stored in the database if found, otherwise empty list
+     * @throws DataAccessException
      */
-    private void init() throws DataAccessException {
-        connectToDB();
-        Connection con = DBConnection.getInstance().getConnection();
-        try {
-            PSfindAll = con.prepareStatement(findAll);
-            PSfindByProduce = con.prepareStatement(findByProduce);
-            PSfindByWorkSite = con.prepareStatement(findByWorkSite);
-            PSinsertWorkSiteProduce = con.prepareStatement(insertWorkSiteProduce);
-            PSupdateWorkSiteProduce = con.prepareStatement(updateWorkSiteProduce);
-            PSdeleteWorkSiteProduce = con.prepareStatement(deleteWorkSiteProduce);
-            DBConnection.disconnect();
-        } catch (SQLException e) {
-            DBConnection.disconnect();
-            throw new DataAccessException("WorkSiteProduce could not initialize.", e);
-        }
-    }
-
     @Override
-    public List<WorkSiteProduce> findAll(boolean fullAssociation, Type type) throws DataAccessException {
+    public List<WorkSiteProduce> findAll(Type type) throws DataAccessException {
         connectToDB();
         Connection con = DBConnection.getInstance().getConnection();
         try {
@@ -86,7 +90,7 @@ public class WorkSiteProduceDB implements WorkSiteProduceDBIF{
         ResultSet rs;
         try {
             rs = this.PSfindAll.executeQuery();
-            return buildObjects(rs,fullAssociation,type);
+            return buildObjects(rs, type);
         } catch (SQLException e) {
             DBConnection.disconnect();
             throw new DataAccessException("Error with fetching all WorkSiteProduce from DB.", e);
@@ -94,8 +98,16 @@ public class WorkSiteProduceDB implements WorkSiteProduceDBIF{
 
     }
 
+    /**
+     * Returns list of WorkSiteProduce object that in the database collect produces with specified name.
+     *
+     * @param produceName name of produce to match with when searching for work site produce
+     * @param type requires to be of proper type
+     * @return list of WorkSiteProduce objects if found, otherwise empty list
+     * @throws DataAccessException
+     */
     @Override
-    public List<WorkSiteProduce> findByProduce(String produceName, boolean fullAssociation, Type type) throws DataAccessException {
+    public List<WorkSiteProduce> findByProduce(String produceName, Type type) throws DataAccessException {
         connectToDB();
         Connection con = DBConnection.getInstance().getConnection();
         try {
@@ -119,11 +131,19 @@ public class WorkSiteProduceDB implements WorkSiteProduceDBIF{
             DBConnection.disconnect();
             throw new DataAccessException("Issue with retrieving WorkSiteProduce from the database (executeQuery)", e);
         }
-        return buildObjects(rs, fullAssociation, type);
+        return buildObjects(rs, type);
     }
 
+    /**
+     * Returns list of WorkSiteProduce objects by matching on specific work site ID.
+     *
+     * @param workSiteID ID of work site to match with when searching for work site produce
+     * @param type requires to be of proper type
+     * @return list of WorkSiteProducts if found, otherwise empty list
+     * @throws DataAccessException
+     */
     @Override
-    public List<WorkSiteProduce> findByWorkSite(int workSiteID, boolean fullAssociation, Type type) throws DataAccessException {
+    public List<WorkSiteProduce> findByWorkSite(int workSiteID, Type type) throws DataAccessException {
         connectToDB();
         Connection con = DBConnection.getInstance().getConnection();
         try {
@@ -147,11 +167,19 @@ public class WorkSiteProduceDB implements WorkSiteProduceDBIF{
             DBConnection.disconnect();
             throw new DataAccessException("Issue with retrieving WorkSiteProduce from the database (executeQuery)", e);
         }
-        return buildObjects(rs, fullAssociation, type);
+        return buildObjects(rs, type);
     }
 
+    /**
+     * Inserts produce into database.
+     *
+     * @param newWorkSiteProduce instance of new WorkSiteProduce to be inserted into database
+     * @param type requires to be of proper type
+     * @return count of affected rows in database after executing operation
+     * @throws DataAccessException
+     */
     @Override
-    public Integer insertWorkSiteProduce(int workSiteID, String produceName, WorkSiteProduce newWorkSiteProduce, Type type) throws DataAccessException {
+    public Integer insertWorkSiteProduce(WorkSiteProduce newWorkSiteProduce, Type type) throws DataAccessException {
         connectToDB();
         Connection con = DBConnection.getInstance().getConnection();
         try {
@@ -181,6 +209,16 @@ public class WorkSiteProduceDB implements WorkSiteProduceDBIF{
         return affectedRows;
     }
 
+
+    /**
+     *
+     * @param workSiteID
+     * @param produceName
+     * @param newWorkSiteProduce
+     * @param type
+     * @return
+     * @throws DataAccessException
+     */
     @Override
     public Integer updateWorkSiteProduce(int workSiteID, String produceName, WorkSiteProduce newWorkSiteProduce, Type type) throws DataAccessException {
         connectToDB();
@@ -211,6 +249,15 @@ public class WorkSiteProduceDB implements WorkSiteProduceDBIF{
         return affectedRows;
     }
 
+    /**
+     * Removes work site produce of specific produce name and work site ID from database.
+     *
+     * @param workSiteID work site ID of work site produce that is going to be removed
+     * @param produceName produce name of work site produce that is going to be removed
+     * @param type requires to be of proper type
+     * @return count of affected rows in database after executing operation
+     * @throws DataAccessException
+     */
     @Override
     public Integer deleteWorkSiteProduce(int workSiteID, String produceName, Type type) throws DataAccessException {
         connectToDB();
@@ -242,13 +289,19 @@ public class WorkSiteProduceDB implements WorkSiteProduceDBIF{
         return affectedRows;
     }
 
-    private List<WorkSiteProduce> buildObjects(ResultSet rs, boolean fullAssociation, Type type) throws DataAccessException {
+    /**
+     * Returns list of WorkSiteProduce objects after finding matching cases in database.
+     *
+     * @param rs ResultSet object returned after executing query
+     * @param type requires to be of proper type
+     * @return list of WorkSiteProduce objects
+     * @throws DataAccessException
+     */
+    private List<WorkSiteProduce> buildObjects(ResultSet rs, Type type) throws DataAccessException {
         List<WorkSiteProduce> res = new ArrayList<>();
         try {
             while(rs.next()) {
-                WorkSiteProduce currentWorkSiteProduce = buildObject(rs,fullAssociation,type);
-//                System.out.println(currentClient.getCountry());
-//                System.out.println(currentClient.toString());
+                WorkSiteProduce currentWorkSiteProduce = buildObject(rs, type);
                 res.add(currentWorkSiteProduce);
             }
             DBConnection.disconnect();
@@ -259,8 +312,15 @@ public class WorkSiteProduceDB implements WorkSiteProduceDBIF{
         return res;
     }
 
-
-    private WorkSiteProduce buildObject(ResultSet rs, boolean fullAssociation, Type type) throws DataAccessException {
+    /**
+     * Gets data from the DB and builds a WorkSiteProduce object.
+     *
+     * @param rs The ResultSet from which a Produce object is to be assembled
+     * @param type requires to be of proper type
+     * @return an assembled WorkSiteProduce object
+     * @throws DataAccessException
+     */
+    private WorkSiteProduce buildObject(ResultSet rs, Type type) throws DataAccessException {
         WorkSiteProduce currentWorkSiteProduce = null;
 
         try {
@@ -268,10 +328,6 @@ public class WorkSiteProduceDB implements WorkSiteProduceDBIF{
                 currentWorkSiteProduce = new WorkSiteProduce();
                 currentWorkSiteProduce.setWorkSiteID(rs.getInt("workSiteID"));
                 currentWorkSiteProduce.setProduceName(rs.getString("produceName"));
-
-                if (fullAssociation) {
-
-                }
             } else {
                 throw new DataAccessException("Could not determine type.", new Exception());
             }

@@ -1,6 +1,9 @@
 package GUI;
 
 import Controller.*;
+import GUI.Components.BackgroundWorker;
+import GUI.Components.ComponentsConfigure;
+import GUI.Components.StatusDialog;
 import Model.SeasonalWorker;
 import Model.WorkSite;
 import Model.WorkTask;
@@ -12,11 +15,41 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.sql.Date;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class RegisterWorkTask extends JPanel {
+    private JButton cancelBtn;
+    private JLabel endDateLabel;
+    private DateTimePicker endDatePicker;
+    private JLabel locationLabel;
+    private JComboBox<WorkSite> locationList;
+    private JLabel produceLabel;
+    private JComboBox<WorkType> produceList;
+    private JSpinner quantitySpinner;
+    private JLabel quantityLabel;
+    private JComboBox<String> quantityPicker;
+    private JButton registerBtn;
+    private JPanel registerTaskPane;
+    private JLabel startDateLabel;
+    private DateTimePicker startDatePicker;
+    private JLabel statusLabel;
+    private JComboBox<String> statusPicker;
+    private JLabel taskTitle;
+    private JPanel subDashboard;
+
+    private MainScreen mainScreen;
+    private Dashboard dashboard;
+    private WorkSiteCtrIF workSiteController;
+    private WorkTaskCtrIF workTaskController;
+    private SeasonalWorkerCtrIF seasonalWorkerController;
+
+    private ArrayList<WorkSite> workSites;
+    private ArrayList<WorkType> workTypes;
+    private SeasonalWorker currentWorker;
+
+    static final String RegisterTask = "registerTask";
+
 
     public RegisterWorkTask(Dashboard dashboard, MainScreen mainScreen) throws DataAccessException {
         this.dashboard = dashboard;
@@ -56,6 +89,7 @@ public class RegisterWorkTask extends JPanel {
         DefaultComboBoxModel<WorkSite> locationComboBoxModel = getLocationComboBoxModel(workSites);
         locationList.setModel(locationComboBoxModel);
         locationList.setRenderer(new WorkTaskWorkSiteComboBoxRenderer());
+        locationList.setEnabled(false);
 
         produceList = new javax.swing.JComboBox<>();
         workTypes = new ArrayList<>();
@@ -81,12 +115,15 @@ public class RegisterWorkTask extends JPanel {
         quantityPicker = new JComboBox<>();
         statusLabel = new JLabel();
         statusPicker = new JComboBox<>();
+        subDashboard = new JPanel();
 
         setBackground(new Color(71, 120, 197));
         setMinimumSize(new Dimension(690, 720));
         setPreferredSize(new Dimension(690, 720));
         setVerifyInputWhenFocusTarget(false);
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        subDashboard.setLayout(new CardLayout());
 
         registerTaskPane.setBackground(new Color(71, 120, 197));
         registerTaskPane.setMinimumSize(new Dimension(690, 720));
@@ -114,9 +151,14 @@ public class RegisterWorkTask extends JPanel {
         cancelBtn.setText("Cancel");
         cancelBtn.setIcon(ComponentsConfigure.trashIcon);
         cancelBtn.addActionListener((e) -> {
-            mainScreen.returnNav();
             try {
-                dashboard.showTaskListView();
+                new BackgroundWorker(() -> {
+                    try {
+                        dashboard.showTaskListView();
+                    } catch (DataAccessException dataAccessException) {
+                        dataAccessException.printStackTrace();
+                    }
+                },"Cancel register task","Cleaning up and returning, please wait.");
             } catch (DataAccessException dataAccessException) {
                 dataAccessException.printStackTrace();
             }
@@ -219,50 +261,58 @@ public class RegisterWorkTask extends JPanel {
                                 .addGap(30, 30, 30)
                                 .addGroup(registerTaskPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addComponent(registerBtn, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(cancelBtn, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)))
+                                 .addComponent(cancelBtn, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)))
         );
 
-        add(registerTaskPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+        add(subDashboard, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+        subDashboard.add(registerTaskPane,RegisterTask);
     }
 
     private void registerBtnActionPerformed(ActionEvent evt) throws DataAccessException {
-        WorkType currentWorkType = (WorkType) produceList.getSelectedItem();
-        Integer workSiteID = ((WorkSite) locationList.getSelectedItem()).getWorkSiteID();
-        Integer workTypeID = currentWorkType.getWorkTypeID();
-        Date startDate = Date.valueOf(startDatePicker.getDateTimePermissive().toLocalDate());
-        Date endDate = Date.valueOf(endDatePicker.getDateTimePermissive().toLocalDate());
-        long hoursWorked = Duration.between(startDatePicker.getDateTimePermissive(), endDatePicker.getDateTimePermissive()).toHours();
-        int quantity;
-        String status = statusPicker.getSelectedItem().toString().trim();
-        if (currentWorkType.getSalaryType().equalsIgnoreCase("hourly".trim())) {
-            quantity = 0;
-        } else {
-            quantity = (int) quantitySpinner.getValue();
+        try {
+            WorkType currentWorkType = (WorkType) produceList.getSelectedItem();
+            Integer workSiteID = ((WorkSite) locationList.getSelectedItem()).getWorkSiteID();
+//        Integer workTypeID = currentWorkType.getWorkTypeID(); // TODO is never used
+            Date startDate = Date.valueOf(startDatePicker.getDateTimePermissive().toLocalDate());
+            Date endDate = Date.valueOf(endDatePicker.getDateTimePermissive().toLocalDate());
+            long hoursWorked = Duration.between(startDatePicker.getDateTimePermissive(), endDatePicker.getDateTimePermissive()).toHours();
+            int quantity;
+            String status = statusPicker.getSelectedItem().toString().trim();
+            if (currentWorkType.getSalaryType().equalsIgnoreCase("hourly".trim())) {
+                quantity = 0;
+            } else {
+                quantity = (int) quantitySpinner.getValue();
+            }
+            // TODO
+            // check if end date is not earlier than start date
+            if(endDate.before(startDate)){
+                new StatusDialog(mainScreen,true, StatusDialog.WARNING,"Date error","End Date cannot be before Starting Date, please try again.");
+            }
+            // TODO (Maybe?) At least that's how it's in the report
+            // should notify team leader
+
+            // Maybe this should be put in try catch too since it's calling a method inside a controller
+            if (workTaskController.insertWorkTask(new WorkTask(workSiteID,
+                            hoursWorked,
+                            quantity,
+                            startDate,
+                            endDate,
+                            status,
+                            currentWorkType),
+                    currentWorker.getCpr())) {
+                new StatusDialog(mainScreen,
+                        true,
+                        StatusDialog.CONFIRM,
+                        "Registered work task.",
+                        "Work task has been successfully added to the system!");
+                dashboard.showTaskListView();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new DataAccessException("A problem has occured.", e);
         }
 
-        // TODO
-        // check if end date is not earlier than start date
 
-        // TODO (Maybe?) At least that's how it's in the report
-        // should notify team leader
-
-        // Maybe this should be put in try catch too since it's calling a method inside a controller
-        if (workTaskController.insertWorkTask(new WorkTask(workSiteID,
-                        hoursWorked,
-                        quantity,
-                        startDate,
-                        endDate,
-                        status,
-                        currentWorkType),
-                currentWorker.getCpr())) {
-            new StatusDialog(mainScreen,
-                    true,
-                    StatusDialog.CONFIRM,
-                    "Registered work task.",
-                    "Work task has been successfully added to the system!");
-            mainScreen.returnNav();
-            dashboard.showTaskListView();
-        }
     }
 
     private void configureLabel(JLabel label, String labelText, ImageIcon icon) {
@@ -310,33 +360,4 @@ public class RegisterWorkTask extends JPanel {
             quantityPicker.setEnabled(true);
         }
     }
-
-
-    private JButton cancelBtn;
-    private JLabel endDateLabel;
-    private DateTimePicker endDatePicker;
-    private JLabel locationLabel;
-    private JComboBox<WorkSite> locationList;
-    private JLabel produceLabel;
-    private JComboBox<WorkType> produceList;
-    private JSpinner quantitySpinner;
-    private JLabel quantityLabel;
-    private JComboBox<String> quantityPicker;
-    private JButton registerBtn;
-    private JPanel registerTaskPane;
-    private JLabel startDateLabel;
-    private DateTimePicker startDatePicker;
-    private JLabel statusLabel;
-    private JComboBox<String> statusPicker;
-    private JLabel taskTitle;
-
-    private MainScreen mainScreen;
-    private Dashboard dashboard;
-    private WorkSiteCtrIF workSiteController;
-    private WorkTaskCtrIF workTaskController;
-    private SeasonalWorkerCtrIF seasonalWorkerController;
-
-    private ArrayList<WorkSite> workSites;
-    private ArrayList<WorkType> workTypes;
-    private SeasonalWorker currentWorker;
 }

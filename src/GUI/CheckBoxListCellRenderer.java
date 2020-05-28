@@ -20,13 +20,9 @@ public class CheckBoxListCellRenderer extends JCheckBox implements ListCellRende
 
         if (value.getCollectedOnWorksite() == null) {
             setSelected(isSelected);
-        } else if (value.getCollectedOnWorksite() == true) {
-            setSelected(true);
-        } else {
-            setSelected(false);
-        }
+        } else setSelected(value.getCollectedOnWorksite());
 
-        setText(value == null ? "" : value.getProduceName());
+        setText(value.getProduceName());
         return this;
     }
 }

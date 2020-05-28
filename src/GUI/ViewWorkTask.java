@@ -1,6 +1,8 @@
 package GUI;
 
 import Controller.*;
+import GUI.Components.ComponentsConfigure;
+import GUI.Components.StatusDialog;
 import Model.SeasonalWorker;
 import Model.WorkSite;
 import Model.WorkTask;
@@ -10,16 +12,37 @@ import com.github.lgooddatepicker.components.DateTimePicker;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.sql.Date;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ViewWorkTask extends JFrame {
+    private DateTimePicker endDatePicker;
+    private JComboBox<WorkSite> locationList;
+    private JComboBox<WorkType> produceList;
+    private JSpinner quantitySpinner;
+    private JComboBox<String> quantityPicker;
+    private DateTimePicker startDatePicker;
+    private JComboBox<String> statusPicker;
+    private JTextArea produceDescriptorLabel;
+
+    private final WorkTask currentTask;
+    private final SeasonalWorker currentWorker;
+    private final PendingTasks pendingTasks;
+
+    private final WorkTaskCtrIF workTaskController;
+
+    private final ArrayList<WorkSite> workSites;
+    private ArrayList<WorkType> workTypes;
 
     public ViewWorkTask(WorkTask currentTask,SeasonalWorker currentWorker,PendingTasks pendingTasks) throws DataAccessException {
         this.currentTask = currentTask;
         this.currentWorker = currentWorker;
         this.pendingTasks = pendingTasks;
 
+        WorkSiteCtrIF workSiteController;
         try {
             workSiteController = new WorkSiteCtr();
         } catch (DataAccessException e) {
@@ -42,6 +65,27 @@ public class ViewWorkTask extends JFrame {
         initComponents();
     }
 
+    public void start(WorkTask currentTask, SeasonalWorker currentWorker) {
+        try {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Windows".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException | UnsupportedLookAndFeelException | IllegalAccessException | InstantiationException ex) {
+            java.util.logging.Logger.getLogger(ViewWorkTask.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+
+        EventQueue.invokeLater(() -> {
+            try {
+                new ViewWorkTask(currentTask,currentWorker,pendingTasks).setVisible(true);
+            } catch (DataAccessException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
     private void initComponents() {
 
         locationList = new javax.swing.JComboBox<>();
@@ -54,35 +98,35 @@ public class ViewWorkTask extends JFrame {
 
         updateProduceList();
 
-        jPanel1 = new JPanel();
-        topBar = new JPanel();
-        maximizeBtn = new JLabel();
-        exitBtn = new JLabel();
-        minimizeBtn = new JLabel();
-        frameTitle = new JLabel();
-        profilePicture = new JLabel();
-        fnameLabel = new JLabel();
-        lnameLabel = new JLabel();
-        fnameValue = new JLabel();
-        lnameValue = new JLabel();
-        locationLabel = new JLabel();
-        produceLabel = new JLabel();
-        startDateLabel = new JLabel();
-        startDatePicker = new com.github.lgooddatepicker.components.DateTimePicker();
-        endDatePicker = new com.github.lgooddatepicker.components.DateTimePicker();
-        endDateLabel = new JLabel();
-        quantityLabel = new JLabel();
+        JPanel jPanel1 = new JPanel();
+        JPanel topBar = new JPanel();
+        JLabel maximizeBtn = new JLabel();
+        JLabel exitBtn = new JLabel();
+        JLabel minimizeBtn = new JLabel();
+        JLabel frameTitle = new JLabel();
+        JLabel profilePicture = new JLabel();
+        JLabel fnameLabel = new JLabel();
+        JLabel lnameLabel = new JLabel();
+        JLabel fnameValue = new JLabel();
+        JLabel lnameValue = new JLabel();
+        JLabel locationLabel = new JLabel();
+        JLabel produceLabel = new JLabel();
+        JLabel startDateLabel = new JLabel();
+        startDatePicker = new DateTimePicker();
+        endDatePicker = new DateTimePicker();
+        JLabel endDateLabel = new JLabel();
+        JLabel quantityLabel = new JLabel();
         quantitySpinner = new JSpinner();
         quantityPicker = new JComboBox<>();
-        statusLabel = new JLabel();
+        JLabel statusLabel = new JLabel();
         statusPicker = new JComboBox<>();
-        saveChangesBtn = new JButton();
-        cancelBtn = new JButton();
-        locationDescriptorLabel = new JLabel();
-        produceDescriptorLabel = new JLabel();
-        approveBtn = new JButton();
-        emailValue = new JLabel();
-        emailLabel = new JLabel();
+        JButton saveChangesBtn = new JButton();
+        JButton cancelBtn = new JButton();
+        JTextArea locationDescriptorLabel = new JTextArea();
+        produceDescriptorLabel = new JTextArea();
+        JButton approveBtn = new JButton();
+        JLabel emailValue = new JLabel();
+        JLabel emailLabel = new JLabel();
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new Dimension(800, 565));
@@ -91,7 +135,7 @@ public class ViewWorkTask extends JFrame {
         jPanel1.setBackground(new Color(71, 120, 197));
 
         ComponentsConfigure.topBarConfig(topBar,this, new Color(120,168,252));
-        ComponentsConfigure.topBarButtons(minimizeBtn,maximizeBtn,exitBtn,this);
+        ComponentsConfigure.topBarButtons(minimizeBtn, maximizeBtn, exitBtn,this);
 
         frameTitle.setFont(new Font("Dialog", Font.BOLD, 24));
         frameTitle.setText("Reviewing work task");
@@ -142,8 +186,12 @@ public class ViewWorkTask extends JFrame {
         quantityLabel.setIcon(ComponentsConfigure.trolleyIcon);
         configureLabel(statusLabel,"Status");
         statusLabel.setIcon(ComponentsConfigure.approveIcon);
-        configureLabel(locationDescriptorLabel,"Full-address or something");//TODO: Query workSite for info
-        configureLabel(produceDescriptorLabel,"Produce description");//TODO: Query workType for info
+        ComponentsConfigure.configureWordWrapLabel(locationDescriptorLabel,workSites.get(0).getDescription() +
+                "\n" +
+                workSites.get(0).getStreetName() +
+                " " +
+                workSites.get(0).getStreetNum());
+        ComponentsConfigure.configureWordWrapLabel(produceDescriptorLabel,"Produce description unavailable");
         configureLabel(emailLabel,"Email");
         configureLabel(emailValue,currentWorker.getEmail());
 
@@ -165,21 +213,27 @@ public class ViewWorkTask extends JFrame {
         approveBtn.setText("Approve");
         approveBtn.addActionListener((e) -> {
             try {
-                approveWorkTask(e);
+                approveWorkTask();
             } catch (DataAccessException dataAccessException) {
                 dataAccessException.printStackTrace();
             }
-        });//TODO: ApproveBtn
+        });
 
         ComponentsConfigure.metroBtnConfig(saveChangesBtn);
         saveChangesBtn.setIcon(ComponentsConfigure.saveIcon);
         saveChangesBtn.setText("Save");
-        saveChangesBtn.addActionListener((e) -> {});//TODO: saveChangesBtn
+        saveChangesBtn.addActionListener((e) -> {
+            try {
+                saveChanges();
+            } catch (DataAccessException dataAccessException) {
+                dataAccessException.printStackTrace();
+            }
+        });
 
         ComponentsConfigure.metroBtnConfig(cancelBtn);
         cancelBtn.setIcon(ComponentsConfigure.trashIcon);
         cancelBtn.setText("Cancel");
-        cancelBtn.addActionListener((e) -> {this.dispose();});//TODO: cancelBtn
+        cancelBtn.addActionListener((e) -> this.dispose());
 
         GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -326,35 +380,6 @@ public class ViewWorkTask extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    private void saveChangesBtnActionPerformed(ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void approveBtnActionPerformed(ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    public void start(WorkTask currentTask, SeasonalWorker currentWorker) {
-        try {
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if ("Windows".equals(info.getName())) {
-                    UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException | UnsupportedLookAndFeelException | IllegalAccessException | InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ViewWorkTask.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-
-        EventQueue.invokeLater(() -> {
-            try {
-                new ViewWorkTask(currentTask,currentWorker,pendingTasks).setVisible(true);
-            } catch (DataAccessException e) {
-                e.printStackTrace();
-            }
-        });
-    }
-    
     private void configureLabel(JLabel label, String text){
         label.setFont(new Font("Dialog", Font.BOLD, 24));
         label.setForeground(new Color(255, 255, 255));
@@ -379,7 +404,15 @@ public class ViewWorkTask extends JFrame {
     private void updateProduceList() {
         if (locationList.getItemCount() > 0) {
             WorkSite selectedWorkSite = (WorkSite) locationList.getSelectedItem();
-            workTypes = selectedWorkSite.getWorkTypes();
+            try{
+                assert selectedWorkSite != null;
+                workTypes = selectedWorkSite.getWorkTypes();
+            }catch(NullPointerException e){
+                new StatusDialog(this,true,StatusDialog.WARNING,"Unable to retrieve work types",
+                        "The system is unable to retrieve the work types assigned to this work site. " +
+                                "We are sorry for the inconvenience please try again later.");
+                throw new NullPointerException("Unable to retrieve the work types of the selected work site.");
+            }
             DefaultComboBoxModel<WorkType> produceComboBoxModel = getProduceComboBoxModel(workTypes);
             produceList.setModel(produceComboBoxModel);
             produceList.setRenderer(new WorkTaskWorkTypeComboBoxRenderer());
@@ -387,16 +420,32 @@ public class ViewWorkTask extends JFrame {
     }
 
     private void configureQuantity(ActionEvent e) {
-        if (((WorkType) produceList.getSelectedItem()).getSalaryType().equalsIgnoreCase("hourly".trim())) {
-            quantitySpinner.setEnabled(false);
-            quantityPicker.setEnabled(false);
-        } else {
-            quantitySpinner.setEnabled(true);
-            quantityPicker.setEnabled(true);
+        try{
+            WorkType currentType = (WorkType) produceList.getSelectedItem();
+            assert currentType != null;
+            String description = currentType.getDescOfJob() +
+                    "\n" +
+                    "Salary is by " +
+                    currentType.getSalaryType() +
+                    "\n" +
+                    currentType.getTypeOfProduce();
+            ComponentsConfigure.configureWordWrapLabel(produceDescriptorLabel, description);
+            if ((Objects.requireNonNull(currentType)).getSalaryType().equalsIgnoreCase("hourly".trim())) {
+                quantitySpinner.setEnabled(false);
+                quantityPicker.setEnabled(false);
+            } else {
+                quantitySpinner.setEnabled(true);
+                quantityPicker.setEnabled(true);
+            }
+        }catch (NullPointerException er){
+            new StatusDialog(this,true,StatusDialog.WARNING,"Unable to retrieve work types",
+                    "The system is unable to retrieve the salary type assigned to this work type. " +
+                            "We are sorry for the inconvenience please try again later.");
+            throw new NullPointerException("Unable to retrieve the salary type for this work type.");
         }
     }
 
-    private void approveWorkTask(ActionEvent e) throws DataAccessException {
+    private void approveWorkTask() throws DataAccessException {
         ArrayList<Integer> idList = new ArrayList<>();
         idList.add(currentTask.getWorkTaskID());
         if(workTaskController.approveWorkTasks(idList)){
@@ -405,46 +454,17 @@ public class ViewWorkTask extends JFrame {
             this.dispose();
         }
     }
-
-    private JButton cancelBtn;
-    private JLabel emailLabel;
-    private JLabel emailValue;
-    private JLabel endDateLabel;
-    private DateTimePicker endDatePicker;
-    private JLabel exitBtn;
-    private JLabel fnameLabel;
-    private JLabel fnameValue;
-    private JLabel frameTitle;
-    private JPanel jPanel1;
-    private JLabel lnameLabel;
-    private JLabel lnameValue;
-    private JLabel locationLabel;
-    private JLabel locationDescriptorLabel;
-    private JLabel produceDescriptorLabel;
-    private JComboBox<WorkSite> locationList;
-    private JLabel maximizeBtn;
-    private JLabel minimizeBtn;
-    private JLabel produceLabel;
-    private JComboBox<WorkType> produceList;
-    private JLabel profilePicture;
-    private JSpinner quantitySpinner;
-    private JLabel quantityLabel;
-    private JComboBox<String> quantityPicker;
-    private JButton saveChangesBtn;
-    private JButton approveBtn;
-    private JLabel startDateLabel;
-    private DateTimePicker startDatePicker;
-    private JLabel statusLabel;
-    private JComboBox<String> statusPicker;
-    private JPanel topBar;
-
-    private WorkTask currentTask;
-    private SeasonalWorker currentWorker;
-    private PendingTasks pendingTasks;
-
-    private WorkSiteCtrIF workSiteController;
-    private WorkTaskCtrIF workTaskController;
-
-    private ArrayList<WorkSite> workSites;
-    private ArrayList<WorkType> workTypes;
+    private void saveChanges() throws DataAccessException {
+        double quantity = Double.valueOf((Integer)quantitySpinner.getValue());
+        Date dateStart = Date.valueOf(startDatePicker.getDateTimePermissive().toLocalDate());
+        Date dateEnd = Date.valueOf(endDatePicker.getDateTimePermissive().toLocalDate());
+        long hoursWorked = Duration.between(startDatePicker.getDateTimePermissive(),endDatePicker.getDateTimePermissive()).toHours();
+        String status = (String)statusPicker.getSelectedItem();
+        WorkTask newTask = new WorkTask(currentTask.getWorkTaskID(), hoursWorked, quantity, dateStart, dateEnd, status, currentTask.getWorkType());
+        if(workTaskController.updateWorkTask(newTask,currentTask.getWorkTaskID())){
+            new StatusDialog(this,true,StatusDialog.CONFIRM,"Changes have been saved!","Your changes to the work task have been saved.");
+            pendingTasks.loadPendingTasks();
+            this.dispose();
+        }
+    }
 }

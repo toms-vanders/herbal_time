@@ -1,8 +1,8 @@
 package GUI;
 
-import Controller.DataAccessException;
-import Controller.WorkTaskCtr;
-import Controller.WorkTaskCtrIF;
+import Controller.*;
+import GUI.Components.ComponentsConfigure;
+import Model.SeasonalWorker;
 import org.netbeans.lib.awtextra.AbsoluteConstraints;
 import org.netbeans.lib.awtextra.AbsoluteLayout;
 
@@ -19,17 +19,41 @@ import java.util.Date;
 import Controller.DataModel.*;
 
 public class Dashboard extends JPanel {
-
     private final MainScreen mainScreen;
+    private JLabel calendarBtn;
+    private JButton contactLeaderBtn;
+    private JLabel contactsBtn;
+    private JLabel exitBtn;
+    private JScrollPane workListView;
+    private JSeparator buttonSeparator;
+    private JLabel logoutBtn;
+    private JLabel mailBtn;
+    private JLabel monthYearLabel;
+    private JPanel overviewBtns;
+    private JPanel overviewPane;
+    private JPanel overviewProfile;
+    private JLabel profileNameLabel;
+    private JLabel profilePicture;
+    private JLabel readableDayLabel;
+    private JButton registerTaskBtn;
+    private RegisterWorkTask registerWorkTask;
+    private JButton viewTaskBtn;
+    private JTable workTaskListTable;
+    private WorkTaskDataModel workTaskModel;
+    private WorkTaskCtrIF workTaskController;
+    private SeasonalWorker currentWorker;
+    private JPanel subDashboard;
+    static final String WorkListScreen = "WorkListScreen";
+    static final String RegisterTask = "RegisterTask";
 
-    public Dashboard(MainScreen mainScreen) throws DataAccessException {
+    public Dashboard(MainScreen mainScreen,SeasonalWorker currentWorker) throws DataAccessException {
+        this.currentWorker = currentWorker;
         this.mainScreen = mainScreen;
         initComponents();
         registerWorkTask.setVisible(false);
     }
 
     private void initComponents() throws DataAccessException {
-
         overviewPane = new JPanel();
         overviewProfile = new JPanel();
         overviewBtns = new JPanel();
@@ -53,11 +77,14 @@ public class Dashboard extends JPanel {
         workTaskModel = new WorkTaskDataModel(
                 new ArrayList<>(workTaskController.findAllWorkTasksOfWorker(true, "1451684849")),
                 "1451684849");
+        subDashboard = new JPanel();
 
         setEnabled(false);
         setMinimumSize(new Dimension(1000, 720));
         setPreferredSize(new Dimension(1000, 720));
         setLayout(new AbsoluteLayout());
+
+        subDashboard.setLayout(new CardLayout());
 
         overviewPane.setBackground(new Color(71, 120, 197));
 
@@ -127,7 +154,7 @@ public class Dashboard extends JPanel {
 
         profileNameLabel.setFont(new Font("Dialog", Font.BOLD, 14)); // NOI18N
         profileNameLabel.setForeground(new Color(255, 255, 255));
-        profileNameLabel.setText("John Doe");
+        profileNameLabel.setText(currentWorker.getFname() + " " + currentWorker.getLname());
         overviewProfile.add(profileNameLabel, new AbsoluteConstraints(110, 50, -1, -1));
 
         profilePicture.setIcon(new ImageIcon(getClass().getResource("/icons8_github_96px.png"))); // NOI18N
@@ -159,7 +186,8 @@ public class Dashboard extends JPanel {
         viewTaskBtn.setText("View Task");
         viewTaskBtn.addActionListener((e) -> {
             try {
-                viewTaskBtnActionPerformed(e);
+                ((CardLayout) subDashboard.getLayout()).show(subDashboard,WorkListScreen);
+                workTaskModel.updateData();
             } catch (DataAccessException dataAccessException) {
                 dataAccessException.printStackTrace();
             }
@@ -205,9 +233,6 @@ public class Dashboard extends JPanel {
                                 .addContainerGap(244, Short.MAX_VALUE))
         );
 
-        add(overviewPane, new AbsoluteConstraints(0, 0, 310, 720));
-        add(registerWorkTask, new AbsoluteConstraints(310, 0, -1, -1));
-
         workTaskListTable.setForeground(new Color(102, 102, 102));
         workTaskListTable.setModel(workTaskModel);
         workTaskListTable.setGridColor(new Color(255, 255, 255));
@@ -215,13 +240,10 @@ public class Dashboard extends JPanel {
         workTaskListTable.setSelectionBackground(new Color(0, 120, 215));
         workListView.setViewportView(workTaskListTable);
 
-        add(workListView, new AbsoluteConstraints(310, 0, 690, 720));
-    }
-
-    void viewTaskBtnActionPerformed(ActionEvent actionEvent) throws DataAccessException {
-        workListView.setVisible(true);
-        workTaskModel.updateData();
-        registerWorkTask.setVisible(false);
+        add(overviewPane, new AbsoluteConstraints(0, 0, 310, 720));
+        add(subDashboard, new AbsoluteConstraints(310, 0, -1, -1));
+        subDashboard.add(workListView, WorkListScreen);
+        subDashboard.add(registerWorkTask, RegisterTask);
     }
 
     private void exitBtnMousePressed() {
@@ -233,40 +255,11 @@ public class Dashboard extends JPanel {
     }
 
     private void registerTaskBtnActionPerformed(ActionEvent evt) {
-        workListView.setVisible(false);
-        viewRegisterTask();
-
-    }
-
-    void viewRegisterTask(){
-        mainScreen.navigation.push(registerWorkTask);
-        registerWorkTask.setVisible(true);
+        ((CardLayout) subDashboard.getLayout()).show(subDashboard,RegisterTask);
     }
 
     void showTaskListView() throws DataAccessException {
         workTaskModel.updateData();
-        workListView.setVisible(true);
+        ((CardLayout) subDashboard.getLayout()).show(subDashboard,WorkListScreen);
     }
-
-    private JLabel calendarBtn;
-    private JButton contactLeaderBtn;
-    private JLabel contactsBtn;
-    private JLabel exitBtn;
-    private JScrollPane workListView;
-    private JSeparator buttonSeparator;
-    private JLabel logoutBtn;
-    private JLabel mailBtn;
-    private JLabel monthYearLabel;
-    private JPanel overviewBtns;
-    private JPanel overviewPane;
-    private JPanel overviewProfile;
-    private JLabel profileNameLabel;
-    private JLabel profilePicture;
-    private JLabel readableDayLabel;
-    private JButton registerTaskBtn;
-    private RegisterWorkTask registerWorkTask;
-    private JButton viewTaskBtn;
-    private JTable workTaskListTable;
-    private WorkTaskDataModel workTaskModel;
-    private WorkTaskCtrIF workTaskController;
 }

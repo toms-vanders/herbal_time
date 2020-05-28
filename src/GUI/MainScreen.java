@@ -1,7 +1,13 @@
 package GUI;
 
 import Controller.DataAccessException;
+import Controller.SeasonalWorkerCtr;
+import Controller.SeasonalWorkerCtrIF;
+import GUI.Components.BackgroundWorker;
+import GUI.Components.ComponentsConfigure;
+import GUI.Components.StatusDialog;
 import GUI.DBStatus.StatusThread;
+import Model.SeasonalWorker;
 import org.netbeans.lib.awtextra.AbsoluteConstraints;
 import org.netbeans.lib.awtextra.AbsoluteLayout;
 
@@ -13,28 +19,150 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MainScreen extends JFrame {
+    // Declarations for the status bar
+    private static JLabel connectionStatusIcon = new JLabel();
+    private static JLabel connectionStatusLabel = new JLabel();
 
+    // Declarations for the various frames and panels
+    private static boolean isLogged;
+    public static String userCPR = "1451684849";
+    private JPanel dashboardContainer;
+    static LoginScreen loginScreen;
+    static WorkSiteDashboard workSiteDashboard;
+    static WorkersScreen workersScreen;
+    static EmployeeDatabaseScreen employeeScreen;
+    static CreateWorkSite createWorkSite;
+    static ClientScreen clientScreen;
+    static PendingTasks pendingTasks;
+    private Dashboard dashboard;
+
+    // Declarations for the MainScreen componenets
+    private JPanel ind,ind1,ind2,ind3,ind4,ind5,ind6,ind7;
+    private JPanel sidePanelBtnHome;
+    private JPanel sidePanelBtnWorkSites;
+    private JPanel sidePanelBtnSettings;
+    private JPanel sidePanelBtnEmployees;
+    private JPanel sidePanelBtnWorkers;
+    private JPanel sidePanelBtnClients;
+    private JPanel sidePanelBtnPending;
+    private JPanel sidePanelBtnAbout;
+    private String connectionStatusText;
+
+    final static String LoginView = "LOGINSCREEN";
+    final static String DashboardScreen ="DASHBOARD";
+    final static String WorkSiteDashboardScreen = "WORKSITEDASHBOARD";
+    final static String ClientsScreen = "CLIENTS";
+    final static String CreateWorkSiteScreen = "CREATEWORKSITE";
+    final static String PendingTasksScreen = "PENDINGTASKS";
+
+    // Declarations for the controllers
+    private SeasonalWorkerCtrIF seasonalWorkerController;
+    private SeasonalWorker currentWorker;
+
+    // Stack for navigation purposes within the application
+    public Stack<JPanel> navigation;
+
+    /**
+     * MainScreen constructor initializing the components
+     * StatusThread for connectivity
+     * Visibility status for all other components part of the MainScreen
+     * @throws DataAccessException if controllers cannot be instantiated
+     */
     public MainScreen() throws DataAccessException {
         initComponents();
         StatusThread sT = new StatusThread();
         sT.start();
-        dashboard.setVisible(false);
-        workSiteDashboard.setVisible(false);
-        createWorkSite.setVisible(false);
-        clientScreen.setVisible(false);
-        pendingTasks.setVisible(false);
     }
 
+    /**
+     * Main thread for the frame to initialize the look and feel of the frame as well as
+     * displaying it once everything has been created and added.
+     * @param args Java arguments array
+     */
+    public static void main(String[] args) throws DataAccessException {
+        try {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Windows".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        new BackgroundWorker(() -> {
+                try {
+                    new MainScreen().setVisible(true);
+                } catch (DataAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        ,"Loading herbal time","Herbal time is loading, please wait.");
+
+    }
+
+    /**
+     * Retrieve the current connection status icon
+     * @return ImageIcon for the current connection status
+     */
+    public static JLabel getConnectionStatusIcon() {
+        return connectionStatusIcon;
+    }
+
+    /**
+     * Set the current connection status icon
+     * @param connectionStatusIcon ImageIcon to be shown
+     */
+    public static void setConnectionStatusIcon(JLabel connectionStatusIcon) {
+        MainScreen.connectionStatusIcon = connectionStatusIcon;
+    }
+
+    /**
+     * Retrieve the current connection status
+     * @return JLabel of the current connection status
+     */
+    public static JLabel getConnectionStatusLabel() {
+        return connectionStatusLabel;
+    }
+
+    /**
+     * Set the current connection status
+     * @param connectionStatusLabel JLabel to be shown
+     */
+    public static void setConnectionStatusLabel(JLabel connectionStatusLabel) {
+        MainScreen.connectionStatusLabel = connectionStatusLabel;
+    }
+
+    /**
+     * Method is called only once during connection to establish the initial status bar
+     * @return ImageIcon of the connection status upon initialization
+     */
     private ImageIcon connectionStatus() {
-//        String statusIcon = true ? "/icons8_connection_status_on_24px.png" : "/icons8_connection_status_off_24px_1.png";
         String statusIcon = "/icons8_connection_status_off_24px.png";
         connectionStatusText = "UNCHECKED";
         return new ImageIcon(getClass().getResource(statusIcon));
     }
 
+    /**
+     * Initialize all components and layouts part of the frame
+     * @throws DataAccessException if controllers cannot be instantiated
+     */
     private void initComponents() throws DataAccessException {
 
         isLogged = false;
+
+        try {
+            seasonalWorkerController = new SeasonalWorkerCtr();
+        } catch(DataAccessException e) {
+            throw new DataAccessException("Unable to retrieve seasonal worker controller instance",e);
+        }
+
+        try {
+            currentWorker = seasonalWorkerController.findSeasonalWorkerByCPR(userCPR);
+        } catch(DataAccessException e) {
+            throw new DataAccessException("Unable to retrieve seasonal worker from CPR",e);
+        }
 
         JPanel sidePanel = new JPanel();
         ind = new JPanel();
@@ -43,33 +171,38 @@ public class MainScreen extends JFrame {
         ind3 = new JPanel();
         ind4 = new JPanel();
         ind5 = new JPanel();
+        ind6 = new JPanel();
+        ind7 = new JPanel();
         sidePanelBtnHome = new JPanel();
         sidePanelBtnEmployees = new JPanel();
         sidePanelBtnClients = new JPanel();
         sidePanelBtnWorkers = new JPanel();
+        sidePanelBtnPending = new JPanel();
         sidePanelBtnWorkSites = new JPanel();
         sidePanelBtnSettings = new JPanel();
+        sidePanelBtnAbout = new JPanel();
         JLabel homeBtnLabel = new JLabel();
         JLabel employeeBtnLabel = new JLabel();
         JLabel workersBtnLabel = new JLabel();
         JLabel clientsBtnLabel = new JLabel();
+        JLabel pendingBtnLabel = new JLabel();
         JLabel workSitesLabel = new JLabel();
         JLabel settingsBtnLabel = new JLabel();
+        JLabel aboutBtnLabel = new JLabel();
         JPanel topBar = new JPanel();
         JPanel statusBar = new JPanel();
         JTextField searchField = new JTextField();
         JLabel searchBtn = new JLabel();
-        dashboard = new Dashboard(this);
+        dashboard = new Dashboard(this, currentWorker);
         loginScreen = new LoginScreen(this);
         workSiteDashboard = new WorkSiteDashboard(this);
         clientScreen = new ClientScreen(this);
         workersScreen = new WorkersScreen();
         employeeScreen = new EmployeeDatabaseScreen();
         pendingTasks = new PendingTasks(this);
-//        JLabel connectionStatusIcon = new JLabel();
-//        JLabel connectionStatusLabel = new JLabel();
         createWorkSite = new CreateWorkSite(this);
         navigation = new Stack<>();
+        dashboardContainer = new JPanel();
         navigation.push(loginScreen);
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -84,6 +217,8 @@ public class MainScreen extends JFrame {
 
         sidePanel.setBackground(new Color(23, 35, 51));
         sidePanel.setLayout(new AbsoluteLayout());
+
+        dashboardContainer.setLayout(new CardLayout());
 
         ComponentsConfigure.topBarConfig(topBar,this, new Color(71,120,197));
 
@@ -120,7 +255,7 @@ public class MainScreen extends JFrame {
         sidePanel.add(statusBar, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 770, 200, 40));
 
         // Side panel buttons configuration
-        ComponentsConfigure.indicatorConfig(new JPanel[] {ind,ind1,ind2,ind3,ind4,ind5});
+        ComponentsConfigure.indicatorConfig(new JPanel[] {ind,ind1,ind2,ind3,ind4,ind5,ind6,ind7});
 
         sidePanelBtnHome.setBackground(new Color(41,57,80));
         sidePanelBtnHome.addMouseListener(new MouseAdapter() {
@@ -198,19 +333,49 @@ public class MainScreen extends JFrame {
         clientsBtnLabel.setForeground(Color.WHITE);
         clientsBtnLabel.setText("Clients");
 
+        sidePanelBtnPending.setBackground(new Color(23,35,51));
+        sidePanelBtnPending.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(isLogged) {
+                    sidePanelBtnPendingMousePressed();
+                }
+            }
+        });
+
+        pendingBtnLabel.setForeground(Color.WHITE);
+        pendingBtnLabel.setText("Pending tasks");
+
+        sidePanelBtnAbout.setBackground(new Color(23,35,51));
+        sidePanelBtnAbout.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(isLogged) {
+                    sidePanelBtnAboutMousePressed();
+                }
+            }
+        });
+
+        aboutBtnLabel.setForeground(Color.WHITE);
+        aboutBtnLabel.setText("About");
+
         sidePanelButtonPosition(sidePanelBtnHome, ind, homeBtnLabel);
         sidePanelButtonPosition(sidePanelBtnEmployees, ind1, employeeBtnLabel);
         sidePanelButtonPosition(sidePanelBtnWorkSites, ind2, workSitesLabel);
         sidePanelButtonPosition(sidePanelBtnSettings, ind3, settingsBtnLabel);
         sidePanelButtonPosition(sidePanelBtnWorkers,ind4, workersBtnLabel);
         sidePanelButtonPosition(sidePanelBtnClients,ind5,clientsBtnLabel);
+        sidePanelButtonPosition(sidePanelBtnPending, ind6,pendingBtnLabel);
+        sidePanelButtonPosition(sidePanelBtnAbout, ind7, aboutBtnLabel);
 
-        sidePanel.add(sidePanelBtnHome, new AbsoluteConstraints(0, 170, 200, 50));
-        sidePanel.add(sidePanelBtnEmployees, new AbsoluteConstraints(0, 220, -1, -1));
-        sidePanel.add(sidePanelBtnClients,new AbsoluteConstraints(0,270,-1,-1));
-        sidePanel.add(sidePanelBtnWorkers,new AbsoluteConstraints(0,320,-1,-1));
-        sidePanel.add(sidePanelBtnWorkSites, new AbsoluteConstraints(0, 370, -1, -1));
-        sidePanel.add(sidePanelBtnSettings, new AbsoluteConstraints(0, 420, -1, -1));
+        sidePanel.add(sidePanelBtnHome, new AbsoluteConstraints(0, 100, 200, 50));
+        sidePanel.add(sidePanelBtnEmployees, new AbsoluteConstraints(0, 150, -1, -1));
+        sidePanel.add(sidePanelBtnClients,new AbsoluteConstraints(0,200,-1,-1));
+        sidePanel.add(sidePanelBtnWorkers,new AbsoluteConstraints(0,250,-1,-1));
+        sidePanel.add(sidePanelBtnPending, new AbsoluteConstraints(0,300,-1,-1));
+        sidePanel.add(sidePanelBtnWorkSites, new AbsoluteConstraints(0, 350, -1, -1));
+        sidePanel.add(sidePanelBtnSettings, new AbsoluteConstraints(0, 400, -1, -1));
+        sidePanel.add(sidePanelBtnAbout, new AbsoluteConstraints(0,450,-1,-1));
 
 
 
@@ -219,7 +384,6 @@ public class MainScreen extends JFrame {
         searchField.setBackground(new Color(123, 156, 225));
         searchField.setForeground(new Color(255, 255, 255));
         searchField.setBorder(null);
-        searchField.addActionListener(this::searchFieldActionPerformed);
         searchField.setUI(new JTextFieldHintUI("Search..",Color.GRAY));
 
         searchBtn.setIcon(new ImageIcon(getClass().getResource("/icons8_search_32px.png"))); // NOI18N
@@ -246,19 +410,27 @@ public class MainScreen extends JFrame {
         );
 
         getContentPane().add(topBar, new AbsoluteConstraints(200, 0, 1000, 90));
-        getContentPane().add(dashboard, new AbsoluteConstraints(200, 90, -1, -1));
-        getContentPane().add(loginScreen, new AbsoluteConstraints(200, 90, -1, -1));
-        getContentPane().add(workSiteDashboard, new AbsoluteConstraints(200, 90, -1, -1));
-        getContentPane().add(createWorkSite,new AbsoluteConstraints(200,90,-1,-1));
-        getContentPane().add(clientScreen,new AbsoluteConstraints(200,90,-1,-1));
-        getContentPane().add(pendingTasks,new AbsoluteConstraints(200,90,-1,-1));
+        getContentPane().add(dashboardContainer, new AbsoluteConstraints(200,90,-1,-1));
+        dashboardContainer.add(dashboard, DashboardScreen);
+        dashboardContainer.add(loginScreen,LoginView);
+        dashboardContainer.add(workSiteDashboard,WorkSiteDashboardScreen);
+        dashboardContainer.add(createWorkSite,CreateWorkSiteScreen);
+        dashboardContainer.add(clientScreen,ClientsScreen);
+        dashboardContainer.add(pendingTasks,PendingTasksScreen);
+        ((CardLayout) dashboardContainer.getLayout()).show(dashboardContainer, LoginView);
 
-        setIconImage(new ImageIcon(getClass().getResource("/icons8_potted_plant_50px_1.png")).getImage());
-        pack();
+        setIconImage(ComponentsConfigure.plantIcon.getImage());
         requestFocus();
+        pack();
         setLocationRelativeTo(null);
     }
 
+    /**
+     * Configure the side panel buttons position and layout based on predefined variables
+     * @param sidePanelBtn JPanel to be designed and positioned as a side panel button
+     * @param ind JPanel indicator to denote the current selected button
+     * @param sidePanelBtnLabel JLabel for the text of the button
+     */
     private void sidePanelButtonPosition(JPanel sidePanelBtn, JPanel ind, JLabel sidePanelBtnLabel) {
         GroupLayout sidePanelLayout = new GroupLayout(sidePanelBtn);
         sidePanelBtn.setLayout(sidePanelLayout);
@@ -280,85 +452,139 @@ public class MainScreen extends JFrame {
         );
     }
 
-    private void searchFieldActionPerformed(ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
+    /**
+     * MouseEvent to detect when a side panel has been pressed.
+     * Once pressed the button is toggled and displayed as such with a different colour and active indicator.
+     * Other side panel buttons that were previously active are cycled through and toggled off as well as their indicators
+     * Finally the current view of the user is changed to the one that the button is assigned to through the use of the
+     * navigation stack.
+     */
     private void sidePanelBtnHomeMousePressed() {
         setColor(sidePanelBtnHome);
         ind.setOpaque(true);
-        resetColor(new JPanel[]{sidePanelBtnEmployees,sidePanelBtnWorkSites,sidePanelBtnSettings,sidePanelBtnWorkers,sidePanelBtnClients},
-                new JPanel[]{ind1,ind2,ind3,ind4,ind5});
-        navigation.empty();
-        setView(dashboard);
+        resetColor(new JPanel[]{sidePanelBtnEmployees,sidePanelBtnWorkSites,sidePanelBtnSettings,sidePanelBtnWorkers,sidePanelBtnClients,sidePanelBtnAbout,sidePanelBtnPending},
+                new JPanel[]{ind1,ind2,ind3,ind4,ind5,ind6,ind7});
+        ((CardLayout) dashboardContainer.getLayout()).show(dashboardContainer,DashboardScreen);
     }
 
+    /**
+     * MouseEvent to detect when a side panel has been pressed.
+     * Once pressed the button is toggled and displayed as such with a different colour and active indicator.
+     * Other side panel buttons that were previously active are cycled through and toggled off as well as their indicators
+     * Finally the current view of the user is changed to the one that the button is assigned to through the use of the
+     * navigation stack.
+     */
     private void sidePanelBtnEmployeesMousePressed() {
         setColor(sidePanelBtnEmployees);
         ind1.setOpaque(true);
-        resetColor(new JPanel[]{sidePanelBtnHome,sidePanelBtnWorkSites,sidePanelBtnSettings,sidePanelBtnWorkers,sidePanelBtnClients},
-                new JPanel[]{ind,ind2,ind3,ind4,ind5});
+        resetColor(new JPanel[]{sidePanelBtnHome,sidePanelBtnWorkSites,sidePanelBtnSettings,sidePanelBtnWorkers,sidePanelBtnClients,sidePanelBtnAbout,sidePanelBtnPending},
+                new JPanel[]{ind,ind2,ind3,ind4,ind5,ind6,ind7});
     }
 
+    /**
+     * MouseEvent to detect when a side panel has been pressed.
+     * Once pressed the button is toggled and displayed as such with a different colour and active indicator.
+     * Other side panel buttons that were previously active are cycled through and toggled off as well as their indicators
+     * Finally the current view of the user is changed to the one that the button is assigned to through the use of the
+     * navigation stack.
+     */
     private void sidePanelBtnWorkSitesMousePressed() {
         setColor(sidePanelBtnWorkSites);
         ind2.setOpaque(true);
-        resetColor(new JPanel[]{sidePanelBtnEmployees,sidePanelBtnHome,sidePanelBtnSettings,sidePanelBtnWorkers,sidePanelBtnClients},
-                new JPanel[]{ind,ind1,ind3,ind4,ind5});
-        navigation.push(workSiteDashboard);
-        setView(workSiteDashboard);
+        resetColor(new JPanel[]{sidePanelBtnEmployees,sidePanelBtnHome,sidePanelBtnSettings,sidePanelBtnWorkers,sidePanelBtnClients,sidePanelBtnAbout,sidePanelBtnPending},
+                new JPanel[]{ind,ind1,ind3,ind4,ind5,ind6,ind7});
+        showWorkSiteDashboard();
     }
 
+    /**
+     * MouseEvent to detect when a side panel has been pressed.
+     * Once pressed the button is toggled and displayed as such with a different colour and active indicator.
+     * Other side panel buttons that were previously active are cycled through and toggled off as well as their indicators
+     * Finally the current view of the user is changed to the one that the button is assigned to through the use of the
+     * navigation stack.
+     */
     private void sidePanelBtnSettingsMousePressed() {
         new StatusDialog(this,true, StatusDialog.WARNING,"error","error2");
         setColor(sidePanelBtnSettings);
         ind3.setOpaque(true);
-        resetColor(new JPanel[]{sidePanelBtnEmployees,sidePanelBtnWorkSites,sidePanelBtnHome,sidePanelBtnWorkers,sidePanelBtnClients},
-                new JPanel[]{ind,ind1,ind2,ind4,ind5});
-        navigation.push(pendingTasks);
-        setView(pendingTasks);
+        resetColor(new JPanel[]{sidePanelBtnEmployees,sidePanelBtnWorkSites,sidePanelBtnHome,sidePanelBtnWorkers,sidePanelBtnClients,sidePanelBtnAbout,sidePanelBtnPending},
+                new JPanel[]{ind,ind1,ind2,ind4,ind5,ind6,ind7});
     }
 
+    /**
+     * MouseEvent to detect when a side panel has been pressed.
+     * Once pressed the button is toggled and displayed as such with a different colour and active indicator.
+     * Other side panel buttons that were previously active are cycled through and toggled off as well as their indicators
+     * Finally the current view of the user is changed to the one that the button is assigned to through the use of the
+     * navigation stack.
+     */
     private void sidePanelBtnWorkersMousePressed() {
         setColor(sidePanelBtnWorkers);
         ind4.setOpaque(true);
-        resetColor(new JPanel[]{sidePanelBtnEmployees,sidePanelBtnWorkSites,sidePanelBtnHome,sidePanelBtnSettings,sidePanelBtnClients},
-                new JPanel[]{ind,ind1,ind2,ind3,ind5});
+        resetColor(new JPanel[]{sidePanelBtnEmployees,sidePanelBtnWorkSites,sidePanelBtnHome,sidePanelBtnSettings,sidePanelBtnClients,sidePanelBtnAbout,sidePanelBtnPending},
+                new JPanel[]{ind,ind1,ind2,ind3,ind5,ind6,ind7});
     }
 
+    /**
+     * MouseEvent to detect when a side panel has been pressed.
+     * Once pressed the button is toggled and displayed as such with a different colour and active indicator.
+     * Other side panel buttons that were previously active are cycled through and toggled off as well as their indicators
+     * Finally the current view of the user is changed to the one that the button is assigned to through the use of the
+     * navigation stack.
+     */
     private void sidePanelBtnClientsMousePressed(){
         setColor(sidePanelBtnClients);
         ind5.setOpaque(true);
-        resetColor(new JPanel[]{sidePanelBtnEmployees,sidePanelBtnWorkSites,sidePanelBtnHome,sidePanelBtnSettings,sidePanelBtnWorkers},
-                new JPanel[]{ind,ind1,ind2,ind3,ind4});
-        navigation.push(clientScreen);
-        setView(clientScreen);
+        resetColor(new JPanel[]{sidePanelBtnEmployees,sidePanelBtnWorkSites,sidePanelBtnHome,sidePanelBtnSettings,sidePanelBtnWorkers,sidePanelBtnAbout,sidePanelBtnPending},
+                new JPanel[]{ind,ind1,ind2,ind3,ind4,ind6,ind7});
+        ((CardLayout) dashboardContainer.getLayout()).show(dashboardContainer,ClientsScreen);
     }
 
-    public static void main(String[] args) {
-        try {
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if ("Windows".equals(info.getName())) {
-                    UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        EventQueue.invokeLater(() -> {
-            try {
-                new MainScreen().setVisible(true);
-            } catch (DataAccessException e) {
-                e.printStackTrace();
-            }
-        });
+    /**
+     * MouseEvent to detect when a side panel has been pressed.
+     * Once pressed the button is toggled and displayed as such with a different colour and active indicator.
+     * Other side panel buttons that were previously active are cycled through and toggled off as well as their indicators
+     * Finally the current view of the user is changed to the one that the button is assigned to through the use of the
+     * navigation stack.
+     */
+    private void sidePanelBtnPendingMousePressed(){
+        setColor(sidePanelBtnPending);
+        ind6.setOpaque(true);
+        resetColor(new JPanel[]{sidePanelBtnEmployees,sidePanelBtnWorkSites,sidePanelBtnHome,sidePanelBtnSettings,sidePanelBtnWorkers,sidePanelBtnAbout,sidePanelBtnClients},
+                new JPanel[]{ind,ind1,ind2,ind3,ind4,ind5,ind7});
+        ((CardLayout) dashboardContainer.getLayout()).show(dashboardContainer,PendingTasksScreen);
     }
 
+    /**
+     * MouseEvent to detect when a side panel has been pressed.
+     * Once pressed the button is toggled and displayed as such with a different colour and active indicator.
+     * Other side panel buttons that were previously active are cycled through and toggled off as well as their indicators
+     * Finally the current view of the user is changed to the one that the button is assigned to through the use of the
+     * navigation stack.
+     */
+    private void sidePanelBtnAboutMousePressed(){
+        setColor(sidePanelBtnAbout);
+        ind7.setOpaque(true);
+        resetColor(new JPanel[]{sidePanelBtnEmployees,sidePanelBtnWorkSites,sidePanelBtnHome,sidePanelBtnSettings,sidePanelBtnWorkers,sidePanelBtnPending,sidePanelBtnClients},
+                new JPanel[]{ind,ind1,ind2,ind3,ind4,ind5,ind6});
+        new StatusDialog(this,true,StatusDialog.ABOUT,"About",
+                "The icons used within this software are property of their respective creators in this case https://icons8.com ." +
+                "The icons have been used under their free license.");
+    }
+
+    /**
+     * Change the color of the MouseEvent pressed panel to show it has been selected.
+     * @param pane JPanel to modify the color of.
+     */
     private void setColor(JPanel pane){
         pane.setBackground(new Color(41,57,80));
     }
 
+    /**
+     * Iterates over the two arrays of panels resetting colors to their standard "off" and disables indicators visibility
+     * @param pane JPanels to be reset to their original color
+     * @param indicators JPanel indicators to be set invisible
+     */
     private void resetColor(JPanel[] pane, JPanel[] indicators) {
         for (JPanel panel : pane) {
             panel.setBackground(new Color(23,35,51));
@@ -368,104 +594,39 @@ public class MainScreen extends JFrame {
         }
     }
 
+    /**
+     * Navigation method which peeks at the top of the stack identifying specific views from which to return
+     * otherwise it goes back one view through which the user has been through.
+     */
     public void returnNav(){
-
-        if(navigation.peek().equals(loginScreen)){
-            logout();
-            return;
-        }
-
-        navigation.pop().setVisible(false);
-        setView(navigation.peek());
+        ((CardLayout) dashboardContainer.getLayout()).show(dashboardContainer,DashboardScreen);
     }
 
-    public void setView(JPanel view) {
-
-        if(!isLogged){
-            return;
-        }
-
-        if (view.equals(loginScreen)) {
-            navigation.forEach(x -> x.setVisible(false));
-            loginScreen.setVisible(true);
-        }
-        else if (view.equals(dashboard)) {
-            navigation.forEach(x -> x.setVisible(false));
-            dashboard.setVisible(true);
-        }
-        else if (view.equals(workSiteDashboard)) {
-            navigation.forEach(x -> x.setVisible(false));
-            workSiteDashboard.setVisible(true);
-        }
-        else if (view.equals(createWorkSite)) {
-            navigation.forEach(x -> x.setVisible(false));
-            createWorkSite.setVisible(true);
-        }
-        else if (view.equals(clientScreen)){
-            navigation.forEach(x -> x.setVisible(false));
-            clientScreen.setVisible(true);
-        }
-        else if (view.equals(pendingTasks)){
-            navigation.forEach(x -> x.setVisible(false));
-            pendingTasks.setVisible(true);
-        }
-    }
-
+    /**
+     * Stub of login method initializing the navigation stack and allowing the user to access other views.
+     */
     public void login() {
         isLogged = true;
-        navigation.push(dashboard);
-        setView(dashboard);
+        ((CardLayout) dashboardContainer.getLayout()).show(dashboardContainer,DashboardScreen);
     }
 
+    /**
+     * Stub of log-out method that empties the navigation stack, disables user control over the GUI and returns the user
+     * to the login screen where they may authenticate again or close the application.
+     */
     public void logout() {
-        navigation.empty();
-        navigation.push(loginScreen);
-        setView(loginScreen);
+        ((CardLayout) dashboardContainer.getLayout()).show(dashboardContainer,LoginView);
         isLogged = false;
     }
 
-    public void createWorkSite() {
-        navigation.push(createWorkSite);
-        setView(createWorkSite);
+    /**
+     * Method to display the create worksite panel and push the view to the navigation stack
+     */
+    public void showCreateWorkSite() {
+        ((CardLayout) dashboardContainer.getLayout()).show(dashboardContainer,CreateWorkSiteScreen);
     }
 
-    private Dashboard dashboard;
-    private JPanel ind,ind1,ind2,ind3,ind4,ind5;
-    static LoginScreen loginScreen;
-    private JPanel sidePanelBtnHome;
-    private JPanel sidePanelBtnWorkSites;
-    private JPanel sidePanelBtnSettings;
-    private JPanel sidePanelBtnEmployees;
-    private JPanel sidePanelBtnWorkers;
-    private JPanel sidePanelBtnClients;
-    static WorkSiteDashboard workSiteDashboard;
-    static WorkersScreen workersScreen;
-    static EmployeeDatabaseScreen employeeScreen;
-    private String connectionStatusText;
-    static CreateWorkSite createWorkSite;
-    static ClientScreen clientScreen;
-    static PendingTasks pendingTasks;
-
-    Stack<JPanel> navigation;
-    private static boolean isLogged;
-    public static String userCPR = "1451684849";
-
-    // Status
-
-    private static JLabel connectionStatusIcon = new JLabel();
-    private static JLabel connectionStatusLabel = new JLabel();
-
-    public static JLabel getConnectionStatusIcon() {
-        return connectionStatusIcon;
-    }
-    public static void setConnectionStatusIcon(JLabel connectionStatusIcon) {
-        MainScreen.connectionStatusIcon = connectionStatusIcon;
-    }
-
-    public static JLabel getConnectionStatusLabel() {
-        return connectionStatusLabel;
-    }
-    public static void setConnectionStatusLabel(JLabel connectionStatusLabel) {
-        MainScreen.connectionStatusLabel = connectionStatusLabel;
+    public void showWorkSiteDashboard(){
+        ((CardLayout) dashboardContainer.getLayout()).show(dashboardContainer,WorkSiteDashboardScreen);
     }
 }
