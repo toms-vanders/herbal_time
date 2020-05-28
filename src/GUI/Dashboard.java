@@ -1,6 +1,7 @@
 package GUI;
 
 import Controller.*;
+import DB.Exception.DataAccessException;
 import GUI.Components.ComponentsConfigure;
 import Model.SeasonalWorker;
 import org.netbeans.lib.awtextra.AbsoluteConstraints;

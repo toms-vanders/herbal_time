@@ -1,5 +1,6 @@
 package Controller;
 
+import DB.Exception.DataAccessException;
 import Model.SeasonalWorker;
 
 import java.util.List;

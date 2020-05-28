@@ -1,5 +1,6 @@
 package Controller;
 
+import DB.Exception.DataAccessException;
 import DB.WorkTypeDB;
 import Model.WorkType;
 

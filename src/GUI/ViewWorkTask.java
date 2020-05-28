@@ -1,6 +1,7 @@
 package GUI;
 
 import Controller.*;
+import DB.Exception.DataAccessException;
 import GUI.Components.ComponentsConfigure;
 import GUI.Components.StatusDialog;
 import Model.SeasonalWorker;

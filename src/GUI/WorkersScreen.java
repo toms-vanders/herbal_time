@@ -1,6 +1,6 @@
 package GUI;
 
-import Controller.DataAccessException;
+import DB.Exception.DataAccessException;
 import Controller.SeasonalWorkerCtr;
 import Controller.SeasonalWorkerCtrIF;
 import GUI.Components.ComponentsConfigure;

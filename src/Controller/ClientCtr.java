@@ -1,6 +1,8 @@
 package Controller;
 
 import DB.ClientDB;
+import DB.ClientDBIF;
+import DB.Exception.DataAccessException;
 import Model.Client;
 
 import java.lang.reflect.Type;
@@ -20,7 +22,7 @@ import java.util.List;
  */
 public class ClientCtr implements ClientCtrIF {
 
-    final ClientDB clientDB;
+    final ClientDBIF clientDB;
 
     public ClientCtr() {
         clientDB = new ClientDB();

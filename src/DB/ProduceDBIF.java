@@ -1,6 +1,6 @@
 package DB;
 
-import Controller.DataAccessException;
+import DB.Exception.DataAccessException;
 import Model.Produce;
 
 import java.lang.reflect.Type;

@@ -1,5 +1,6 @@
 package Controller;
 
+import DB.Exception.DataAccessException;
 import Model.WorkType;
 
 import java.util.List;

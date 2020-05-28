@@ -1,6 +1,6 @@
 package GUI.DBStatus;
 
-import Controller.DataAccessException;
+import DB.Exception.DataAccessException;
 import DB.DBConnection;
 import GUI.MainScreen;
 

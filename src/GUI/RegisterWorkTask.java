@@ -1,6 +1,7 @@
 package GUI;
 
 import Controller.*;
+import DB.Exception.DataAccessException;
 import GUI.Components.BackgroundWorker;
 import GUI.Components.ComponentsConfigure;
 import GUI.Components.StatusDialog;
@@ -342,7 +343,12 @@ public class RegisterWorkTask extends JPanel {
     private void updateProduceList() {
         if (locationList.getItemCount() > 0) {
             WorkSite selectedWorkSite = (WorkSite) locationList.getSelectedItem();
-            workTypes = selectedWorkSite.getWorkTypes();
+            try{
+                workTypes = selectedWorkSite.getWorkTypes();
+            }catch(NullPointerException e){
+                new StatusDialog(mainScreen,true,StatusDialog.CONFIRM,"No location found",
+                        "There are currently no locations available in the system.");
+            }
             DefaultComboBoxModel<WorkType> produceComboBoxModel = getProduceComboBoxModel(workTypes);
             produceList.setModel(produceComboBoxModel);
             produceList.setRenderer(new WorkTaskWorkTypeComboBoxRenderer());

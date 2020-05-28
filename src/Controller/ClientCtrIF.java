@@ -1,6 +1,7 @@
 package Controller;
 
-import Model.*;
+import DB.Exception.DataAccessException;
+import Model.Client;
 
 import java.lang.reflect.Type;
 import java.util.List;

@@ -1,6 +1,6 @@
 package GUI;
 
-import Controller.DataAccessException;
+import DB.Exception.DataAccessException;
 import Controller.SeasonalWorkerCtr;
 import Controller.SeasonalWorkerCtrIF;
 import GUI.Components.BackgroundWorker;
@@ -80,6 +80,7 @@ public class MainScreen extends JFrame {
      * @throws DataAccessException if controllers cannot be instantiated
      */
     public MainScreen() throws DataAccessException {
+        setUndecorated(true);
         initComponents();
         StatusThread sT = new StatusThread();
         sT.start();
@@ -91,7 +92,7 @@ public class MainScreen extends JFrame {
      *
      * @param args Java arguments array
      */
-    public static void main(String[] args) throws DataAccessException {
+    public static void main(String[] args) {
         try {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Windows".equals(info.getName())) {
@@ -222,7 +223,6 @@ public class MainScreen extends JFrame {
         setAutoRequestFocus(false);
         setBackground(new Color(123, 156, 225));
         setMinimumSize(new Dimension(1200, 800));
-        setUndecorated(true);
         setResizable(false);
         setSize(new Dimension(1200, 800));
         getContentPane().setLayout(new AbsoluteLayout());
@@ -516,7 +516,8 @@ public class MainScreen extends JFrame {
      * the use of the navigation stack.
      */
     private void sidePanelBtnSettingsMousePressed() {
-        new StatusDialog(this,true, StatusDialog.WARNING,"error","error2");
+        new StatusDialog(this,true, StatusDialog.WARNING,"Not implemented yet.",
+                "Settings are not yet implemented.");
         setColor(sidePanelBtnSettings);
         ind3.setOpaque(true);
         resetColor(new JPanel[]{sidePanelBtnEmployees,sidePanelBtnWorkSites,sidePanelBtnHome,sidePanelBtnWorkers,sidePanelBtnClients,sidePanelBtnAbout,sidePanelBtnPending},

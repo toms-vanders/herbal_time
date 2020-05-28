@@ -1,7 +1,9 @@
 package Controller;
 
-import Model.*;
-import DB.*;
+import DB.Exception.DataAccessException;
+import DB.SeasonalWorkerDB;
+import DB.SeasonalWorkerDBIF;
+import Model.SeasonalWorker;
 
 import java.util.List;
 

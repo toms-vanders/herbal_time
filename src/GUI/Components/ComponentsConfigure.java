@@ -25,6 +25,11 @@ public class ComponentsConfigure implements Serializable {
     public static final ImageIcon sentIcon = new ImageIcon(ComponentsConfigure.class.getResource("/icons8_sent_32px.png"));
     public static final ImageIcon settingsIcon = new ImageIcon(ComponentsConfigure.class.getResource("/icons8_settings_32px_1.png"));
     public static final ImageIcon defaultProfile = new ImageIcon(ComponentsConfigure.class.getResource("/icons8_github_96px.png"));
+    public static final ImageIcon idIcon = new ImageIcon(ComponentsConfigure.class.getResource("/icons8_identification_documents_32px.png"));
+    public static final ImageIcon emailIcon = new ImageIcon(ComponentsConfigure.class.getResource("/icons8_microsoft_outlook_32px_1.png"));
+    public static final ImageIcon phoneIcon = new ImageIcon(ComponentsConfigure.class.getResource("/icons8_phone_32px.png"));
+    public static final ImageIcon addIcon = new ImageIcon(ComponentsConfigure.class.getResource("/icons8_add_32px_1.png"));
+
     public static final Font defaultFont = new Font("Dialog", Font.BOLD, 24);
 
     public static void metroBtnConfig(JButton button) {

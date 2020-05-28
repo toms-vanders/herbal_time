@@ -2,7 +2,8 @@ package GUI;
 
 import Controller.ClientCtr;
 import Controller.ClientCtrIF;
-import Controller.DataAccessException;
+import DB.Exception.DataAccessException;
+import GUI.Components.BackgroundWorker;
 import GUI.Components.ComponentsConfigure;
 import Model.Client;
 
@@ -14,6 +15,7 @@ public class ClientScreen extends JPanel {
 
     private MainScreen mainScreen;
     private JPanel listContainer;
+    private JScrollPane scrollableListContainer;
     private ClientCtrIF clientController;
     private Client currentClient;
     private int MAX_CLIENTS;
@@ -23,19 +25,19 @@ public class ClientScreen extends JPanel {
     private GroupLayout.ParallelGroup parallelGroup;
     private GroupLayout.SequentialGroup sequentialGroup;
 
-    public ClientScreen(MainScreen mainScreen) throws DataAccessException {
+    public ClientScreen(MainScreen mainScreen) {
         this.mainScreen = mainScreen;
         initComponents();
     }
 
-    private void initComponents() throws DataAccessException {
+    private void initComponents() {
 
         clientController = new ClientCtr();
 
         JPanel topBar = new JPanel();
         JLabel taskTitle = new JLabel();
         JButton addBtn = new JButton();
-        JScrollPane scrollableListContainer = new JScrollPane();
+        scrollableListContainer = new JScrollPane();
 
         setBackground(new Color(71, 120, 197));
         setForeground(new Color(255, 255, 255));
@@ -118,16 +120,12 @@ public class ClientScreen extends JPanel {
         // TODO add your handling code here:
     }
 
-    private void removeBtnActionPerformed() {
-        // TODO add your handling code here:
-    }
-
     private void settingsBtnActionPerformed() {
         // TODO add your handling code here:
     }
 
     private void addBtnActionPerformed() {
-        // TODO add your handling code here:
+        new CreateClient(this).start();
     }
 
     private void configureButton(JButton button, ImageIcon icon){
@@ -161,7 +159,7 @@ public class ClientScreen extends JPanel {
                 .addComponent(listElement));
     }
 
-    private void loadClients() throws DataAccessException {
+    public void loadClients() throws DataAccessException {
         clientsList = new ArrayList<>(clientController.findAllClients(false));
         MAX_CLIENTS = clientsList.size();
         listContainer.removeAll();
@@ -171,24 +169,29 @@ public class ClientScreen extends JPanel {
     private void createElements(){
         if(MAX_CLIENTS > 0){
             for(int i = 0; i < MAX_CLIENTS; i++){
+                currentClient = clientsList.get(i);
                 JPanel listElement = new JPanel();
                 JLabel profilePicture = new JLabel();
-                String pName = clientsList.get(i).getName();
+                String pName = currentClient.getName();
                 JLabel personName = new JLabel();
                 JButton infoBtn = new JButton();
                 JButton msgBtn = new JButton();
                 JButton removeBtn = new JButton();
                 JButton settingsBtn = new JButton();
 
-                setElementComponents(listElement,profilePicture,personName,pName,infoBtn,msgBtn,removeBtn,settingsBtn);
+                setElementComponents(listElement,profilePicture,personName,pName,infoBtn,msgBtn,removeBtn, currentClient,settingsBtn);
                 setElementGroupsPosition(listElement,profilePicture,personName,infoBtn,msgBtn,removeBtn,settingsBtn);
                 addElementToList(listElement);
 
             }
         }
+        scrollableListContainer.revalidate();
+        listContainer.revalidate();
+        listContainer.repaint();
+        scrollableListContainer.repaint();
     }
 
-    private void setElementComponents(JPanel listElement, JLabel profilePicture, JLabel personName, String pName, JButton infoBtn, JButton msgBtn, JButton removeBtn, JButton settingsBtn){
+    private void setElementComponents(JPanel listElement, JLabel profilePicture, JLabel personName, String pName, JButton infoBtn, JButton msgBtn, JButton removeBtn, Client currentClient, JButton settingsBtn){
 
         listElement.setBackground(new Color(23, 35, 51));
         listElement.setMaximumSize(new Dimension(970, 112));
@@ -211,7 +214,10 @@ public class ClientScreen extends JPanel {
 
         ComponentsConfigure.metroBtnConfig(removeBtn);
         configureButton(removeBtn,ComponentsConfigure.trashIcon);
-        removeBtn.addActionListener(evt -> removeBtnActionPerformed());
+        removeBtn.addActionListener((e) -> new BackgroundWorker(() -> {
+            clientController.deleteClient(currentClient.getCvr());
+            loadClients();
+        },"Removing client","Client " + currentClient.getName() + " is being removed, please wait."));
 
         ComponentsConfigure.metroBtnConfig(settingsBtn);
         configureButton(settingsBtn,ComponentsConfigure.settingsIcon);
@@ -261,11 +267,7 @@ public class ClientScreen extends JPanel {
     public void setVisible(boolean aFlag) {
         super.setVisible(aFlag);
         if(aFlag){
-            try {
-                loadClients();
-            } catch (DataAccessException e) {
-                e.printStackTrace();
-            }
+            new BackgroundWorker(this::loadClients,"Loading clients","Loading clients from the database please wait.");
         }
     }
 }

@@ -1,7 +1,7 @@
 package GUI.Components;
 
-import Controller.DataAccessException;
+import DB.Exception.DataAccessException;
 
 public interface BackgroundOperation {
-    void backgroundExecute();
+    void backgroundExecute() throws DataAccessException;
 }

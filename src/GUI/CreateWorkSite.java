@@ -1,6 +1,7 @@
 package GUI;
 
 import Controller.*;
+import DB.Exception.DataAccessException;
 import DB.WorkSiteProduceDB;
 import DB.WorkSiteProduceDBIF;
 import GUI.Components.ComponentsConfigure;

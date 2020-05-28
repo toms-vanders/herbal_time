@@ -1,6 +1,6 @@
 package Tests;
 
-import Controller.DataAccessException;
+import DB.Exception.DataAccessException;
 import DB.ClientDB;
 import DB.DBConnection;
 import Model.Client;
