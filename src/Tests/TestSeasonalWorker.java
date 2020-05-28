@@ -1,8 +1,9 @@
 package Tests;
 
-import Controller.*;
-import Model.*;
-import DB.*;
+import Controller.DataAccessException;
+import DB.DBConnection;
+import DB.SeasonalWorkerDB;
+import Model.SeasonalWorker;
 import org.junit.jupiter.api.*;
 import java.sql.Date;
 import java.time.LocalDate;
@@ -25,12 +26,12 @@ import java.util.Random;
 public class TestSeasonalWorker {
 
     private DBConnection dbConnection;
-    private Random r = new Random();
-    private Integer randomGeneratedCPR = 10000000 + r.nextInt(90000000);
-    private String randomGeneratedCPRString = Integer.toString(randomGeneratedCPR);
-    private Date dob = Date.valueOf(LocalDate.of(1995,06,11));
-    private Date start = Date.valueOf(LocalDate.of(2020, 06, 11));
-    private Date end = Date.valueOf(LocalDate.of(2025, 06, 11));
+    private final Random r = new Random();
+    private final Integer randomGeneratedCPR = 10000000 + r.nextInt(90000000);
+    private final String randomGeneratedCPRString = Integer.toString(randomGeneratedCPR);
+    private final Date dob = Date.valueOf(LocalDate.of(1995, 6,11));
+    private final Date start = Date.valueOf(LocalDate.of(2020, 6, 11));
+    private final Date end = Date.valueOf(LocalDate.of(2025, 6, 11));
 
     @BeforeEach
     public void testDBConnection() {
@@ -50,6 +51,7 @@ public class TestSeasonalWorker {
                 "lastName", dob, 'f', "test@gmail.com", "000", "testStreet",
                 "0", "9000", "DK", "Denmark", "123456789", "12345678910", "99161721446", "12312193581230971231", false);
         swDB.insertSeasonalWorker(testSWleader, 1, SeasonalWorker.class);
+        System.out.println("Successfully inserted Seasonal Worker");
     }
 
     /**
@@ -62,6 +64,7 @@ public class TestSeasonalWorker {
     public void testListAllSeasonalWorkers() throws DataAccessException {
         SeasonalWorkerDB swDB = new SeasonalWorkerDB();
         System.out.println(swDB.findAll(false, SeasonalWorker.class));
+        System.out.println("Successfully listed all Seasonal Workers");
     }
 
     /**
@@ -77,6 +80,7 @@ public class TestSeasonalWorker {
                 "UPDATED", "UPDATED", "0", "9000", "DK",
                 "Denmark", "421456789", "1234178910", "99161726446", "14212193581230971231", true);
         swDB.updateSeasonalWorker(randomGeneratedCPRString,testGeneratedSeasonalWorker,testGeneratedSeasonalWorker.getClass());
+        System.out.println("Successfully updated Seasonal Worker");
     }
 
     /**
@@ -89,6 +93,7 @@ public class TestSeasonalWorker {
     public void testCleanup() throws DataAccessException{
         SeasonalWorkerDB swDB = new SeasonalWorkerDB();
         swDB.deleteSeasonalWorker(randomGeneratedCPRString, SeasonalWorker.class);
+        System.out.println("Successfully deleted Seasonal Worker");
     }
 }
 

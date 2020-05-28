@@ -1,6 +1,6 @@
 package Controller;
 
-import Model.*;
+import Model.SeasonalWorker;
 
 import java.util.List;
 

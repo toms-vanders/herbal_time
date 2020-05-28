@@ -202,7 +202,7 @@ public class ProduceDB implements ProduceDBIF {
             throw new DataAccessException("There was a problem with the produce being inserted into DB.",e);
         }
 
-        Integer affectedRows;
+        int affectedRows;
         try {
             affectedRows = PSinsertProduce.executeUpdate();
             DBConnection.disconnect();
@@ -240,7 +240,7 @@ public class ProduceDB implements ProduceDBIF {
             throw new DataAccessException("There was an error updating the WorkSiteProduce (newData).", e);
         }
 
-        Integer affectedRows;
+        int affectedRows;
         try {
             affectedRows = PSupdateProduce.executeUpdate();
             DBConnection.disconnect();
@@ -277,7 +277,7 @@ public class ProduceDB implements ProduceDBIF {
             throw new DataAccessException("Issue with setting update parameters when deleting produce", e);
         }
 
-        Integer affectedRows;
+        int affectedRows;
         try {
             affectedRows = PSdeleteProduce.executeUpdate();
             DBConnection.disconnect();

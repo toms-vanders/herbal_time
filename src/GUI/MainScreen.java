@@ -14,18 +14,38 @@ import org.netbeans.lib.awtextra.AbsoluteLayout;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Application's main window, is the center of all action in the program.
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0
+ *
+ * Date: 29.05.2020
+ */
 public class MainScreen extends JFrame {
+
+    // Navigation strings for the cardLayout
+    final static String LoginView = "LOGINSCREEN";
+    final static String DashboardScreen ="DASHBOARD";
+    final static String WorkSiteDashboardScreen = "WORKSITEDASHBOARD";
+    final static String ClientsScreen = "CLIENTS";
+    final static String CreateWorkSiteScreen = "CREATEWORKSITE";
+    final static String PendingTasksScreen = "PENDINGTASKS";
+
     // Declarations for the status bar
     private static JLabel connectionStatusIcon = new JLabel();
     private static JLabel connectionStatusLabel = new JLabel();
 
     // Declarations for the various frames and panels
     private static boolean isLogged;
-    public static String userCPR = "1451684849";
+    public static final String userCPR = "1451684849";
     private JPanel dashboardContainer;
     static LoginScreen loginScreen;
     static WorkSiteDashboard workSiteDashboard;
@@ -48,24 +68,15 @@ public class MainScreen extends JFrame {
     private JPanel sidePanelBtnAbout;
     private String connectionStatusText;
 
-    final static String LoginView = "LOGINSCREEN";
-    final static String DashboardScreen ="DASHBOARD";
-    final static String WorkSiteDashboardScreen = "WORKSITEDASHBOARD";
-    final static String ClientsScreen = "CLIENTS";
-    final static String CreateWorkSiteScreen = "CREATEWORKSITE";
-    final static String PendingTasksScreen = "PENDINGTASKS";
-
     // Declarations for the controllers
     private SeasonalWorkerCtrIF seasonalWorkerController;
     private SeasonalWorker currentWorker;
 
-    // Stack for navigation purposes within the application
-    public Stack<JPanel> navigation;
-
     /**
      * MainScreen constructor initializing the components
      * StatusThread for connectivity
-     * Visibility status for all other components part of the MainScreen
+     * Visibility status for all other components part of the MainScreen.
+     *
      * @throws DataAccessException if controllers cannot be instantiated
      */
     public MainScreen() throws DataAccessException {
@@ -77,6 +88,7 @@ public class MainScreen extends JFrame {
     /**
      * Main thread for the frame to initialize the look and feel of the frame as well as
      * displaying it once everything has been created and added.
+     *
      * @param args Java arguments array
      */
     public static void main(String[] args) throws DataAccessException {
@@ -103,7 +115,8 @@ public class MainScreen extends JFrame {
     }
 
     /**
-     * Retrieve the current connection status icon
+     * Retrieves the current connection status icon.
+     *
      * @return ImageIcon for the current connection status
      */
     public static JLabel getConnectionStatusIcon() {
@@ -111,7 +124,8 @@ public class MainScreen extends JFrame {
     }
 
     /**
-     * Set the current connection status icon
+     * Sets the current connection status icon.
+     *
      * @param connectionStatusIcon ImageIcon to be shown
      */
     public static void setConnectionStatusIcon(JLabel connectionStatusIcon) {
@@ -119,7 +133,8 @@ public class MainScreen extends JFrame {
     }
 
     /**
-     * Retrieve the current connection status
+     * Retrieves the current connection status.
+     *
      * @return JLabel of the current connection status
      */
     public static JLabel getConnectionStatusLabel() {
@@ -127,7 +142,8 @@ public class MainScreen extends JFrame {
     }
 
     /**
-     * Set the current connection status
+     * Sets the current connection status.
+     *
      * @param connectionStatusLabel JLabel to be shown
      */
     public static void setConnectionStatusLabel(JLabel connectionStatusLabel) {
@@ -135,7 +151,8 @@ public class MainScreen extends JFrame {
     }
 
     /**
-     * Method is called only once during connection to establish the initial status bar
+     * Method is called only once during connection to establish the initial status bar.
+     *
      * @return ImageIcon of the connection status upon initialization
      */
     private ImageIcon connectionStatus() {
@@ -145,18 +162,15 @@ public class MainScreen extends JFrame {
     }
 
     /**
-     * Initialize all components and layouts part of the frame
+     * Initialize all components and layouts part of the frame.
+     *
      * @throws DataAccessException if controllers cannot be instantiated
      */
     private void initComponents() throws DataAccessException {
 
         isLogged = false;
 
-        try {
-            seasonalWorkerController = new SeasonalWorkerCtr();
-        } catch(DataAccessException e) {
-            throw new DataAccessException("Unable to retrieve seasonal worker controller instance",e);
-        }
+        seasonalWorkerController = new SeasonalWorkerCtr();
 
         try {
             currentWorker = seasonalWorkerController.findSeasonalWorkerByCPR(userCPR);
@@ -201,9 +215,7 @@ public class MainScreen extends JFrame {
         employeeScreen = new EmployeeDatabaseScreen();
         pendingTasks = new PendingTasks(this);
         createWorkSite = new CreateWorkSite(this);
-        navigation = new Stack<>();
         dashboardContainer = new JPanel();
-        navigation.push(loginScreen);
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("Herbal Time");
@@ -455,9 +467,9 @@ public class MainScreen extends JFrame {
     /**
      * MouseEvent to detect when a side panel has been pressed.
      * Once pressed the button is toggled and displayed as such with a different colour and active indicator.
-     * Other side panel buttons that were previously active are cycled through and toggled off as well as their indicators
-     * Finally the current view of the user is changed to the one that the button is assigned to through the use of the
-     * navigation stack.
+     * Other side panel buttons that were previously active are cycled through and toggled off as well as their
+     * indicators. Finally the current view of the user is changed to the one that the button is assigned to through
+     * the use of the navigation stack.
      */
     private void sidePanelBtnHomeMousePressed() {
         setColor(sidePanelBtnHome);
@@ -470,9 +482,9 @@ public class MainScreen extends JFrame {
     /**
      * MouseEvent to detect when a side panel has been pressed.
      * Once pressed the button is toggled and displayed as such with a different colour and active indicator.
-     * Other side panel buttons that were previously active are cycled through and toggled off as well as their indicators
-     * Finally the current view of the user is changed to the one that the button is assigned to through the use of the
-     * navigation stack.
+     * Other side panel buttons that were previously active are cycled through and toggled off as well as their
+     * indicators. Finally the current view of the user is changed to the one that the button is assigned to through
+     * the use of the navigation stack.
      */
     private void sidePanelBtnEmployeesMousePressed() {
         setColor(sidePanelBtnEmployees);
@@ -484,9 +496,9 @@ public class MainScreen extends JFrame {
     /**
      * MouseEvent to detect when a side panel has been pressed.
      * Once pressed the button is toggled and displayed as such with a different colour and active indicator.
-     * Other side panel buttons that were previously active are cycled through and toggled off as well as their indicators
-     * Finally the current view of the user is changed to the one that the button is assigned to through the use of the
-     * navigation stack.
+     * Other side panel buttons that were previously active are cycled through and toggled off as well as their
+     * indicators. Finally the current view of the user is changed to the one that the button is assigned to through
+     * the use of the navigation stack.
      */
     private void sidePanelBtnWorkSitesMousePressed() {
         setColor(sidePanelBtnWorkSites);
@@ -499,9 +511,9 @@ public class MainScreen extends JFrame {
     /**
      * MouseEvent to detect when a side panel has been pressed.
      * Once pressed the button is toggled and displayed as such with a different colour and active indicator.
-     * Other side panel buttons that were previously active are cycled through and toggled off as well as their indicators
-     * Finally the current view of the user is changed to the one that the button is assigned to through the use of the
-     * navigation stack.
+     * Other side panel buttons that were previously active are cycled through and toggled off as well as their
+     * indicators. Finally the current view of the user is changed to the one that the button is assigned to through
+     * the use of the navigation stack.
      */
     private void sidePanelBtnSettingsMousePressed() {
         new StatusDialog(this,true, StatusDialog.WARNING,"error","error2");
@@ -514,9 +526,9 @@ public class MainScreen extends JFrame {
     /**
      * MouseEvent to detect when a side panel has been pressed.
      * Once pressed the button is toggled and displayed as such with a different colour and active indicator.
-     * Other side panel buttons that were previously active are cycled through and toggled off as well as their indicators
-     * Finally the current view of the user is changed to the one that the button is assigned to through the use of the
-     * navigation stack.
+     * Other side panel buttons that were previously active are cycled through and toggled off as well as their
+     * indicators. Finally the current view of the user is changed to the one that the button is assigned to through
+     * the use of the navigation stack.
      */
     private void sidePanelBtnWorkersMousePressed() {
         setColor(sidePanelBtnWorkers);
@@ -528,9 +540,9 @@ public class MainScreen extends JFrame {
     /**
      * MouseEvent to detect when a side panel has been pressed.
      * Once pressed the button is toggled and displayed as such with a different colour and active indicator.
-     * Other side panel buttons that were previously active are cycled through and toggled off as well as their indicators
-     * Finally the current view of the user is changed to the one that the button is assigned to through the use of the
-     * navigation stack.
+     * Other side panel buttons that were previously active are cycled through and toggled off as well as their
+     * indicators. Finally the current view of the user is changed to the one that the button is assigned to through
+     * the use of the navigation stack.
      */
     private void sidePanelBtnClientsMousePressed(){
         setColor(sidePanelBtnClients);
@@ -543,11 +555,11 @@ public class MainScreen extends JFrame {
     /**
      * MouseEvent to detect when a side panel has been pressed.
      * Once pressed the button is toggled and displayed as such with a different colour and active indicator.
-     * Other side panel buttons that were previously active are cycled through and toggled off as well as their indicators
-     * Finally the current view of the user is changed to the one that the button is assigned to through the use of the
-     * navigation stack.
+     * Other side panel buttons that were previously active are cycled through and toggled off as well as their
+     * indicators. Finally the current view of the user is changed to the one that the button is assigned to through
+     * the use of the navigation stack.
      */
-    private void sidePanelBtnPendingMousePressed(){
+    private void sidePanelBtnPendingMousePressed() {
         setColor(sidePanelBtnPending);
         ind6.setOpaque(true);
         resetColor(new JPanel[]{sidePanelBtnEmployees,sidePanelBtnWorkSites,sidePanelBtnHome,sidePanelBtnSettings,sidePanelBtnWorkers,sidePanelBtnAbout,sidePanelBtnClients},
@@ -558,22 +570,24 @@ public class MainScreen extends JFrame {
     /**
      * MouseEvent to detect when a side panel has been pressed.
      * Once pressed the button is toggled and displayed as such with a different colour and active indicator.
-     * Other side panel buttons that were previously active are cycled through and toggled off as well as their indicators
-     * Finally the current view of the user is changed to the one that the button is assigned to through the use of the
-     * navigation stack.
+     * Other side panel buttons that were previously active are cycled through and toggled off as well as their
+     * indicators. Finally the current view of the user is changed to the one that the button is assigned to through
+     * the use of the navigation stack.
      */
-    private void sidePanelBtnAboutMousePressed(){
+    private void sidePanelBtnAboutMousePressed() {
         setColor(sidePanelBtnAbout);
         ind7.setOpaque(true);
         resetColor(new JPanel[]{sidePanelBtnEmployees,sidePanelBtnWorkSites,sidePanelBtnHome,sidePanelBtnSettings,sidePanelBtnWorkers,sidePanelBtnPending,sidePanelBtnClients},
                 new JPanel[]{ind,ind1,ind2,ind3,ind4,ind5,ind6});
         new StatusDialog(this,true,StatusDialog.ABOUT,"About",
-                "The icons used within this software are property of their respective creators in this case https://icons8.com ." +
+                "The icons used within this software are property of their respective creators " +
+                        "in this case https://icons8.com ." +
                 "The icons have been used under their free license.");
     }
 
     /**
      * Change the color of the MouseEvent pressed panel to show it has been selected.
+     *
      * @param pane JPanel to modify the color of.
      */
     private void setColor(JPanel pane){
@@ -581,7 +595,8 @@ public class MainScreen extends JFrame {
     }
 
     /**
-     * Iterates over the two arrays of panels resetting colors to their standard "off" and disables indicators visibility
+     * Iterates over the two arrays of panels resetting colors to their standard "off" and disables indicators
+     * visibility.
      * @param pane JPanels to be reset to their original color
      * @param indicators JPanel indicators to be set invisible
      */
@@ -620,7 +635,7 @@ public class MainScreen extends JFrame {
     }
 
     /**
-     * Method to display the create worksite panel and push the view to the navigation stack
+     * Method to display the create worksite panel and push the view to the navigation stack.
      */
     public void showCreateWorkSite() {
         ((CardLayout) dashboardContainer.getLayout()).show(dashboardContainer,CreateWorkSiteScreen);

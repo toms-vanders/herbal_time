@@ -25,7 +25,7 @@ public class WorkSiteDashboard extends JPanel {
 
     private ArrayList<WorkSite> workSites;
 
-    public WorkSiteDashboard(MainScreen mainScreen) throws DataAccessException {
+    public WorkSiteDashboard(MainScreen mainScreen) {
         this.mainScreen = mainScreen;
         try {
             initComponents();
@@ -41,11 +41,7 @@ public class WorkSiteDashboard extends JPanel {
     private void initComponents() throws DataAccessException {
 
         WorkSiteCtrIF workSitesCtr;
-        try {
-            workSitesCtr = new WorkSiteCtr();
-        }catch(DataAccessException e) {
-            throw new DataAccessException("Unable to obtain seasonal worker controller instance.",e);
-        }
+        workSitesCtr = new WorkSiteCtr();
         workSites = new ArrayList<>();
         try {
             workSites = new ArrayList<>(workSitesCtr.listAllWorkSites(false));

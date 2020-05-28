@@ -26,8 +26,8 @@ public class EmployeeDB implements EmployeeDBIF {
     /**
      * Pre-made queries for the program
      */
-    private static final String findAll = "SELECT * FROM Employee emp JOIN PERSON ps ON emp.cpr = ps.cpr";
-    private static final String findEmployeeByCPR = "SELECT * FROM Employee WHERE cpr = ?";
+    private static final String findAll = "SELECT * FROM Employee emp JOIN Person ps ON emp.cpr = ps.cpr";
+    private static final String findEmployeeByCPR = "SELECT * FROM Employee emp JOIN Person ps ON emp.cpr = ps.cpr WHERE emp.cpr = ?";
     private static final String insertEmployee = "INSERT INTO Employee VALUES(?,?,?,?)";
     private static final String updateEmployee = "UPDATE Employee SET "
             + "cpr = ?,"

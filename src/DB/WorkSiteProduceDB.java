@@ -1,8 +1,6 @@
 package DB;
 
 import Controller.DataAccessException;
-import Model.Produce;
-import Model.WorkSite;
 import Model.WorkSiteProduce;
 
 import java.lang.reflect.Type;
@@ -198,7 +196,7 @@ public class WorkSiteProduceDB implements WorkSiteProduceDBIF{
             throw new DataAccessException("There was a problem with the WorkSiteProduce being inserted into DB.",e);
         }
 
-        Integer affectedRows;
+        int affectedRows;
         try {
             affectedRows = PSinsertWorkSiteProduce.executeUpdate();
             DBConnection.disconnect();
@@ -238,7 +236,7 @@ public class WorkSiteProduceDB implements WorkSiteProduceDBIF{
             throw new DataAccessException("There was an error updating the Produce (newData).", e);
         }
 
-        Integer affectedRows;
+        int affectedRows;
         try {
             affectedRows = PSupdateWorkSiteProduce.executeUpdate();
             DBConnection.disconnect();
@@ -278,7 +276,7 @@ public class WorkSiteProduceDB implements WorkSiteProduceDBIF{
             throw new DataAccessException("Issue with setting update parameters when deleting WorkSiteProduce", e);
         }
 
-        Integer affectedRows;
+        int affectedRows;
         try {
             affectedRows = PSdeleteWorkSiteProduce.executeUpdate();
             DBConnection.disconnect();

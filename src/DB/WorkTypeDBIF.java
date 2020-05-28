@@ -1,12 +1,8 @@
 package DB;
 
 import Controller.DataAccessException;
-import Model.WorkSite;
-import Model.WorkTask;
 import Model.WorkType;
 
-import javax.xml.crypto.Data;
-import java.lang.reflect.Type;
 import java.util.List;
 
 /**

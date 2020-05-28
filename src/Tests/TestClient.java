@@ -1,8 +1,9 @@
 package Tests;
 
-import Controller.*;
-import Model.*;
-import DB.*;
+import Controller.DataAccessException;
+import DB.ClientDB;
+import DB.DBConnection;
+import Model.Client;
 import org.junit.jupiter.api.*;
 import java.sql.Date;
 import java.time.LocalDate;
@@ -26,11 +27,11 @@ public class TestClient {
 
     private DBConnection dbConnection;
     private Client testGeneratedClient;
-    private Random r = new Random();
-    private Integer randomGeneratedCVR = 10000000 + r.nextInt(90000000);
-    private String randomGeneratedCVRString = Integer.toString(randomGeneratedCVR);
-    private Date start = Date.valueOf(LocalDate.of(2020, 06, 11));
-    private Date end = Date.valueOf(LocalDate.of(2025, 06, 11));
+    private final Random r = new Random();
+    private final Integer randomGeneratedCVR = 10000000 + r.nextInt(90000000);
+    private final String randomGeneratedCVRString = Integer.toString(randomGeneratedCVR);
+    private final Date start = Date.valueOf(LocalDate.of(2020, 6, 11));
+    private final Date end = Date.valueOf(LocalDate.of(2025, 6, 11));
 
     @BeforeEach
     public void testDBConnection() {

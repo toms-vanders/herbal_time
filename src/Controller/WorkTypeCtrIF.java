@@ -1,8 +1,7 @@
 package Controller;
 
-import Model.*;
+import Model.WorkType;
 
-import java.lang.reflect.Type;
 import java.util.List;
 
 public interface WorkTypeCtrIF {

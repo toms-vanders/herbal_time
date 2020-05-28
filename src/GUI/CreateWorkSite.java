@@ -17,6 +17,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * A view extending JPanel. Allows for management of work site registered in Herbal Time database.
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0
+ *
+ * Date: 29.05.2020
+ */
 public class CreateWorkSite extends JPanel {
     private JButton addWorkersBtn;
     private JButton cancelBtn;
@@ -70,17 +82,9 @@ public class CreateWorkSite extends JPanel {
 
     private void initComponents() throws DataAccessException {
         ClientCtrIF clientCtr;
-        try {
-            clientCtr = new ClientCtr();
-        } catch (DataAccessException e) {
-            throw new DataAccessException("Unable to obtain client controller instance.",e);
-        }
+        clientCtr = new ClientCtr();
 
-        try {
-            workSiteCtr = new WorkSiteCtr();
-        } catch (DataAccessException e) {
-            throw new DataAccessException("Unable to obtain work site controller instance.",e);
-        }
+        workSiteCtr = new WorkSiteCtr();
 
         clients = new ArrayList<>();
         try {

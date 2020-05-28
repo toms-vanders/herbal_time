@@ -1,15 +1,21 @@
 package Controller;
 
-import Model.*;
-import DB.*;
+import DB.WorkTypeDB;
+import Model.WorkType;
 
-import javax.xml.crypto.Data;
-import java.lang.reflect.Type;
-import java.sql.SQLException;
 import java.util.List;
 
 /**
- * Used to interface between the database and the GUI
+ * Used to interface between the GUI layer and WorkTypeDB
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0
+ *
+ * Date: 29.05.2020
  */
 public class WorkTypeCtr implements WorkTypeCtrIF{
 
@@ -25,6 +31,7 @@ public class WorkTypeCtr implements WorkTypeCtrIF{
 
     /**
      * Returns a list of all WorkTypes loaded in the database
+     *
      * @return a list of all WorkTypes loaded in the database
      * @throws DataAccessException
      */

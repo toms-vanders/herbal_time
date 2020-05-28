@@ -1,12 +1,10 @@
 package DB;
 
-import Controller.*;
-import Model.*;
+import Controller.DataAccessException;
+import Model.SeasonalWorker;
 
-import javax.xml.crypto.Data;
 import java.lang.reflect.Type;
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +20,7 @@ import java.util.List;
  *
  * Date: 29.05.2020
  */
-public class SeasonalWorkerDB implements SeasonalWorkerIF {
+public class SeasonalWorkerDB implements SeasonalWorkerDBIF {
     /**
      * Pre-made queries for the program
      */
@@ -374,7 +372,7 @@ public class SeasonalWorkerDB implements SeasonalWorkerIF {
 
         try {
             affectedRows = PSupdateSeasonalWorker.executeUpdate();
-            System.out.println(affectedRows);
+            System.out.println("Affected rows:" + affectedRows);
             DBConnection.disconnect();
         } catch (SQLException e) {
             DBConnection.disconnect();
@@ -490,9 +488,8 @@ public class SeasonalWorkerDB implements SeasonalWorkerIF {
      * @param type requires to be of proper type
      * @return an assembled SeasonalWorker object
      * @throws DataAccessException
-     * @throws SQLException
      */
-    private SeasonalWorker buildObject(ResultSet rs, boolean fullAssociation, Type type) throws DataAccessException, SQLException {
+    private SeasonalWorker buildObject(ResultSet rs, boolean fullAssociation, Type type) throws DataAccessException {
         SeasonalWorker currentSeasonalWorker = null;
 //        try {
 //            rs.next();

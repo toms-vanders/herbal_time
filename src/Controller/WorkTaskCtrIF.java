@@ -1,6 +1,6 @@
 package Controller;
 
-import Model.*;
+import Model.WorkTask;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,19 +1,26 @@
 package Controller;
 
-import DB.*;
-import Model.*;
+import DB.WorkSiteDB;import Model.*;
 
-import java.lang.reflect.Type;
 import java.util.List;
 
 /**
- * Used to interface between the database and the GUI
+ * Used to interface between the GUI layer and WorkSiteDB
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0
+ *
+ * Date: 29.05.2020
  */
 public class WorkSiteCtr implements WorkSiteCtrIF{
 
-    WorkSiteDB workSiteDB;
+    final WorkSiteDB workSiteDB;
 
-    public WorkSiteCtr() throws DataAccessException {
+    public WorkSiteCtr() {
         workSiteDB = new WorkSiteDB();
     }
 
@@ -104,10 +111,9 @@ public class WorkSiteCtr implements WorkSiteCtrIF{
      * @param workSiteID ID of the WorkSite wished to be changed
      * @param newWorkSite new WorkSite object to replace the original one
      * @return Number of rows affected
-     * @throws DataAccessException
      */
     @Override
-    public int updateWorkSite(int workSiteID, WorkSite newWorkSite) throws DataAccessException {
+    public int updateWorkSite(int workSiteID, WorkSite newWorkSite) {
         return 0;
     }
 

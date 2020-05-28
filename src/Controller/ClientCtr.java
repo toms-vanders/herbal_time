@@ -4,17 +4,25 @@ import DB.ClientDB;
 import Model.Client;
 
 import java.lang.reflect.Type;
-import java.sql.SQLException;
 import java.util.List;
 
 /**
- * Used to interface between the database and the GUI
+ * Used to interface between the GUI layer and ClientDB
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0
+ *
+ * Date: 29.05.2020
  */
 public class ClientCtr implements ClientCtrIF {
 
-    ClientDB clientDB;
+    final ClientDB clientDB;
 
-    public ClientCtr() throws DataAccessException {
+    public ClientCtr() {
         clientDB = new ClientDB();
     }
 

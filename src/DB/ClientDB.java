@@ -180,7 +180,7 @@ public class ClientDB implements ClientDBIF {
             throw new DataAccessException("There was a problem with the client being inserted into DB.",e);
         }
 
-        Integer affectedRows;
+        int affectedRows;
         try {
             affectedRows = PSinsertClient.executeUpdate();
             DBConnection.disconnect();
@@ -229,7 +229,7 @@ public class ClientDB implements ClientDBIF {
             throw new DataAccessException("There was an error updating the Client (newData).", e);
         }
 
-        Integer affectedRows;
+        int affectedRows;
         try {
             affectedRows = PSupdateClient.executeUpdate();
             DBConnection.disconnect();
@@ -265,7 +265,7 @@ public class ClientDB implements ClientDBIF {
             throw new DataAccessException("Issue with setting update parameters when deleting client", e);
         }
 
-        Integer affectedRows;
+        int affectedRows;
         try {
             affectedRows = PSdeleteClientByCVR.executeUpdate();
             DBConnection.disconnect();
@@ -331,10 +331,10 @@ public class ClientDB implements ClientDBIF {
                 if (fullAssociation) {
                     //TODO test it
                     WorkSiteDB wsDB = new WorkSiteDB();
-                    List<WorkSite> workSites = new ArrayList<>(wsDB.findWorkSitesOfClient(
+                    ArrayList<WorkSite> workSites = new ArrayList<>(wsDB.findWorkSitesOfClient(
                             rs.getString("cvr"), false));
                     if (!workSites.isEmpty()) {
-                        currentClient.setWorkSites((ArrayList<WorkSite>) workSites);
+                        currentClient.setWorkSites(workSites);
                     } else {
                         currentClient.setWorkSites(new ArrayList<>());
                     }

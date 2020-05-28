@@ -1,20 +1,27 @@
 package Controller;
 
-import DB.*;
-import Model.*;
+import DB.WorkTaskDB;import DB.WorkTaskDBIF;import Model.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Used to interface between the database and the GUI
+ * Used to interface between the GUI layer and WorkTaskDB
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0
+ *
+ * Date: 29.05.2020
  */
 public class WorkTaskCtr implements WorkTaskCtrIF {
 
-    WorkTaskDBIF workTaskDB;
+    final WorkTaskDBIF workTaskDB;
 
-    public WorkTaskCtr() throws DataAccessException
-    {
+    public WorkTaskCtr() {
         workTaskDB = new WorkTaskDB();
     }
 

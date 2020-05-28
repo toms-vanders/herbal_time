@@ -16,13 +16,14 @@ public class StatusThread extends Thread {
     private PreparedStatement PSCheckTables;
     private Status status;
     private Status lastChangedStatus;
-    private JLabel statusLabel = MainScreen.getConnectionStatusLabel();
-    private JLabel statusIcon = MainScreen.getConnectionStatusIcon();
+    private final JLabel statusLabel = MainScreen.getConnectionStatusLabel();
+    private final JLabel statusIcon = MainScreen.getConnectionStatusIcon();
 
     public StatusThread() {
         this.status = Status.UNCHECKED;
     }
 
+    @SuppressWarnings({"InfiniteLoopStatement", "BusyWait"})
     @Override
     public void run() {
 //        System.out.println("Current connection status: " + this.status);

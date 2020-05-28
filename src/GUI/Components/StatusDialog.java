@@ -13,7 +13,7 @@ public class StatusDialog extends JDialog {
     private final String msg;
     private AnimatedIcon loadingIcon;
 
-    public ImageIcon typeOfDialog;
+    public final ImageIcon typeOfDialog;
 
     public StatusDialog(JFrame parent,boolean modal,ImageIcon typeOfDialog,String title, String msg) {
         super(parent,modal);

@@ -4,9 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class sidePanelBtn extends JPanel {
-    private JPanel indicator = new JPanel();
-    private JPanel sidePanelBtn = new JPanel();
-    private JLabel sidePanelBtnLabel = new JLabel();
+    private final JPanel indicator = new JPanel();
+    private final JPanel sidePanelBtn = new JPanel();
+    private final JLabel sidePanelBtnLabel = new JLabel();
 
     public sidePanelBtn(String text) {
 

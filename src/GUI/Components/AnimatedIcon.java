@@ -39,8 +39,8 @@ public class AnimatedIcon implements Icon, ActionListener, Runnable
     public final static float BOTTOM = 1.0f;
     public final static float RIGHT = 1.0f;
 
-    private JComponent component;
-    private List<Icon> icons = new ArrayList<Icon>();
+    private final JComponent component;
+    private final List<Icon> icons = new ArrayList<Icon>();
 
     private int cycles;
     private boolean showFirstIcon = false;
@@ -64,7 +64,7 @@ public class AnimatedIcon implements Icon, ActionListener, Runnable
     private int currentIconIndex;
     private int cyclesCompleted;
     private boolean animationFinished = true;
-    private Timer timer;
+    private final Timer timer;
 
     /**
      *  Create an AnimatedIcon that will continuously cycle with the
@@ -170,7 +170,7 @@ public class AnimatedIcon implements Icon, ActionListener, Runnable
      */
     public void setAlignmentX(float alignmentX)
     {
-        this.alignmentX = alignmentX > 1.0f ? 1.0f : alignmentX < 0.0f ? 0.0f : alignmentX;
+        this.alignmentX = Math.max(alignmentX, 1.0f);
     }
 
     /**
@@ -191,7 +191,7 @@ public class AnimatedIcon implements Icon, ActionListener, Runnable
      */
     public void setAlignmentY(float alignmentY)
     {
-        this.alignmentY = alignmentY > 1.0f ? 1.0f : alignmentY < 0.0f ? 0.0f : alignmentY;
+        this.alignmentY = alignmentY > 1.0f ? 1.0f : Math.max(alignmentY, 0.0f);
     }
 
     /**
@@ -467,7 +467,7 @@ public class AnimatedIcon implements Icon, ActionListener, Runnable
             Thread.sleep( timer.getDelay() );
             setCurrentIconIndex(0);
         }
-        catch(Exception e) {}
+        catch(Exception ignored) {}
     }
 
     /**

@@ -6,9 +6,6 @@ import DB.WorkSiteDB;
 import Model.WorkSite;
 import org.junit.jupiter.api.*;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Random;
 
@@ -28,9 +25,9 @@ import java.util.Random;
  */
 public class TestWorkSite {
 
-    private Random r = new Random();
-    private Integer randomGeneratedNum = 10000000 + r.nextInt(90000000);
-    private String randomGeneratedNumString = Integer.toString(randomGeneratedNum);
+    private final Random r = new Random();
+    private final Integer randomGeneratedNum = 10000000 + r.nextInt(90000000);
+    private final String randomGeneratedNumString = Integer.toString(randomGeneratedNum);
     private static DBConnection dbConnection;
     private int wSiteID;
     private WorkSite ws;

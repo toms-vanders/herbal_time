@@ -41,7 +41,7 @@ public class Dashboard extends JPanel {
     private JTable workTaskListTable;
     private WorkTaskDataModel workTaskModel;
     private WorkTaskCtrIF workTaskController;
-    private SeasonalWorker currentWorker;
+    private final SeasonalWorker currentWorker;
     private JPanel subDashboard;
     static final String WorkListScreen = "WorkListScreen";
     static final String RegisterTask = "RegisterTask";

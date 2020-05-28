@@ -5,6 +5,18 @@ import Model.Produce;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Implements ListCellRenderer to render list with collected produce on the work site.
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0
+ *
+ * Date: 29.05.2020
+ */
 public class CheckBoxListCellRenderer extends JCheckBox implements ListCellRenderer<Produce> {
 
     @Override

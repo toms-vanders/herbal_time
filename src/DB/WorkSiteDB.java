@@ -3,7 +3,11 @@ package DB;
 import Controller.DataAccessException;
 import Model.WorkSite;
 import Model.WorkType;
-import java.sql.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -538,10 +542,10 @@ public class WorkSiteDB implements WorkSiteDBIF {
 //                currentWorkSite.setClientCvr(rs.getString("cvr"));
             if (fullAssociation) {
                 WorkTypeDB wtDB = new WorkTypeDB();
-                List<WorkType> workTypes = new ArrayList<>(wtDB.findAllWorkTypesOfWorkSite(
+                ArrayList<WorkType> workTypes = new ArrayList<>(wtDB.findAllWorkTypesOfWorkSite(
                         rs.getInt("workSiteID")));
                 if (!workTypes.isEmpty()) {
-                    currentWorkSite.setWorkTypes((ArrayList<WorkType>) workTypes);
+                    currentWorkSite.setWorkTypes(workTypes);
                 } else {
                     currentWorkSite.setWorkTypes(new ArrayList<>());
                 }

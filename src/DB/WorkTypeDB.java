@@ -3,7 +3,6 @@ package DB;
 import Controller.DataAccessException;
 import Model.WorkType;
 
-import java.lang.reflect.Type;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -274,7 +273,7 @@ public class WorkTypeDB implements WorkTypeDBIF {
             throw new DataAccessException("Issue preparing statement", e);
         }
 
-        Integer affectedRows;
+        int affectedRows;
         try {
             PSupdateWorkType.setString(1, newWorkType.getDescOfJob());
             PSupdateWorkType.setString(2, newWorkType.getTypeOfProduce());

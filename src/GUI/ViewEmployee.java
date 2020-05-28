@@ -1,59 +1,47 @@
 package GUI;
 
+import GUI.Components.ComponentsConfigure;
 import Model.Employee;
 
-/**
- *
- *
- */
-public class ViewEmployee extends javax.swing.JFrame {
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.util.Arrays;
+
+public class ViewEmployee extends JFrame {
+
     // TODO a lot of unused components
-    private javax.swing.JLabel addressLabel;
-    private javax.swing.JLabel addressValue;
-    private javax.swing.JLabel countryLabel;
-    private javax.swing.JLabel countryValue;
-    private javax.swing.JLabel cprLabel;
-    private javax.swing.JLabel cprValue;
-    private javax.swing.JLabel dobLabel;
-    private javax.swing.JLabel dobValue;
-    private javax.swing.JLabel emailLabel;
-    private javax.swing.JLabel emailValue;
-    private javax.swing.JLabel exitBtn;
-    private javax.swing.JLabel exitBtn1;
-    private javax.swing.JLabel exitBtn2;
-    private javax.swing.JLabel exitBtn3;
-    private javax.swing.JLabel fnameLabel;
-    private javax.swing.JLabel fnameValue;
-    private javax.swing.JLabel frameTitle;
-    private javax.swing.JLabel frameTitle1;
-    private javax.swing.JLabel frameTitle2;
-    private javax.swing.JLabel frameTitle3;
-    private javax.swing.JLabel lnameLabel;
-    private javax.swing.JLabel lnameValue;
-    private javax.swing.JPanel mainContainer;
-    private javax.swing.JLabel maximizeBtn;
-    private javax.swing.JLabel maximizeBtn1;
-    private javax.swing.JLabel maximizeBtn2;
-    private javax.swing.JLabel maximizeBtn3;
-    private javax.swing.JLabel minimizeBtn;
-    private javax.swing.JLabel minimizeBtn1;
-    private javax.swing.JLabel minimizeBtn2;
-    private javax.swing.JLabel minimizeBtn3;
-    private javax.swing.JList<String> paymentslipsList;
-    private javax.swing.JLabel phoneLabel;
-    private javax.swing.JLabel phoneValue;
-    private javax.swing.JLabel postalCodeLabel;
-    private javax.swing.JLabel postalCodeValue;
-    private javax.swing.JLabel profilePicture;
-    private javax.swing.JScrollPane scrollabelPaymentSlips;
-    private javax.swing.JScrollPane scrollableSeasonalWorkers;
-    private javax.swing.JList<String> seasonalWorkersList;
-    private javax.swing.JLabel sexLabel;
-    private javax.swing.JLabel sexValue;
-    private javax.swing.JPanel topBar;
-    private javax.swing.JPanel topBar1;
-    private javax.swing.JPanel topBar2;
-    private javax.swing.JPanel topBar3;
+    private JLabel addressLabel;
+    private JLabel addressValue;
+    private JLabel countryLabel;
+    private JLabel countryValue;
+    private JLabel cprLabel;
+    private JLabel cprValue;
+    private JLabel dobLabel;
+    private JLabel dobValue;
+    private JLabel emailLabel;
+    private JLabel emailValue;
+    private JLabel exitBtn;
+    private JLabel fnameLabel;
+    private JLabel fnameValue;
+    private JLabel frameTitle;
+    private JLabel lnameLabel;
+    private JLabel lnameValue;
+    private JPanel mainContainer;
+    private JLabel maximizeBtn;
+    private JLabel minimizeBtn;
+    private JList<String> paymentslipsList;
+    private JLabel phoneLabel;
+    private JLabel phoneValue;
+    private JLabel postalCodeLabel;
+    private JLabel postalCodeValue;
+    private JLabel profilePicture;
+    private JScrollPane scrollabelPaymentSlips;
+    private JScrollPane scrollableSeasonalWorkers;
+    private JList<String> seasonalWorkersList;
+    private JLabel sexLabel;
+    private JLabel sexValue;
+    private JPanel topBar;
 
     private Employee employee;
 
@@ -68,373 +56,274 @@ public class ViewEmployee extends javax.swing.JFrame {
     public ViewEmployee() {
     }
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-         */
+    public void start() {
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Windows".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ViewEmployee.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ViewEmployee.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ViewEmployee.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(ViewEmployee.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ViewEmployee().setVisible(true);
-            }
-        });
+        EventQueue.invokeLater(() -> new ViewEmployee(employee).setVisible(true));
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private void initComponents() {
 
-        mainContainer = new javax.swing.JPanel();
-        topBar3 = new javax.swing.JPanel();
-        maximizeBtn3 = new javax.swing.JLabel();
-        exitBtn3 = new javax.swing.JLabel();
-        minimizeBtn3 = new javax.swing.JLabel();
-        frameTitle3 = new javax.swing.JLabel();
-        profilePicture = new javax.swing.JLabel();
-        fnameLabel = new javax.swing.JLabel();
-        fnameValue = new javax.swing.JLabel();
-        lnameLabel = new javax.swing.JLabel();
-        lnameValue = new javax.swing.JLabel();
-        emailLabel = new javax.swing.JLabel();
-        emailValue = new javax.swing.JLabel();
-        dobLabel = new javax.swing.JLabel();
-        dobValue = new javax.swing.JLabel();
-        sexLabel = new javax.swing.JLabel();
-        sexValue = new javax.swing.JLabel();
-        postalCodeLabel = new javax.swing.JLabel();
-        postalCodeValue = new javax.swing.JLabel();
-        phoneLabel = new javax.swing.JLabel();
-        phoneValue = new javax.swing.JLabel();
-        addressLabel = new javax.swing.JLabel();
-        addressValue = new javax.swing.JLabel();
-        countryLabel = new javax.swing.JLabel();
-        countryValue = new javax.swing.JLabel();
-        cprLabel = new javax.swing.JLabel();
-        cprValue = new javax.swing.JLabel();
-        scrollableSeasonalWorkers = new javax.swing.JScrollPane();
-        seasonalWorkersList = new javax.swing.JList<>();
-        scrollabelPaymentSlips = new javax.swing.JScrollPane();
-        paymentslipsList = new javax.swing.JList<>();
+        mainContainer = new JPanel();
+        topBar = new JPanel();
+        maximizeBtn = new JLabel();
+        exitBtn = new JLabel();
+        minimizeBtn = new JLabel();
+        frameTitle = new JLabel();
+        profilePicture = new JLabel();
+        fnameLabel = new JLabel();
+        fnameValue = new JLabel();
+        lnameLabel = new JLabel();
+        lnameValue = new JLabel();
+        emailLabel = new JLabel();
+        emailValue = new JLabel();
+        dobLabel = new JLabel();
+        dobValue = new JLabel();
+        sexLabel = new JLabel();
+        sexValue = new JLabel();
+        postalCodeLabel = new JLabel();
+        postalCodeValue = new JLabel();
+        phoneLabel = new JLabel();
+        phoneValue = new JLabel();
+        addressLabel = new JLabel();
+        addressValue = new JLabel();
+        countryLabel = new JLabel();
+        countryValue = new JLabel();
+        cprLabel = new JLabel();
+        cprValue = new JLabel();
+        scrollableSeasonalWorkers = new JScrollPane();
+        seasonalWorkersList = new JList<>();
+        scrollabelPaymentSlips = new JScrollPane();
+        paymentslipsList = new JList<>();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("View Employee");
         setUndecorated(true);
-        setPreferredSize(new java.awt.Dimension(800, 600));
+        setPreferredSize(new Dimension(800, 600));
 
-        mainContainer.setBackground(new java.awt.Color(23, 35, 51));
+        mainContainer.setBackground(new Color(23, 35, 51));
 
-        topBar3.setBackground(new java.awt.Color(120, 168, 252));
+        frameTitle.setFont(new Font("Dialog", Font.BOLD, 24));
+        frameTitle.setText("CS Works Employee view");
 
-        maximizeBtn3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons8_maximize_button_32px.png"))); // NOI18N
+        ComponentsConfigure.createTopBar(topBar,frameTitle,minimizeBtn,maximizeBtn,exitBtn,new Color(120,168,252),this);
 
-        exitBtn3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons8_close_window_32px.png"))); // NOI18N
+        profilePicture.setIcon(ComponentsConfigure.defaultProfile);
 
-        minimizeBtn3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons8_minimize_window_32px_1.png"))); // NOI18N
-        minimizeBtn3.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                minimizeBtn3MousePressed(evt);
-            }
-        });
+        configureLabel(fnameLabel,
+                fnameValue,
+                lnameLabel,
+                lnameValue,
+                emailLabel,
+                emailValue,
+                dobLabel,
+                dobValue,
+                sexLabel,
+                sexValue,
+                postalCodeLabel,
+                postalCodeValue,
+                phoneLabel,
+                phoneValue,
+                addressLabel,
+                addressValue,
+                countryLabel,
+                countryValue,
+                cprLabel,
+                cprValue);
 
-        frameTitle3.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        frameTitle3.setText("CS Works");
-
-        javax.swing.GroupLayout topBar3Layout = new javax.swing.GroupLayout(topBar3);
-        topBar3.setLayout(topBar3Layout);
-        topBar3Layout.setHorizontalGroup(
-                topBar3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, topBar3Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(frameTitle3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(minimizeBtn3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(maximizeBtn3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(exitBtn3)
-                                .addContainerGap())
-        );
-        topBar3Layout.setVerticalGroup(
-                topBar3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, topBar3Layout.createSequentialGroup()
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(topBar3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(frameTitle3)
-                                        .addGroup(topBar3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(minimizeBtn3)
-                                                .addComponent(exitBtn3)
-                                                .addComponent(maximizeBtn3)))
-                                .addContainerGap())
-        );
-
-        profilePicture.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons8_github_96px.png"))); // NOI18N
-        profilePicture.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                profilePictureMousePressed(evt);
-            }
-        });
-
-        fnameLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        fnameLabel.setForeground(new java.awt.Color(255, 255, 255));
         fnameLabel.setText("Firstname:");
-
-        fnameValue.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        fnameValue.setForeground(new java.awt.Color(255, 255, 255));
         fnameValue.setText(employee.getFname());
 
-        lnameLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        lnameLabel.setForeground(new java.awt.Color(255, 255, 255));
         lnameLabel.setText("Lastname:");
-
-        lnameValue.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        lnameValue.setForeground(new java.awt.Color(255, 255, 255));
         lnameValue.setText(employee.getLname());
 
-        emailLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        emailLabel.setForeground(new java.awt.Color(255, 255, 255));
         emailLabel.setText("Email:");
-
-        emailValue.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        emailValue.setForeground(new java.awt.Color(255, 255, 255));
         emailValue.setText(employee.getEmail());
 
-        dobLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        dobLabel.setForeground(new java.awt.Color(255, 255, 255));
         dobLabel.setText("Date of birth:");
-
-        dobValue.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        dobValue.setForeground(new java.awt.Color(255, 255, 255));
         dobValue.setText(String.valueOf(employee.getDob()));
 
-        sexLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        sexLabel.setForeground(new java.awt.Color(255, 255, 255));
         sexLabel.setText("Sex:");
-
-        sexValue.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        sexValue.setForeground(new java.awt.Color(255, 255, 255));
         sexValue.setText(String.valueOf(employee.getSex()));
 
-        postalCodeLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        postalCodeLabel.setForeground(new java.awt.Color(255, 255, 255));
         postalCodeLabel.setText("Postal code:");
-
-        postalCodeValue.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        postalCodeValue.setForeground(new java.awt.Color(255, 255, 255));
         postalCodeValue.setText(String.valueOf(employee.getZip()));
 
-        phoneLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        phoneLabel.setForeground(new java.awt.Color(255, 255, 255));
         phoneLabel.setText("Phone:");
-
-        phoneValue.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        phoneValue.setForeground(new java.awt.Color(255, 255, 255));
         phoneValue.setText(employee.getPhoneNum());
 
-        addressLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        addressLabel.setForeground(new java.awt.Color(255, 255, 255));
         addressLabel.setText("Address: ");
-
-        addressValue.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        addressValue.setForeground(new java.awt.Color(255, 255, 255));
         addressValue.setText(employee.getStreetName() + " " + employee.getStreetNum());
 
-        countryLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        countryLabel.setForeground(new java.awt.Color(255, 255, 255));
         countryLabel.setText("Country:");
-
-        countryValue.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        countryValue.setForeground(new java.awt.Color(255, 255, 255));
         countryValue.setText(employee.getCountry());
 
-        cprLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        cprLabel.setForeground(new java.awt.Color(255, 255, 255));
         cprLabel.setText("CPR:");
-
-        cprValue.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        cprValue.setForeground(new java.awt.Color(255, 255, 255));
         cprValue.setText(String.valueOf(employee.getCpr()));
 
-        seasonalWorkersList.setBackground(new java.awt.Color(23, 35, 51));
-        seasonalWorkersList.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Seasonal Workers", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12), new java.awt.Color(255, 255, 255))); // NOI18N
-        seasonalWorkersList.setForeground(new java.awt.Color(255, 255, 255));
-        seasonalWorkersList.setModel(new javax.swing.AbstractListModel<String>() {
+        seasonalWorkersList.setBackground(new Color(23, 35, 51));
+        seasonalWorkersList.setBorder(BorderFactory.createTitledBorder(null, "Seasonal Workers", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("Dialog", Font.BOLD, 12), new Color(255, 255, 255)));
+        seasonalWorkersList.setForeground(new Color(255, 255, 255));
+        seasonalWorkersList.setModel(new AbstractListModel<String>() {
             // TODO
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            final String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
         scrollableSeasonalWorkers.setViewportView(seasonalWorkersList);
 
-        paymentslipsList.setBackground(new java.awt.Color(23, 35, 51));
-        paymentslipsList.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Paymentslips", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12), new java.awt.Color(255, 255, 255))); // NOI18N
-        paymentslipsList.setForeground(new java.awt.Color(255, 255, 255));
-        paymentslipsList.setModel(new javax.swing.AbstractListModel<String>() {
+        paymentslipsList.setBackground(new Color(23, 35, 51));
+        paymentslipsList.setBorder(BorderFactory.createTitledBorder(null, "Paymentslips", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("Dialog", Font.BOLD, 12), new Color(255, 255, 255)));
+        paymentslipsList.setForeground(new Color(255, 255, 255));
+        paymentslipsList.setModel(new AbstractListModel<String>() {
             // TODO
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            final String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
         scrollabelPaymentSlips.setViewportView(paymentslipsList);
 
-        javax.swing.GroupLayout mainContainerLayout = new javax.swing.GroupLayout(mainContainer);
+        GroupLayout mainContainerLayout = new GroupLayout(mainContainer);
         mainContainer.setLayout(mainContainerLayout);
         mainContainerLayout.setHorizontalGroup(
-                mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(topBar3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(topBar, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(mainContainerLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addGroup(mainContainerLayout.createSequentialGroup()
-                                                .addComponent(profilePicture, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(profilePicture, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
                                                 .addGap(18, 18, 18)
-                                                .addGroup(mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                         .addComponent(fnameLabel)
                                                         .addComponent(lnameLabel))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addGroup(mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                         .addComponent(fnameValue)
                                                         .addComponent(lnameValue)))
                                         .addGroup(mainContainerLayout.createSequentialGroup()
                                                 .addComponent(emailLabel)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(emailValue))
                                         .addGroup(mainContainerLayout.createSequentialGroup()
                                                 .addComponent(dobLabel)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(dobValue))
                                         .addGroup(mainContainerLayout.createSequentialGroup()
                                                 .addComponent(sexLabel)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(sexValue))
                                         .addGroup(mainContainerLayout.createSequentialGroup()
                                                 .addComponent(phoneLabel)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(phoneValue))
                                         .addGroup(mainContainerLayout.createSequentialGroup()
                                                 .addComponent(addressLabel)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(addressValue))
                                         .addGroup(mainContainerLayout.createSequentialGroup()
                                                 .addComponent(postalCodeLabel)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(postalCodeValue))
                                         .addGroup(mainContainerLayout.createSequentialGroup()
                                                 .addComponent(countryLabel)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(countryValue))
                                         .addGroup(mainContainerLayout.createSequentialGroup()
                                                 .addComponent(cprLabel)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(cprValue)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 129, Short.MAX_VALUE)
-                                .addGroup(mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(scrollabelPaymentSlips, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(scrollableSeasonalWorkers, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 129, Short.MAX_VALUE)
+                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addComponent(scrollabelPaymentSlips, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 350, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(scrollableSeasonalWorkers, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 350, GroupLayout.PREFERRED_SIZE))
                                 .addContainerGap())
         );
         mainContainerLayout.setVerticalGroup(
-                mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(mainContainerLayout.createSequentialGroup()
-                                .addComponent(topBar3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(topBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addGroup(mainContainerLayout.createSequentialGroup()
-                                                .addGroup(mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(profilePicture, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                        .addComponent(profilePicture, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
                                                         .addGroup(mainContainerLayout.createSequentialGroup()
-                                                                .addGroup(mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                                         .addComponent(fnameLabel)
                                                                         .addComponent(fnameValue))
                                                                 .addGap(18, 18, 18)
-                                                                .addGroup(mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                                         .addComponent(lnameLabel)
                                                                         .addComponent(lnameValue))))
                                                 .addGap(18, 18, 18)
-                                                .addGroup(mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                         .addComponent(emailLabel)
                                                         .addComponent(emailValue))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addGroup(mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                         .addComponent(dobLabel)
                                                         .addComponent(dobValue))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addGroup(mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                         .addComponent(sexLabel)
                                                         .addComponent(sexValue)))
-                                        .addComponent(scrollableSeasonalWorkers, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(scrollableSeasonalWorkers, GroupLayout.PREFERRED_SIZE, 250, GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addGroup(mainContainerLayout.createSequentialGroup()
-                                                .addGroup(mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                         .addComponent(phoneValue)
                                                         .addComponent(phoneLabel))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addGroup(mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                         .addComponent(addressLabel)
                                                         .addComponent(addressValue))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addGroup(mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                         .addComponent(postalCodeLabel)
                                                         .addComponent(postalCodeValue))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addGroup(mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                         .addComponent(countryLabel)
                                                         .addComponent(countryValue))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addGroup(mainContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                         .addComponent(cprLabel)
                                                         .addComponent(cprValue)))
-                                        .addComponent(scrollabelPaymentSlips, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(scrollabelPaymentSlips, GroupLayout.PREFERRED_SIZE, 250, GroupLayout.PREFERRED_SIZE))
                                 .addContainerGap())
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(mainContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(mainContainer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(mainContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(mainContainer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
-    }// </editor-fold>
-
-    private void minimizeBtn3MousePressed(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
+        setLocationRelativeTo(null);
     }
 
-    private void profilePictureMousePressed(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
+    private void configureLabel(JLabel ...label){
+        Arrays.stream(label).forEach((l) -> {
+            l.setFont(new Font("Dialog", Font.BOLD, 24));
+            l.setForeground(new Color(255, 255, 255));
+        });
     }
+
 }

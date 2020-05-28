@@ -19,7 +19,7 @@ public class ProduceCheckList extends javax.swing.JFrame {
     private javax.swing.JLabel maximizeBtn;
     private javax.swing.JLabel exitBtn;
     private javax.swing.JLabel minimizeBtn;
-    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel frameTitle;
     private javax.swing.JList<Produce> jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel topBar;
@@ -90,7 +90,7 @@ public class ProduceCheckList extends javax.swing.JFrame {
                 // Get index of item clicked
 
                 int index = list.locationToIndex(event.getPoint());
-                Produce item = (Produce) list.getModel()
+                Produce item = list.getModel()
                         .getElementAt(index);
 
                 // Toggle selected state
@@ -111,7 +111,7 @@ public class ProduceCheckList extends javax.swing.JFrame {
         maximizeBtn = new javax.swing.JLabel();
         exitBtn = new javax.swing.JLabel();
         minimizeBtn = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
+        frameTitle = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
 //        jList1 = new javax.swing.JList();
         jButton1 = new javax.swing.JButton();
@@ -124,39 +124,10 @@ public class ProduceCheckList extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(71, 120, 197));
 
-        ComponentsConfigure.topBarConfig(topBar,this,new Color(120, 168, 252));
-        ComponentsConfigure.topBarButtons(minimizeBtn,maximizeBtn,exitBtn,this);
+        ComponentsConfigure.createTopBar(topBar,frameTitle,minimizeBtn,maximizeBtn,exitBtn, new Color(120,168,252),this);
 
-        jLabel4.setFont(new java.awt.Font("Dialog", Font.BOLD, 24)); // NOI18N
-        jLabel4.setText("CS Works");
-
-        javax.swing.GroupLayout topBarLayout = new javax.swing.GroupLayout(topBar);
-        topBar.setLayout(topBarLayout);
-        topBarLayout.setHorizontalGroup(
-            topBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, topBarLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 167, Short.MAX_VALUE)
-                .addComponent(minimizeBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(maximizeBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(exitBtn)
-                .addContainerGap())
-        );
-        topBarLayout.setVerticalGroup(
-            topBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, topBarLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(topBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel4)
-                    .addGroup(topBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(minimizeBtn)
-                        .addComponent(exitBtn)
-                        .addComponent(maximizeBtn)))
-                .addContainerGap())
-        );
+        frameTitle.setFont(new java.awt.Font("Dialog", Font.BOLD, 24)); // NOI18N
+        frameTitle.setText("CS Works");
 
 //        jList1.setModel(new javax.swing.AbstractListModel<String>(){
 //            public int getSize () {
@@ -170,11 +141,7 @@ public class ProduceCheckList extends javax.swing.JFrame {
 
         jButton1.setBackground(new java.awt.Color(71, 120, 197));
         jButton1.setText("Confirm");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

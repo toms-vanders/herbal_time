@@ -11,9 +11,9 @@ import java.util.ArrayList;
 public class WorkTaskDataModel extends DefaultTableModel {
 
     private ArrayList<WorkTask> workTasks = new ArrayList<>();
-    private String[] columnNames = {"Date", "Work type", "Hours worked", "Quantity", "Status"};
-    private WorkTaskCtrIF workTaskController;
-    private String workerCPR;
+    private final String[] columnNames = {"Date", "Work type", "Hours worked", "Quantity", "Status"};
+    private final WorkTaskCtrIF workTaskController;
+    private final String workerCPR;
 
     public WorkTaskDataModel(ArrayList<WorkTask> workTasks,String workerCPR) throws DataAccessException {
         this.workerCPR = workerCPR;

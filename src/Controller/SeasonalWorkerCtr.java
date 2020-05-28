@@ -6,13 +6,22 @@ import DB.*;
 import java.util.List;
 
 /**
- * Used to interface between the database and the GUI
+ * Used to interface between the GUI layer and SeasonalWorkerDB
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0
+ *
+ * Date: 29.05.2020
  */
 public class SeasonalWorkerCtr implements SeasonalWorkerCtrIF{
 
-    SeasonalWorkerIF seasonalWorkerDB;
+    final SeasonalWorkerDBIF seasonalWorkerDB;
 
-    public SeasonalWorkerCtr() throws DataAccessException {
+    public SeasonalWorkerCtr() {
         seasonalWorkerDB = new SeasonalWorkerDB();
     }
 

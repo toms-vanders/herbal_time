@@ -1,17 +1,22 @@
 package Tests;
 
 import Controller.DataAccessException;
-import DB.*;
-import Model.*;
+import DB.ClientDB;
+import DB.DBConnection;
+import DB.SeasonalWorkerDB;
+import DB.WorkSiteDB;
+import DB.WorkTaskDB;
+import DB.WorkTypeDB;
+import Model.Client;
+import Model.SeasonalWorker;
+import Model.WorkSite;
+import Model.WorkTask;
+import Model.WorkType;
 import org.junit.jupiter.api.*;
 
-import javax.xml.crypto.Data;
-import java.sql.Connection;
 import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Random;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 
@@ -29,12 +34,12 @@ import java.util.*;
  */
 public class IntegrationTests {
     private static DBConnection dbConnection;
-    private final Date dob = Date.valueOf(LocalDate.of(1995,06,11));
-    private final Date start = Date.valueOf(LocalDate.of(2020, 06, 11));
-    private final Date end = Date.valueOf(LocalDate.of(2025, 06, 11));
-    private Random r = new Random();
-    private Integer randomGeneratedNum = 10000000 + r.nextInt(90000000);
-    private String randomGeneratedNumString = Integer.toString(randomGeneratedNum);
+    private final Date dob = Date.valueOf(LocalDate.of(1995, 6,11));
+    private final Date start = Date.valueOf(LocalDate.of(2020, 6, 11));
+    private final Date end = Date.valueOf(LocalDate.of(2025, 6, 11));
+    private final Random r = new Random();
+    private final Integer randomGeneratedNum = 10000000 + r.nextInt(90000000);
+    private final String randomGeneratedNumString = Integer.toString(randomGeneratedNum);
 
 
     @BeforeEach
@@ -94,7 +99,7 @@ public class IntegrationTests {
     }
 
     @AfterAll
-    static void cleanUp() throws DataAccessException {
+    static void cleanUp() {
         // There probably won't need to be anything here
     }
 }

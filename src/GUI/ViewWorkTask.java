@@ -43,17 +43,8 @@ public class ViewWorkTask extends JFrame {
         this.pendingTasks = pendingTasks;
 
         WorkSiteCtrIF workSiteController;
-        try {
-            workSiteController = new WorkSiteCtr();
-        } catch (DataAccessException e) {
-            throw new DataAccessException("Unable to obtain work site controller instance.", e);
-        }
-
-        try {
-            workTaskController = new WorkTaskCtr();
-        } catch (DataAccessException e) {
-            throw new DataAccessException("Unable to obtain work task controller instance.", e);
-        }
+        workSiteController = new WorkSiteCtr();
+        workTaskController = new WorkTaskCtr();
 
         try {
             workSites = new ArrayList<>();
@@ -98,7 +89,7 @@ public class ViewWorkTask extends JFrame {
 
         updateProduceList();
 
-        JPanel jPanel1 = new JPanel();
+        JPanel mainContainer = new JPanel();
         JPanel topBar = new JPanel();
         JLabel maximizeBtn = new JLabel();
         JLabel exitBtn = new JLabel();
@@ -132,41 +123,13 @@ public class ViewWorkTask extends JFrame {
         setMaximumSize(new Dimension(800, 565));
         setMinimumSize(new Dimension(800, 565));
 
-        jPanel1.setBackground(new Color(71, 120, 197));
+        mainContainer.setBackground(new Color(71, 120, 197));
 
-        ComponentsConfigure.topBarConfig(topBar,this, new Color(120,168,252));
-        ComponentsConfigure.topBarButtons(minimizeBtn, maximizeBtn, exitBtn,this);
 
         frameTitle.setFont(new Font("Dialog", Font.BOLD, 24));
         frameTitle.setText("Reviewing work task");
 
-        GroupLayout topBarLayout = new GroupLayout(topBar);
-        topBar.setLayout(topBarLayout);
-        topBarLayout.setHorizontalGroup(
-                topBarLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(GroupLayout.Alignment.TRAILING, topBarLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(frameTitle)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(minimizeBtn)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(maximizeBtn)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(exitBtn)
-                                .addContainerGap())
-        );
-        topBarLayout.setVerticalGroup(
-                topBarLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(GroupLayout.Alignment.TRAILING, topBarLayout.createSequentialGroup()
-                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(topBarLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                        .addComponent(frameTitle)
-                                        .addGroup(topBarLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                .addComponent(minimizeBtn)
-                                                .addComponent(exitBtn)
-                                                .addComponent(maximizeBtn)))
-                                .addContainerGap())
-        );
+        ComponentsConfigure.createTopBar(topBar,frameTitle,minimizeBtn,maximizeBtn,exitBtn,new Color(120,168,252),this);
 
         profilePicture.setIcon(new ImageIcon(getClass().getResource("/icons8_github_96px.png")));
 
@@ -235,69 +198,69 @@ public class ViewWorkTask extends JFrame {
         cancelBtn.setText("Cancel");
         cancelBtn.addActionListener((e) -> this.dispose());
 
-        GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-                jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        GroupLayout mainContainerLayout = new GroupLayout(mainContainer);
+        mainContainer.setLayout(mainContainerLayout);
+        mainContainerLayout.setHorizontalGroup(
+                mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(topBar, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(GroupLayout.Alignment.TRAILING, mainContainerLayout.createSequentialGroup()
+                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                        .addGroup(mainContainerLayout.createSequentialGroup()
                                                 .addGap(0, 0, Short.MAX_VALUE)
                                                 .addComponent(endDatePicker, GroupLayout.PREFERRED_SIZE, 270, GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGroup(mainContainerLayout.createSequentialGroup()
+                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                        .addGroup(mainContainerLayout.createSequentialGroup()
                                                                 .addGap(135, 135, 135)
                                                                 .addComponent(profilePicture, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
-                                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                                        .addGroup(mainContainerLayout.createSequentialGroup()
                                                                 .addGap(89, 89, 89)
-                                                                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                                         .addComponent(fnameLabel)
                                                                         .addComponent(lnameLabel, GroupLayout.Alignment.TRAILING))
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                                         .addComponent(fnameValue)
                                                                         .addComponent(lnameValue))))
                                                 .addGap(100, 100, 100)
-                                                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                        .addGroup(mainContainerLayout.createSequentialGroup()
                                                                 .addComponent(locationLabel)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                                 .addComponent(locationList, GroupLayout.PREFERRED_SIZE, 270, GroupLayout.PREFERRED_SIZE))
-                                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                                        .addGroup(mainContainerLayout.createSequentialGroup()
                                                                 .addComponent(produceLabel)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                                 .addComponent(produceList, GroupLayout.PREFERRED_SIZE, 270, GroupLayout.PREFERRED_SIZE))
-                                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                                                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                        .addGroup(mainContainerLayout.createSequentialGroup()
+                                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                                         .addComponent(locationDescriptorLabel, GroupLayout.PREFERRED_SIZE, 399, GroupLayout.PREFERRED_SIZE)
                                                                         .addComponent(produceDescriptorLabel, GroupLayout.PREFERRED_SIZE, 399, GroupLayout.PREFERRED_SIZE))
                                                                 .addGap(0, 13, Short.MAX_VALUE))))
-                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGroup(mainContainerLayout.createSequentialGroup()
                                                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                                        .addGroup(mainContainerLayout.createSequentialGroup()
                                                                 .addComponent(approveBtn, GroupLayout.PREFERRED_SIZE, 180, GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(saveChangesBtn, GroupLayout.PREFERRED_SIZE, 180, GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(cancelBtn, GroupLayout.PREFERRED_SIZE, 180, GroupLayout.PREFERRED_SIZE))
-                                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                                        .addGroup(mainContainerLayout.createSequentialGroup()
                                                                 .addComponent(statusLabel)
                                                                 .addGap(51, 51, 51)
                                                                 .addComponent(statusPicker, GroupLayout.PREFERRED_SIZE, 270, GroupLayout.PREFERRED_SIZE))))
-                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGroup(mainContainerLayout.createSequentialGroup()
                                                 .addGap(34, 34, 34)
                                                 .addComponent(emailLabel)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(emailValue)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                         .addComponent(startDatePicker, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 270, GroupLayout.PREFERRED_SIZE)
-                                                        .addGroup(GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                        .addGroup(GroupLayout.Alignment.TRAILING, mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                                 .addComponent(endDateLabel)
-                                                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                                                .addGroup(mainContainerLayout.createSequentialGroup()
                                                                         .addComponent(quantityLabel)
                                                                         .addGap(31, 31, 31)
                                                                         .addComponent(quantitySpinner, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE)
@@ -306,58 +269,58 @@ public class ViewWorkTask extends JFrame {
                                                                 .addComponent(startDateLabel)))))
                                 .addGap(14, 14, 14))
         );
-        jPanel1Layout.setVerticalGroup(
-                jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
+        mainContainerLayout.setVerticalGroup(
+                mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(mainContainerLayout.createSequentialGroup()
                                 .addComponent(topBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addGroup(mainContainerLayout.createSequentialGroup()
+                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                         .addComponent(locationLabel)
                                                         .addComponent(locationList, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE))
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(locationDescriptorLabel, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                         .addComponent(produceList, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(produceLabel))
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(produceDescriptorLabel, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
-                                                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                         .addComponent(startDateLabel)
                                                         .addComponent(startDatePicker, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                                 .addGap(18, 18, 18)
-                                                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                         .addComponent(endDateLabel)
                                                         .addComponent(endDatePicker, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                                 .addGap(18, 18, 18)
-                                                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                         .addComponent(quantityLabel)
                                                         .addComponent(quantityPicker, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(quantitySpinner, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE))
                                                 .addGap(18, 18, 18)
-                                                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                         .addComponent(statusLabel)
                                                         .addComponent(statusPicker, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE))
                                                 .addGap(30, 30, 30))
-                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGroup(mainContainerLayout.createSequentialGroup()
                                                 .addComponent(profilePicture, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                         .addComponent(fnameLabel)
                                                         .addComponent(fnameValue))
                                                 .addGap(18, 18, 18)
-                                                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                         .addComponent(lnameValue)
                                                         .addComponent(lnameLabel))
                                                 .addGap(18, 18, 18)
-                                                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                         .addComponent(emailLabel)
                                                         .addComponent(emailValue))
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addGroup(mainContainerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(cancelBtn, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(saveChangesBtn, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(approveBtn, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE))
@@ -368,11 +331,11 @@ public class ViewWorkTask extends JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(mainContainer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(mainContainer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         setUndecorated(true);

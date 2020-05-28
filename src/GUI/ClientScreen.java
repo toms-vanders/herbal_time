@@ -30,11 +30,7 @@ public class ClientScreen extends JPanel {
 
     private void initComponents() throws DataAccessException {
 
-        try{
-            clientController = new ClientCtr();
-        }catch(DataAccessException e){
-            throw new DataAccessException("Unable to retrieve client controller.",e);
-        }
+        clientController = new ClientCtr();
 
         JPanel topBar = new JPanel();
         JLabel taskTitle = new JLabel();

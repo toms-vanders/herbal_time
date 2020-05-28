@@ -1,10 +1,10 @@
 package DB;
 
-import Controller.*;
-import Model.*;
+import Controller.DataAccessException;
+import Model.SeasonalWorker;
 
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.List;
 
 /**
  * User of this interface implements access to data about seasonal workers from the database.
@@ -18,7 +18,7 @@ import java.util.*;
  *
  * Date: 29.05.2020
  */
-public interface SeasonalWorkerIF {
+public interface SeasonalWorkerDBIF {
     List<SeasonalWorker> findAll(boolean fullAssociation, Type type) throws DataAccessException;
     SeasonalWorker findSeasonalWorkerByCPR(String seasonalWorkerCPR, boolean fullAssociation, Type type) throws DataAccessException;
     SeasonalWorker findSeasonalWorkerByWorkTask(int workTaskID, boolean fullAssociation, Type type) throws DataAccessException;

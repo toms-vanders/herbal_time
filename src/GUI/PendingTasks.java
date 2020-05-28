@@ -34,16 +34,8 @@ public class PendingTasks extends JPanel {
 
     private void initComponents() throws DataAccessException {
 
-        try{
-            workTaskController = new WorkTaskCtr();
-        }catch(DataAccessException e){
-            throw new DataAccessException("Unable to retrieve work task controller.",e);
-        }
-        try{
-            seasonalWorkerController = new SeasonalWorkerCtr();
-        }catch (DataAccessException e){
-            throw new DataAccessException("Unable to retrieve seasonal worker controller.",e);
-        }
+        workTaskController = new WorkTaskCtr();
+        seasonalWorkerController = new SeasonalWorkerCtr();
 
         //TODO: finish loading workTasks
         scrollableListContainer = new JScrollPane();
@@ -110,7 +102,7 @@ public class PendingTasks extends JPanel {
         }
     }
 
-    private void approveBtnActionPerformed(Integer workTaskID) throws DataAccessException {
+    private void approveBtnActionPerformed(Integer workTaskID) {
         ArrayList<Integer> idList = new ArrayList<>();
         idList.add(workTaskID);
         SwingWorker<Void,Void> loadingSwingWorker = new SwingWorker<Void, Void>() {
@@ -185,11 +177,7 @@ public class PendingTasks extends JPanel {
         ComponentsConfigure.metroBtnConfig(approveBtn);
         approveBtn.setIcon(ComponentsConfigure.approveIcon);
         approveBtn.addActionListener((e) -> {
-            try {
-                approveBtnActionPerformed(currentTask.getWorkTaskID());
-            } catch (DataAccessException dataAccessException) {
-                dataAccessException.printStackTrace();
-            }
+            approveBtnActionPerformed(currentTask.getWorkTaskID());
         });
 
         ComponentsConfigure.metroBtnConfig(viewBtn);

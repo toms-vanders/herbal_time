@@ -170,8 +170,7 @@ public class RotatedIcon implements Icon
                 double radians = Math.toRadians( degrees );
                 double sin = Math.abs( Math.sin( radians ) );
                 double cos = Math.abs( Math.cos( radians ) );
-                int width = (int)Math.floor(icon.getIconWidth() * cos + icon.getIconHeight() * sin);
-                return width;
+                return (int)Math.floor(icon.getIconWidth() * cos + icon.getIconHeight() * sin);
             }
         }
         else if (rotate == Rotate.UPSIDE_DOWN)
@@ -197,8 +196,7 @@ public class RotatedIcon implements Icon
                 double radians = Math.toRadians( degrees );
                 double sin = Math.abs( Math.sin( radians ) );
                 double cos = Math.abs( Math.cos( radians ) );
-                int height = (int)Math.floor(icon.getIconHeight() * cos + icon.getIconWidth() * sin);
-                return height;
+                return (int)Math.floor(icon.getIconHeight() * cos + icon.getIconWidth() * sin);
             }
         }
         else if (rotate == Rotate.UPSIDE_DOWN)

@@ -38,13 +38,13 @@ public class RegisterWorkTask extends JPanel {
     private JLabel taskTitle;
     private JPanel subDashboard;
 
-    private MainScreen mainScreen;
-    private Dashboard dashboard;
-    private WorkSiteCtrIF workSiteController;
-    private WorkTaskCtrIF workTaskController;
-    private SeasonalWorkerCtrIF seasonalWorkerController;
+    private final MainScreen mainScreen;
+    private final Dashboard dashboard;
+    private final WorkSiteCtrIF workSiteController;
+    private final WorkTaskCtrIF workTaskController;
+    private final SeasonalWorkerCtrIF seasonalWorkerController;
 
-    private ArrayList<WorkSite> workSites;
+    private final ArrayList<WorkSite> workSites;
     private ArrayList<WorkType> workTypes;
     private SeasonalWorker currentWorker;
 
@@ -55,23 +55,11 @@ public class RegisterWorkTask extends JPanel {
         this.dashboard = dashboard;
         this.mainScreen = mainScreen;
 
-        try {
-            seasonalWorkerController = new SeasonalWorkerCtr();
-        } catch (DataAccessException e) {
-            throw new DataAccessException("Unable to obtain seasonal worker controller instance.", e);
-        }
+        seasonalWorkerController = new SeasonalWorkerCtr();
 
-        try {
-            workSiteController = new WorkSiteCtr();
-        } catch (DataAccessException e) {
-            throw new DataAccessException("Unable to obtain work site controller instance.", e);
-        }
+        workSiteController = new WorkSiteCtr();
 
-        try {
-            workTaskController = new WorkTaskCtr();
-        } catch (DataAccessException e) {
-            throw new DataAccessException("Unable to obtain work task controller instance.", e);
-        }
+        workTaskController = new WorkTaskCtr();
 
 //        workSites = new ArrayList<>();
         try {
@@ -151,17 +139,13 @@ public class RegisterWorkTask extends JPanel {
         cancelBtn.setText("Cancel");
         cancelBtn.setIcon(ComponentsConfigure.trashIcon);
         cancelBtn.addActionListener((e) -> {
-            try {
-                new BackgroundWorker(() -> {
-                    try {
-                        dashboard.showTaskListView();
-                    } catch (DataAccessException dataAccessException) {
-                        dataAccessException.printStackTrace();
-                    }
-                },"Cancel register task","Cleaning up and returning, please wait.");
-            } catch (DataAccessException dataAccessException) {
-                dataAccessException.printStackTrace();
-            }
+            new BackgroundWorker(() -> {
+                try {
+                    dashboard.showTaskListView();
+                } catch (DataAccessException dataAccessException) {
+                    dataAccessException.printStackTrace();
+                }
+            },"Cancel register task","Cleaning up and returning, please wait.");
         });
         configureLabel(locationLabel, "Location", ComponentsConfigure.locationIcon);
         configureLabel(produceLabel, "Produce", ComponentsConfigure.vegetableIcon);
@@ -272,7 +256,12 @@ public class RegisterWorkTask extends JPanel {
         try {
             WorkType currentWorkType = (WorkType) produceList.getSelectedItem();
             Integer workSiteID = ((WorkSite) locationList.getSelectedItem()).getWorkSiteID();
-//        Integer workTypeID = currentWorkType.getWorkTypeID(); // TODO is never used
+            if (startDatePicker.getDateTimePermissive() == null || endDatePicker.getDateTimePermissive() == null) {
+                new StatusDialog(mainScreen,true, StatusDialog.WARNING,
+                        "Date field cannot be empty",
+                        "The date field cannot be empty. Please insert a correct Date value.");
+                return;
+            }
             Date startDate = Date.valueOf(startDatePicker.getDateTimePermissive().toLocalDate());
             Date endDate = Date.valueOf(endDatePicker.getDateTimePermissive().toLocalDate());
             long hoursWorked = Duration.between(startDatePicker.getDateTimePermissive(), endDatePicker.getDateTimePermissive()).toHours();
@@ -282,16 +271,22 @@ public class RegisterWorkTask extends JPanel {
                 quantity = 0;
             } else {
                 quantity = (int) quantitySpinner.getValue();
+                if (quantity == 0) {
+                    new StatusDialog(mainScreen,true, StatusDialog.WARNING,
+                            "Invalid quantity",
+                            "The quantity field should not be zero, when selecting an hourly-paid work task.");
+                    return;
+                }
             }
-            // TODO
-            // check if end date is not earlier than start date
             if(endDate.before(startDate)){
-                new StatusDialog(mainScreen,true, StatusDialog.WARNING,"Date error","End Date cannot be before Starting Date, please try again.");
+                new StatusDialog(mainScreen,true, StatusDialog.WARNING,
+                        "Date error",
+                        "Start Date cannot exceed End Date, please enter the correct date.");
+                return;
             }
             // TODO (Maybe?) At least that's how it's in the report
             // should notify team leader
 
-            // Maybe this should be put in try catch too since it's calling a method inside a controller
             if (workTaskController.insertWorkTask(new WorkTask(workSiteID,
                             hoursWorked,
                             quantity,
@@ -308,6 +303,9 @@ public class RegisterWorkTask extends JPanel {
                 dashboard.showTaskListView();
             }
         } catch (Exception e) {
+            new StatusDialog(mainScreen,true, StatusDialog.WARNING,
+                    "Incorrect data",
+                    "There is a problem with the data in the work task to be registered.");
             e.printStackTrace();
             throw new DataAccessException("A problem has occured.", e);
         }
@@ -323,7 +321,7 @@ public class RegisterWorkTask extends JPanel {
         label.setForeground(new Color(249, 249, 249));
     }
 
-    private WorkSite getWorkLocation() throws DataAccessException {
+    private WorkSite getWorkLocation() {
         return new WorkSite();
     }
 

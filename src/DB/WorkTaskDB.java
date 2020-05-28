@@ -1,11 +1,9 @@
 package DB;
 
 import Controller.DataAccessException;
-import Model.*;
-import DB.WorkTypeDB;
+import Model.WorkTask;
+import Model.WorkType;
 
-import java.awt.image.DataBufferDouble;
-import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

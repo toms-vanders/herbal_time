@@ -1,14 +1,11 @@
 package Tests;
 
 import Controller.DataAccessException;
-import DB.*;
-import Model.*;
+import DB.DBConnection;
+import DB.WorkTypeDB;
+import Model.WorkType;
 import org.junit.jupiter.api.*;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.List;
 import java.util.Random;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -27,9 +24,9 @@ import java.util.Random;
  */
 public class TestWorkType {
 
-    private Random r = new Random();
-    private Integer randomGeneratedNum = 10000000 + r.nextInt(90000000);
-    private String randomGeneratedNumString = Integer.toString(randomGeneratedNum);
+    private final Random r = new Random();
+    private final Integer randomGeneratedNum = 10000000 + r.nextInt(90000000);
+    private final String randomGeneratedNumString = Integer.toString(randomGeneratedNum);
     private static DBConnection dbConnection;
     private WorkType wt;
 

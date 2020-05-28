@@ -24,7 +24,7 @@ public class EmployeeDatabaseScreen extends JFrame {
     private ArrayList<Employee> employees;
 
 
-    public EmployeeDatabaseScreen() throws DataAccessException {
+    public EmployeeDatabaseScreen() {
         try {
             initComponents();
         } catch (DataAccessException e) {
@@ -49,11 +49,7 @@ public class EmployeeDatabaseScreen extends JFrame {
         }
 
         EventQueue.invokeLater(() -> {
-            try {
-                new EmployeeDatabaseScreen().setVisible(true);
-            } catch (DataAccessException e) {
-                e.printStackTrace();
-            }
+            new EmployeeDatabaseScreen().setVisible(true);
         });
     }
 
@@ -63,11 +59,7 @@ public class EmployeeDatabaseScreen extends JFrame {
 
     private void initComponents() throws DataAccessException {
 
-        try {
-            employeeCtr = new EmployeeCtr();
-        }catch(DataAccessException e) {
-            throw new DataAccessException("Unable to obtain seasonal worker controller instance.",e);
-        }
+        employeeCtr = new EmployeeCtr();
         employees = new ArrayList<>();
         try {
             employees = new ArrayList<>(employeeCtr.findAllEmployees());
@@ -96,40 +88,11 @@ public class EmployeeDatabaseScreen extends JFrame {
         setResizable(false);
 
         mainContainer.setBackground(new Color(71, 120, 197));
-        ComponentsConfigure.topBarConfig(topBar,this,new Color(120,168,252));
 
-        ComponentsConfigure.topBarButtons(minimizeBtn,maximizeBtn,exitBtn,this);
+        ComponentsConfigure.createTopBar(topBar,frameTitle,minimizeBtn,maximizeBtn,exitBtn,new Color(120,168,252),this);
 
         frameTitle.setFont(ComponentsConfigure.defaultFont); // NOI18N
         frameTitle.setText("CS Works");
-
-        GroupLayout topBarLayout = new GroupLayout(topBar);
-        topBar.setLayout(topBarLayout);
-        topBarLayout.setHorizontalGroup(
-            topBarLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(GroupLayout.Alignment.TRAILING, topBarLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(frameTitle)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(minimizeBtn)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(maximizeBtn)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(exitBtn)
-                .addContainerGap())
-        );
-        topBarLayout.setVerticalGroup(
-            topBarLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(GroupLayout.Alignment.TRAILING, topBarLayout.createSequentialGroup()
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(topBarLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                    .addComponent(frameTitle)
-                    .addGroup(topBarLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addComponent(minimizeBtn)
-                        .addComponent(exitBtn)
-                        .addComponent(maximizeBtn)))
-                .addContainerGap())
-        );
 
         scrollableListContainer.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -375,11 +338,10 @@ public class EmployeeDatabaseScreen extends JFrame {
 
     private void infoBtnActionPerformed(ActionEvent evt,String cpr) {
         try {
-            viewEmployee = new ViewEmployee(employeeCtr.findEmployeeByCPR(cpr));
+            new ViewEmployee(employeeCtr.findEmployeeByCPR(cpr)).start();
         } catch (DataAccessException e) {
             e.printStackTrace();
         }
-        viewEmployee.setVisible(true);
     }
 
     private JPanel createListContainer() {

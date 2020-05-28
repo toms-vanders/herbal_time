@@ -67,11 +67,7 @@ public class WorkersScreen extends JFrame {
     private void initComponents() throws DataAccessException {
 
         SeasonalWorkerCtrIF seasonalWorkerController;
-        try {
-            seasonalWorkerController = new SeasonalWorkerCtr();
-        }catch(DataAccessException e) {
-            throw new DataAccessException("Unable to obtain seasonal worker controller instance.",e);
-        }
+        seasonalWorkerController = new SeasonalWorkerCtr();
         seasonalWorkers = new ArrayList<>();
         try {
             seasonalWorkers = new ArrayList<>(seasonalWorkerController.findAllSeasonalWorkers());
@@ -93,44 +89,17 @@ public class WorkersScreen extends JFrame {
 
         mainContainer.setBackground(new Color(71, 120, 197));
 
-        ComponentsConfigure.topBarConfig(topBar,this, new Color(120,168,252));
-        ComponentsConfigure.topBarButtons(minimizeBtn,maximizeBtn,exitBtn,this);
+        frameTitle.setFont(ComponentsConfigure.defaultFont);
+        frameTitle.setText("CS Works");
+
+        ComponentsConfigure.createTopBar(topBar,frameTitle,minimizeBtn,maximizeBtn,exitBtn,new Color(120,168,252),this);
 
         addBtn.setText("Add");
         ComponentsConfigure.metroBtnConfig(addBtn);
         //TODO: add button action listener
         addBtn.addActionListener(e -> {});
 
-        frameTitle.setFont(ComponentsConfigure.defaultFont);
-        frameTitle.setText("CS Works");
 
-        GroupLayout topBarLayout = new GroupLayout(topBar);
-        topBar.setLayout(topBarLayout);
-        topBarLayout.setHorizontalGroup(
-                topBarLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(GroupLayout.Alignment.TRAILING, topBarLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(frameTitle)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(minimizeBtn)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(maximizeBtn)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(exitBtn)
-                                .addContainerGap())
-        );
-        topBarLayout.setVerticalGroup(
-                topBarLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(GroupLayout.Alignment.TRAILING, topBarLayout.createSequentialGroup()
-                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(topBarLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                        .addComponent(frameTitle)
-                                        .addGroup(topBarLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                .addComponent(minimizeBtn)
-                                                .addComponent(exitBtn)
-                                                .addComponent(maximizeBtn)))
-                                .addContainerGap())
-        );
 
         scrollablePanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
