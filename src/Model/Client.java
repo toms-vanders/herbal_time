@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * @author Adrian Mihai Dohot
  * @author Damian Hrabąszcz
  * @author Toms Vanders
- * @version 1.0
+ * @version 1.0 (29.05.2020)
  *
  * Date: 29.05.2020
  */

@@ -1,6 +1,8 @@
 package GUI;
 
-import Controller.*;
+import Controller.DataModel.WorkTaskDataModel;
+import Controller.WorkTaskCtr;
+import Controller.WorkTaskCtrIF;
 import DB.DataAccessException;
 import GUI.Components.ComponentsConfigure;
 import Model.SeasonalWorker;
@@ -17,8 +19,18 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 
-import Controller.DataModel.*;
-
+/**
+ * A view extending JPanel. Is the first screen encountered after login, displays current work tasks.
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0 (29.05.2020)
+ *
+ * Date: 29.05.2020
+ */
 public class Dashboard extends JPanel {
     private final MainScreen mainScreen;
     private RegisterWorkTask registerWorkTask;
@@ -28,6 +40,12 @@ public class Dashboard extends JPanel {
     static final String WorkListScreen = "WorkListScreen";
     static final String RegisterTask = "RegisterTask";
 
+    /**
+     * Constructor for the dashboard
+     * @param mainScreen MainScreen instance for navigation
+     * @param currentWorker SeasonalWorker object to retrieve information
+     * @throws DataAccessException Thrown if there is no connection or information is incorrect within the SeasonalWorker object
+     */
     public Dashboard(MainScreen mainScreen,SeasonalWorker currentWorker) throws DataAccessException {
         this.currentWorker = currentWorker;
         this.mainScreen = mainScreen;
@@ -44,6 +62,10 @@ public class Dashboard extends JPanel {
 
     }
 
+    /**
+     * Initialize all components and layouts part of the panel.
+     * @throws DataAccessException Thrown if there is no connection or information is incorrect within the SeasonalWorker object
+     */
     private void initComponents() throws DataAccessException {
         JPanel overviewPane = new JPanel();
         JPanel overviewProfile = new JPanel();
@@ -153,11 +175,6 @@ public class Dashboard extends JPanel {
         overviewProfile.add(profileNameLabel, new AbsoluteConstraints(110, 50, -1, -1));
 
         profilePicture.setIcon(new ImageIcon(getClass().getResource("/icons8_github_96px.png"))); // NOI18N
-        profilePicture.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent evt) {
-                profilePictureMousePressed();
-            }
-        });
         overviewProfile.add(profilePicture, new AbsoluteConstraints(0, 10, 100, 100));
 
         // Damian code
@@ -260,18 +277,25 @@ public class Dashboard extends JPanel {
         subDashboard.add(registerWorkTask, RegisterTask);
     }
 
+    /**
+     * ActionListener method for the exit button
+     * used to quit from the application
+     */
     private void exitBtnMousePressed() {
         System.exit(0);
     }
 
-    private void profilePictureMousePressed() {
-        // TODO add your handling code here:
-    }
-
-    private void registerTaskBtnActionPerformed(ActionEvent evt) {
+    /**
+     * ActionListener method for displaying the register task panel
+     */
+    private void registerTaskBtnActionPerformed(ActionEvent e) {
         ((CardLayout) subDashboard.getLayout()).show(subDashboard,RegisterTask);
     }
 
+    /**
+     * ActionListener method to update the task list table and return the view for the user
+     * @throws DataAccessException Thrown if there is no connection
+     */
     void showTaskListView() throws DataAccessException {
         workTaskModel.updateData();
         ((CardLayout) subDashboard.getLayout()).show(subDashboard,WorkListScreen);

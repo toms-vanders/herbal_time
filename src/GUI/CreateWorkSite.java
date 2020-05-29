@@ -1,6 +1,9 @@
 package GUI;
 
-import Controller.*;
+import Controller.ClientCtr;
+import Controller.ClientCtrIF;
+import Controller.WorkSiteCtr;
+import Controller.WorkSiteCtrIF;
 import DB.DataAccessException;
 import DB.WorkSiteProduceDB;
 import DB.WorkSiteProduceDBIF;
@@ -19,54 +22,35 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * A view extending JPanel. Allows for management of work site registered in Herbal Time database.
+ * A view extending JPanel. Allows for creating of new work sites to insert into the Herbal Time database.
  *
  * @author Daniel Zoltan Ban
  * @author Mikuláš Dobrodej
  * @author Adrian Mihai Dohot
  * @author Damian Hrabąszcz
  * @author Toms Vanders
- * @version 1.0
+ * @version 1.0 (29.05.2020)
  *
  * Date: 29.05.2020
  */
 public class CreateWorkSite extends JPanel {
-    private JButton addWorkersBtn;
-    private JButton cancelBtn;
     private JComboBox<Client> clientComboBox;
-    private JLabel clientLabel;
-    private JButton collectedProduceBtn;
-    private JButton createBtn;
     private JTextField descriptionField;
-    private JLabel descriptionLabel;
-    private JLabel locationInfoTitle;
-    private JPanel mainContainer;
     private JTextField nameField;
-    private JLabel nameLabel;
     private JTextField postalCodeField;
-    private JLabel postalCodeLabel;
     private JTextField pricePerWorkerField;
-    private JLabel pricePerWorkerLabel;
-    private JScrollPane scrollableListContainer;
-    private JLabel streetLabel;
     private JTextField streetNameField;
     private JTextField streetNoField;
-    private JLabel taskTitle;
-    private JPanel topBar;
     private JTextField typeOfJobField;
-    private JLabel typeOfJobLabel;
-    private JList<String> workerList;
 
-    private ArrayList<Client> clients;
-
-    private Consumer<ArrayList<String>> collectedProduce;
     private ArrayList<String> collectedProduceStringList;
 
     private WorkSiteCtrIF workSiteCtr;
     private MainScreen mainScreen;
 
     /**
-     * Creates new form workSiteDashboard
+     * Constructor for the CreateWorkSite screen
+     * @param mainScreen MainScreen instance required for navigation through the views
      */
     public CreateWorkSite(MainScreen mainScreen) {
         try {
@@ -75,19 +59,24 @@ public class CreateWorkSite extends JPanel {
         } catch (DataAccessException e) {
             System.err.println("Issue obtaining connection.");
 //            e.printStackTrace();
-            // Alert the user here with e.g JDialog saying there was an issue connecting to the database.
+            new StatusDialog(mainScreen,true,StatusDialog.WARNING,"Internet connection is required.",
+                    "The system is unable to connect to the internet. " +
+                            "We are sorry for the inconvenience please try again later.");
             // TODO
             // Add a refresh button.
         }
     }
 
+    /**
+     * Initialize all components and layouts part of the panel.
+     */
     private void initComponents() throws DataAccessException {
         ClientCtrIF clientCtr;
         clientCtr = new ClientCtr();
 
         workSiteCtr = new WorkSiteCtr();
 
-        clients = new ArrayList<>();
+        ArrayList<Client> clients;
         try {
             clients = new ArrayList<>(clientCtr.findAllClients(false)); // todo - set fullAssociation to
                                                                                     // todo - FALSE temporarily
@@ -102,30 +91,30 @@ public class CreateWorkSite extends JPanel {
         clientComboBox.setRenderer(new WorkSiteClientComboBoxRenderer());
 
 
-        topBar = new JPanel();
-        taskTitle = new JLabel();
-        mainContainer = new JPanel();
-        clientLabel = new JLabel();
-        nameLabel = new JLabel();
+        JPanel topBar = new JPanel();
+        JLabel taskTitle = new JLabel();
+        JPanel mainContainer = new JPanel();
+        JLabel clientLabel = new JLabel();
+        JLabel nameLabel = new JLabel();
         nameField = new JTextField();
-        locationInfoTitle = new JLabel();
+        JLabel locationInfoTitle = new JLabel();
         streetNoField = new JTextField();
-        streetLabel = new JLabel();
+        JLabel streetLabel = new JLabel();
         streetNameField = new JTextField();
-        postalCodeLabel = new JLabel();
+        JLabel postalCodeLabel = new JLabel();
         postalCodeField = new JTextField();
-        typeOfJobLabel = new JLabel();
+        JLabel typeOfJobLabel = new JLabel();
         typeOfJobField = new JTextField();
-        collectedProduceBtn = new JButton();
-        addWorkersBtn = new JButton();
-        scrollableListContainer = new JScrollPane();
-        workerList = new JList<>();
-        cancelBtn = new JButton();
-        createBtn = new JButton();
-        pricePerWorkerLabel = new JLabel();
+        JButton collectedProduceBtn = new JButton();
+        JButton addWorkersBtn = new JButton();
+        JScrollPane scrollableListContainer = new JScrollPane();
+        JList<String> workerList = new JList<>();
+        JButton cancelBtn = new JButton();
+        JButton createBtn = new JButton();
+        JLabel pricePerWorkerLabel = new JLabel();
         pricePerWorkerField = new JTextField();
         descriptionField = new JTextField();
-        descriptionLabel = new JLabel();
+        JLabel descriptionLabel = new JLabel();
 
         setMinimumSize(new Dimension(1000, 720));
         setName(""); // NOI18N
@@ -319,43 +308,85 @@ public class CreateWorkSite extends JPanel {
         add(mainContainer, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 110, 1000, 610));
     }
 
+    /**
+     * Create a combo box for choosing clients
+     * @param clients List of Clients to choose from
+     * @return The set up combo box containing the clients
+     */
     private DefaultComboBoxModel<Client> getComboBoxModel(List<Client> clients) {
         Client[] comboBoxModel = clients.toArray(new Client[0]);
         return new DefaultComboBoxModel<>(comboBoxModel);
     }
 
+    /**
+     * Currently unused
+     * @param evt
+     */
     private void pricePerWorkerFieldActionPerformed(ActionEvent evt) {
         // TODO add your handling code here:
     }
 
+    /**
+     * Currently unused
+     * @param evt
+     */
     private void addWorkersBtnActionPerformed(ActionEvent evt) {
         // TODO add your handling code here:
     }
 
+    /**
+     * Currently unused
+     * @param evt
+     */
     private void typeOfJobFieldActionPerformed(ActionEvent evt) {
         // TODO add your handling code here:
     }
+
+    /**
+     * Currently unused
+     * @param evt
+     */
     private void postalCodeFieldActionPerformed(ActionEvent evt) {
         // TODO add your handling code here:
     }
 
+    /**
+     * Currently unused
+     * @param evt
+     */
     private void streetNameFieldActionPerformed(ActionEvent evt) {
         // TODO add your handling code here:
     }
 
+    /**
+     * Currently unused
+     * @param evt
+     */
     private void streetNoFieldActionPerformed(ActionEvent evt) {
         // TODO add your handling code here:
     }
 
+    /**
+     * Currently unused
+     * @param evt
+     */
     private void nameFieldActionPerformed(ActionEvent evt) {
         // TODO add your handling code here:
     }
 
+    /**
+     * Currently unused
+     * @param evt
+     */
     private void collectedProduceBtnActionPerformed() {
-        collectedProduce = s -> collectedProduceStringList = s;
+        Consumer<ArrayList<String>> collectedProduce = s -> collectedProduceStringList = s;
                 new ProduceCheckList(collectedProduce).setVisible(true);
     }
 
+    /**
+     * Get all the data from the input fields and attempt to create and insert the new WorkSite into the database
+     * @param evt
+     */
     private void createBtnActionPerformed(ActionEvent evt) {
         Client selectClient = (Client) clientComboBox.getSelectedItem();
         assert selectClient != null;
@@ -447,16 +478,30 @@ public class CreateWorkSite extends JPanel {
         }
     }
 
+    /**
+     * Currently unused
+     * @param evt
+     */
     private void descriptionFieldActionPerformed(ActionEvent evt) {
         // TODO add your handling code here:
     }
 
+    /**
+     * Set up all the input fields
+     * @param field JTextField to be set up
+     * @param hintText String placeholder text for theTextField
+     */
     private void configureField(JTextField field,String hintText){
         field.setUI(new JTextFieldHintUI(hintText,Color.GRAY));
         field.setMinimumSize(new Dimension(65, 26));
         field.setPreferredSize(new Dimension(65, 26));
     }
 
+    /**
+     * Set up all the labels for the input fields
+     * @param label JLabel object to be set up
+     * @param labelText String text for the label
+     */
     private void configureLabel(JLabel label, String labelText){
         label.setText(labelText);
         label.setFont(new Font("Dialog", Font.BOLD, 18));

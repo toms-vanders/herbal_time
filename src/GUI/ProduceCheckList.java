@@ -14,6 +14,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * A view extending JPanel. Used when creating a new work site to select produce to attach to the worksite.
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0 (29.05.2020)
+ *
+ * Date: 29.05.2020
+ */
 public class ProduceCheckList extends javax.swing.JFrame {
     private static Consumer<ArrayList<String>> consumer;
     private javax.swing.JButton jButton1;

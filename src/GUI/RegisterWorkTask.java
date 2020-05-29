@@ -1,6 +1,11 @@
 package GUI;
 
-import Controller.*;
+import Controller.SeasonalWorkerCtr;
+import Controller.SeasonalWorkerCtrIF;
+import Controller.WorkSiteCtr;
+import Controller.WorkSiteCtrIF;
+import Controller.WorkTaskCtr;
+import Controller.WorkTaskCtrIF;
 import DB.DataAccessException;
 import GUI.Components.BackgroundWorker;
 import GUI.Components.ComponentsConfigure;
@@ -19,6 +24,18 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A view extending JPanel. Used for workers registering a new work task into the system
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0 (29.05.2020)
+ *
+ * Date: 29.05.2020
+ */
 public class RegisterWorkTask extends JPanel {
     private JButton cancelBtn;
     private JLabel endDateLabel;
@@ -51,7 +68,12 @@ public class RegisterWorkTask extends JPanel {
 
     static final String RegisterTask = "registerTask";
 
-
+    /**
+     * Constructor for the RegisterWorkTask screen
+     * @param dashboard Dashboard instance required for creating the view
+     * @param mainScreen MainScreen instance required for creating the view
+     * @throws DataAccessException
+     */
     public RegisterWorkTask(Dashboard dashboard, MainScreen mainScreen) throws DataAccessException {
         this.dashboard = dashboard;
         this.mainScreen = mainScreen;
@@ -72,6 +94,9 @@ public class RegisterWorkTask extends JPanel {
         initComponents();
     }
 
+    /**
+     * Initialize all components and layouts part of the panel.
+     */
     private void initComponents() throws DataAccessException {
 
         locationList = new javax.swing.JComboBox<>();

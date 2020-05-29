@@ -1,6 +1,9 @@
 package GUI;
 
-import Controller.*;
+import Controller.WorkSiteCtr;
+import Controller.WorkSiteCtrIF;
+import Controller.WorkTaskCtr;
+import Controller.WorkTaskCtrIF;
 import DB.DataAccessException;
 import GUI.Components.ComponentsConfigure;
 import GUI.Components.StatusDialog;
@@ -19,6 +22,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * A view extending JFrame. Used for displaying details about a specific work task.
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0 (29.05.2020)
+ *
+ * Date: 29.05.2020
+ */
 public class ViewWorkTask extends JFrame {
     private DateTimePicker endDatePicker;
     private JComboBox<WorkSite> locationList;
@@ -38,6 +53,13 @@ public class ViewWorkTask extends JFrame {
     private final ArrayList<WorkSite> workSites;
     private ArrayList<WorkType> workTypes;
 
+    /**
+     * Constructor for the WorkTask frame
+     * @param currentTask specific WorkTask
+     * @param currentWorker specific SeasonalWorker
+     * @param pendingTasks WorkTasks having "Pending" or "Awaiting approval" as their status
+     * @throws DataAccessException
+     */
     public ViewWorkTask(WorkTask currentTask,SeasonalWorker currentWorker,PendingTasks pendingTasks) throws DataAccessException {
         this.currentTask = currentTask;
         this.currentWorker = currentWorker;
@@ -78,6 +100,9 @@ public class ViewWorkTask extends JFrame {
         });
     }
 
+    /**
+     * Initialize all components and layouts part of the panel.
+     */
     private void initComponents() {
 
         locationList = new javax.swing.JComboBox<>();
@@ -344,6 +369,12 @@ public class ViewWorkTask extends JFrame {
         setLocationRelativeTo(null);
     }
 
+
+    /**
+     * Setup all the labels for JTextFields
+     * @param label
+     * @param text
+     */
     private void configureLabel(JLabel label, String text){
         label.setFont(new Font("Dialog", Font.BOLD, 24));
         label.setForeground(new Color(255, 255, 255));

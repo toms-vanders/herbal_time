@@ -2,12 +2,1801 @@
 <Diagram>
   <ID>JAVA</ID>
   <OriginalElement />
-  <nodes />
+  <nodes>
+    <node x="12782.47144780745" y="2831.0">Model.Produce</node>
+    <node x="10916.72978114078" y="5822.0">DB.WorkSiteProduceDB</node>
+    <node x="6928.606599436202" y="8093.0">GUI.MainScreen</node>
+    <node x="7005.37589473192" y="1363.0">Model.WorkSite</node>
+    <node x="5771.085573265324" y="3905.0">GUI.Components.StatusDialog</node>
+    <node x="3830.1258947319197" y="0.0">Model.WorkType</node>
+    <node x="2091.5998168498163" y="4982.0">GUI.WorkTaskWorkTypeComboBoxRenderer</node>
+    <node x="8647.145537589064" y="5856.0">GUI.WorkSiteDashboard</node>
+    <node x="7094.12589473192" y="451.0">Model.Person</node>
+    <node x="7794.208614088217" y="3969.0">DB.EmployeeDBIF</node>
+    <node x="12797.637043785171" y="7135.0">GUI.DBStatus.StatusThread</node>
+    <node x="10911.47978114078" y="3970.0">Model.WorkSiteProduce</node>
+    <node x="12742.304781140781" y="3958.0">DB.ProduceDBIF</node>
+    <node x="3192.5998168498163" y="5922.0">Controller.DataModel.WorkTaskDataModel</node>
+    <node x="3606.87723993199" y="5657.0">GUI.RegisterWorkTask</node>
+    <node x="1271.5998168498163" y="3936.0">Controller.WorkTaskCtrIF</node>
+    <node x="7153.250280754883" y="4906.0">Controller.WorkSiteCtr</node>
+    <node x="9190.145537589065" y="2601.0">DB.WorkTypeDB</node>
+    <node x="605.7163521834545" y="7025.0">GUI.PendingTasks</node>
+    <node x="7276.550001874777" y="5987.0">Controller.EmployeeCtr</node>
+    <node x="13377.299652935653" y="4959.0">Controller.ClientCtrIF</node>
+    <node x="7925.208614088217" y="4785.0">DB.EmployeeDB</node>
+    <node x="3997.6258947319197" y="930.0">Model.SeasonalWorker</node>
+    <node x="8492.60982330335" y="1527.0">DB.DataAccessException</node>
+    <node x="13229.255725103852" y="9640.0">GUI.ClientScreen</node>
+    <node x="6985.750280754883" y="3958.0">Controller.WorkSiteCtrIF</node>
+    <node x="7521.208614088217" y="4959.0">Controller.EmployeeCtrIF</node>
+    <node x="8586.53244235097" y="4013.0">GUI.Components.BackgroundOperation</node>
+    <node x="749.6712454212447" y="495.0">Model.WorkTask</node>
+    <node x="13698.299652935653" y="3969.0">DB.ClientDBIF</node>
+    <node x="192.75160256410254" y="5789.0">GUI.ViewWorkTask</node>
+    <node x="5613.460573265324" y="5910.0">GUI.WorkersScreen</node>
+    <node x="7571.550001874777" y="5965.0">GUI.JTextFieldHintUI</node>
+    <node x="11166.579781140783" y="3992.0">GUI.WorkSiteClientComboBoxRenderer</node>
+    <node x="9559.145537589065" y="2786.0">DB.WorkSiteDBIF</node>
+    <node x="9800.879781140782" y="548.0">DB.WorkTypeDBIF</node>
+    <node x="10247.704781140783" y="1375.0">DB.DBConnection</node>
+    <node x="13470.065248913375" y="7068.0">GUI.CreateClient</node>
+    <node x="4179.5439065986575" y="2808.0">DB.SeasonalWorkerDBIF</node>
+    <node x="12801.304781140781" y="4752.0">DB.ProduceDB</node>
+    <node x="10658.329781140783" y="4948.0">DB.WorkSiteProduceDBIF</node>
+    <node x="478.31410256410254" y="2808.0">DB.WorkTaskDBIF</node>
+    <node x="3183.734209326311" y="7134.0">GUI.Dashboard</node>
+    <node x="6115.462370541748" y="2755.0">GUI.Components.RotatedIcon</node>
+    <node x="12030.797649845776" y="5855.0">GUI.ProduceCheckList</node>
+    <node x="10623.292405297005" y="6782.0">GUI.CreateWorkSite</node>
+    <node x="6808.300001874777" y="7013.0">GUI.EmployeeDatabaseScreen</node>
+    <node x="7354.958614088217" y="3597.0">GUI.ViewEmployee</node>
+    <node x="13787.841319602321" y="5987.0">Controller.ClientCtr</node>
+    <node x="5773.581022937048" y="7123.0">GUI.LoginScreen</node>
+    <node x="4607.5439065986575" y="3696.0">DB.SeasonalWorkerDB</node>
+    <node x="14008.299652935653" y="4785.0">DB.ClientDB</node>
+    <node x="5163.710573265324" y="4906.0">Controller.SeasonalWorkerCtr</node>
+    <node x="3943.793906598657" y="3958.0">Controller.SeasonalWorkerCtrIF</node>
+    <node x="11779.138114474117" y="559.0">Controller.WorkTypeCtrIF</node>
+    <node x="8468.03244235097" y="5003.0">GUI.Components.BackgroundWorker</node>
+    <node x="12391.77871045184" y="5997.0">GUI.DBStatus.Status</node>
+    <node x="12129.304781140781" y="4013.0">GUI.CheckBoxListCellRenderer</node>
+    <node x="13397.666319602322" y="2700.0">Model.Client</node>
+    <node x="11783.304781140781" y="3916.0">Controller.WorkTypeCtr</node>
+    <node x="9589.520537589065" y="3630.0">DB.WorkSiteDB</node>
+    <node x="1703.5998168498163" y="4884.0">Controller.WorkTaskCtr</node>
+    <node x="5806.462370541748" y="2426.0">GUI.Components.AnimatedIcon</node>
+    <node x="2721.5998168498163" y="4982.0">GUI.WorkTaskWorkSiteComboBoxRenderer</node>
+    <node x="5339.924530792908" y="2578.0">GUI.Components.ComponentsConfigure</node>
+    <node x="7522.708614088217" y="2821.0">Model.Employee</node>
+    <node x="866.3141025641025" y="3696.0">DB.WorkTaskDB</node>
+  </nodes>
   <notes />
-  <edges />
-  <settings layout="Hierarchic Group" zoom="1.0" x="0.0" y="0.0" />
+  <edges>
+    <edge source="Controller.WorkTaskCtr" target="DB.WorkTaskDB">
+      <point x="-30.58333333333394" y="-145.5" />
+      <point x="1856.5164835164824" y="4582.0" />
+      <point x="1049.8141025641025" y="4582.0" />
+      <point x="0.0" y="343.5" />
+    </edge>
+    <edge source="GUI.EmployeeDatabaseScreen" target="Controller.EmployeeCtrIF">
+      <point x="0.0" y="-299.5" />
+      <point x="7165.800001874777" y="6692.0" />
+      <point x="7043.62589473192" y="6692.0" />
+      <point x="7043.62589473192" y="5527.0" />
+      <point x="7584.208614088217" y="5527.0" />
+      <point x="-63.0" y="70.5" />
+    </edge>
+    <edge source="GUI.ViewWorkTask" target="GUI.PendingTasks">
+      <point x="167.66666666666606" y="310.5" />
+      <point x="611.9182692307686" y="6702.0" />
+      <point x="1013.5913521834545" y="6702.0" />
+      <point x="-94.125" y="-287.5" />
+    </edge>
+    <edge source="Controller.WorkTypeCtr" target="Model.WorkType">
+      <point x="130.83333333333394" y="-123.5" />
+      <point x="12071.138114474117" y="3487.0" />
+      <point x="12103.638114474117" y="3487.0" />
+      <point x="12103.638114474117" y="361.0" />
+      <point x="4091.9668038228297" y="361.0" />
+      <point x="121.34090909090992" y="145.5" />
+    </edge>
+    <edge source="GUI.MainScreen" target="GUI.Components.ComponentsConfigure">
+      <point x="-57.79487179487205" y="-728.5" />
+      <point x="7031.811727641329" y="7953.0" />
+      <point x="5025.0439065986575" y="7953.0" />
+      <point x="5025.0439065986575" y="3537.0" />
+      <point x="5492.091197459575" y="3537.0" />
+      <point x="-55.33333333333303" y="333.5" />
+    </edge>
+    <edge source="GUI.WorkersScreen" target="Model.SeasonalWorker">
+      <point x="84.0" y="-189.5" />
+      <point x="5921.460573265324" y="5457.0" />
+      <point x="6414.962370541748" y="5457.0" />
+      <point x="6414.962370541748" y="1313.0" />
+      <point x="4634.292561398586" y="1313.0" />
+      <point x="254.66666666666606" y="156.5" />
+    </edge>
+    <edge source="GUI.LoginScreen" target="GUI.MainScreen">
+      <point x="35.375" y="189.5" />
+      <point x="5950.456022937048" y="7903.0" />
+      <point x="7073.093778923381" y="7903.0" />
+      <point x="-16.512820512820326" y="-728.5" />
+    </edge>
+    <edge source="GUI.Dashboard" target="GUI.Components.ComponentsConfigure">
+      <point x="39.75" y="-178.5" />
+      <point x="3382.484209326311" y="6652.0" />
+      <point x="3555.0998168498163" y="6652.0" />
+      <point x="3555.0998168498163" y="3517.0" />
+      <point x="5436.757864126241" y="3517.0" />
+      <point x="-110.66666666666697" y="333.5" />
+    </edge>
+    <edge source="Controller.EmployeeCtr" target="DB.DataAccessException">
+      <point x="63.0" y="-112.5" />
+      <point x="7465.550001874777" y="5587.0" />
+      <point x="8231.708614088217" y="5587.0" />
+      <point x="8231.708614088217" y="3517.0" />
+      <point x="8562.357423612026" y="3517.0" />
+      <point x="8562.357423612026" y="2336.0" />
+      <point x="8608.895537589064" y="2336.0" />
+      <point x="-15.714285714285325" y="47.5" />
+    </edge>
+    <edge source="GUI.ViewEmployee" target="GUI.Components.ComponentsConfigure">
+      <point x="-83.33333333333326" y="-442.5" />
+      <point x="7396.625280754883" y="3517.0" />
+      <point x="5630.424530792908" y="3517.0" />
+      <point x="83.0" y="333.5" />
+    </edge>
+    <edge source="GUI.RegisterWorkTask" target="Model.WorkTask">
+      <point x="-157.1875" y="-442.5" />
+      <point x="3701.18973993199" y="5427.0" />
+      <point x="3694.2456501831493" y="5427.0" />
+      <point x="3694.2456501831493" y="880.0" />
+      <point x="1055.5045787545787" y="880.0" />
+      <point x="122.33333333333394" y="145.5" />
+    </edge>
+    <edge source="GUI.ViewWorkTask" target="Model.WorkTask">
+      <point x="-136.22916666666606" y="-310.5" />
+      <point x="308.0224358974365" y="5587.0" />
+      <point x="138.25160256410254" y="5587.0" />
+      <point x="138.25160256410254" y="880.0" />
+      <point x="835.304578754578" y="880.0" />
+      <point x="-97.86666666666679" y="145.5" />
+    </edge>
+    <edge source="GUI.ClientScreen" target="Model.Client">
+      <point x="185.46428571428532" y="-309.5" />
+      <point x="13703.220010818139" y="9600.0" />
+      <point x="14378.085367221367" y="9600.0" />
+      <point x="14378.085367221367" y="3517.0" />
+      <point x="13795.999652935654" y="3517.0" />
+      <point x="159.33333333333303" y="211.5" />
+    </edge>
+    <edge source="GUI.CreateClient" target="GUI.Components.BackgroundWorker">
+      <point x="-86.44999999999982" y="-244.5" />
+      <point x="13507.115248913376" y="6602.0" />
+      <point x="13220.304781140781" y="6602.0" />
+      <point x="13220.304781140781" y="5427.0" />
+      <point x="8791.615775684302" y="5427.0" />
+      <point x="147.08333333333303" y="26.5" />
+    </edge>
+    <edge source="DB.ProduceDB" target="Model.Produce">
+      <point x="59.0" y="-277.5" />
+      <point x="13007.804781140781" y="4732.0" />
+      <point x="13058.804781140781" y="4732.0" />
+      <point x="13058.804781140781" y="3507.0" />
+      <point x="12951.138114474114" y="3507.0" />
+      <point x="76.66666666666606" y="80.5" />
+    </edge>
+    <edge source="Model.Client" target="Model.WorkSite">
+      <point x="119.5" y="-211.5" />
+      <point x="13756.166319602322" y="1866.0" />
+      <point x="7452.15089473192" y="1866.0" />
+      <point x="205.27499999999964" y="211.5" />
+    </edge>
+    <edge source="GUI.WorkSiteDashboard" target="GUI.Components.ComponentsConfigure">
+      <point x="0.0" y="-243.5" />
+      <point x="8875.145537589064" y="5637.0" />
+      <point x="8929.28839473192" y="5637.0" />
+      <point x="8929.28839473192" y="3487.0" />
+      <point x="5658.091197459575" y="3487.0" />
+      <point x="110.66666666666697" y="333.5" />
+    </edge>
+    <edge source="GUI.CreateWorkSite" target="DB.WorkSiteProduceDBIF">
+      <point x="47.15909090909099" y="-530.5" />
+      <point x="10877.951496206097" y="6622.0" />
+      <point x="10759.329781140783" y="6622.0" />
+      <point x="-101.0" y="81.5" />
+    </edge>
+    <edge source="GUI.MainScreen" target="GUI.JTextFieldHintUI">
+      <point x="33.02564102564065" y="-728.5" />
+      <point x="7122.632240461842" y="7923.0" />
+      <point x="7677.050001874777" y="7923.0" />
+      <point x="0.0" y="134.5" />
+    </edge>
+    <edge source="GUI.WorkersScreen" target="GUI.Components.ComponentsConfigure">
+      <point x="-84.0" y="-189.5" />
+      <point x="5753.460573265324" y="5447.0" />
+      <point x="5643.837370541748" y="5447.0" />
+      <point x="5643.837370541748" y="3547.0" />
+      <point x="5547.424530792908" y="3547.0" />
+      <point x="0.0" y="333.5" />
+    </edge>
+    <edge source="GUI.CreateClient" target="GUI.ClientScreen">
+      <point x="0.0" y="244.5" />
+      <point x="13593.565248913375" y="8073.0" />
+      <point x="13557.89858224671" y="8073.0" />
+      <point x="13557.89858224671" y="9620.0" />
+      <point x="13538.362867960997" y="9620.0" />
+      <point x="20.607142857143117" y="-309.5" />
+    </edge>
+    <edge source="GUI.WorkSiteDashboard" target="Controller.WorkSiteCtr">
+      <point x="-195.42857142857156" y="-243.5" />
+      <point x="8679.716966160493" y="5457.0" />
+      <point x="7399.125280754883" y="5457.0" />
+      <point x="105.375" y="123.5" />
+    </edge>
+    <edge source="GUI.DBStatus.StatusThread" target="DB.DBConnection">
+      <point x="58.0" y="-177.5" />
+      <point x="12971.637043785171" y="6702.0" />
+      <point x="13176.304781140781" y="6702.0" />
+      <point x="13176.304781140781" y="1916.0" />
+      <point x="10401.454781140783" y="1916.0" />
+      <point x="51.25" y="199.5" />
+    </edge>
+    <edge source="GUI.ProduceCheckList" target="GUI.Components.ComponentsConfigure">
+      <point x="-143.54999999999927" y="-244.5" />
+      <point x="12046.747649845776" y="5637.0" />
+      <point x="11761.804781140781" y="5637.0" />
+      <point x="11761.804781140781" y="3447.0" />
+      <point x="5713.424530792908" y="3447.0" />
+      <point x="166.0" y="333.5" />
+    </edge>
+    <edge source="GUI.CreateWorkSite" target="Controller.WorkSiteCtr">
+      <point x="-179.2045454545455" y="-530.5" />
+      <point x="10651.58785984246" y="6742.0" />
+      <point x="8216.533161745288" y="6742.0" />
+      <point x="8216.533161745288" y="5467.0" />
+      <point x="7328.875280754883" y="5467.0" />
+      <point x="35.125" y="123.5" />
+    </edge>
+    <edge source="GUI.CreateWorkSite" target="DB.WorkSiteProduceDB">
+      <point x="66.02272727272702" y="-530.5" />
+      <point x="10896.815132569733" y="6672.0" />
+      <point x="11118.72978114078" y="6672.0" />
+      <point x="0.0" y="277.5" />
+    </edge>
+    <edge source="DB.WorkTaskDB" target="DB.DBConnection">
+      <point x="81.55555555555475" y="-343.5" />
+      <point x="1131.3696581196573" y="3477.0" />
+      <point x="1167.2029914529912" y="3477.0" />
+      <point x="1167.2029914529912" y="2376.0" />
+      <point x="10257.954781140783" y="2376.0" />
+      <point x="-92.25" y="199.5" />
+    </edge>
+    <edge source="GUI.CreateWorkSite" target="Controller.ClientCtr">
+      <point x="198.06818181818198" y="-530.5" />
+      <point x="11028.860587115189" y="6742.0" />
+      <point x="13836.007986268987" y="6742.0" />
+      <point x="-96.33333333333303" y="112.5" />
+    </edge>
+    <edge source="DB.WorkTypeDB" target="DB.DataAccessException">
+      <point x="-134.80000000000018" y="-310.5" />
+      <point x="9223.845537589064" y="2086.0" />
+      <point x="8652.895537589064" y="2086.0" />
+      <point x="28.285714285714675" y="47.5" />
+    </edge>
+    <edge source="GUI.PendingTasks" target="Controller.WorkTaskCtr">
+      <point x="282.375" y="-287.5" />
+      <point x="1390.0913521834545" y="6692.0" />
+      <point x="1784.5998168498163" y="6692.0" />
+      <point x="1784.5998168498163" y="5387.0" />
+      <point x="1813.6998168498167" y="5387.0" />
+      <point x="-73.39999999999964" y="145.5" />
+    </edge>
+    <edge source="GUI.PendingTasks" target="Model.WorkTask">
+      <point x="-470.625" y="-287.5" />
+      <point x="637.0913521834545" y="6762.0" />
+      <point x="39.25160256410254" y="6762.0" />
+      <point x="39.25160256410254" y="850.0" />
+      <point x="761.9045787545783" y="850.0" />
+      <point x="-171.26666666666642" y="145.5" />
+    </edge>
+    <edge source="GUI.ViewWorkTask" target="Controller.WorkTaskCtr">
+      <point x="157.1875" y="-310.5" />
+      <point x="601.4391025641025" y="5387.0" />
+      <point x="1740.299816849817" y="5387.0" />
+      <point x="-146.79999999999927" y="145.5" />
+    </edge>
+    <edge source="GUI.MainScreen" target="GUI.WorkersScreen">
+      <point x="8.256410256410163" y="-728.5" />
+      <point x="7097.863009692612" y="7873.0" />
+      <point x="6075.337433193458" y="7873.0" />
+      <point x="6075.337433193458" y="6692.0" />
+      <point x="5949.460573265324" y="6692.0" />
+      <point x="112.0" y="189.5" />
+    </edge>
+    <edge source="GUI.CreateClient" target="Controller.ClientCtrIF">
+      <point x="12.350000000000364" y="-244.5" />
+      <point x="13605.915248913378" y="6562.0" />
+      <point x="13485.674652935653" y="6562.0" />
+      <point x="-36.125" y="70.5" />
+    </edge>
+    <edge source="GUI.RegisterWorkTask" target="Controller.WorkTaskCtr">
+      <point x="-241.02083333333394" y="-442.5" />
+      <point x="3617.356406598656" y="5377.0" />
+      <point x="2033.8998168498156" y="5377.0" />
+      <point x="146.79999999999927" y="145.5" />
+    </edge>
+    <edge source="GUI.DBStatus.StatusThread" target="GUI.MainScreen">
+      <point x="77.33333333333303" y="177.5" />
+      <point x="12990.970377118505" y="8053.0" />
+      <point x="7229.965573795176" y="8053.0" />
+      <point x="140.3589743589746" y="-728.5" />
+    </edge>
+    <edge source="GUI.Dashboard" target="GUI.RegisterWorkTask">
+      <point x="66.25" y="-178.5" />
+      <point x="3408.984209326311" y="6662.0" />
+      <point x="3648.793906598656" y="6662.0" />
+      <point x="-209.58333333333394" y="442.5" />
+    </edge>
+    <edge source="GUI.ClientScreen" target="GUI.Components.ComponentsConfigure">
+      <point x="-267.8928571428569" y="-309.5" />
+      <point x="13249.862867960997" y="9620.0" />
+      <point x="0.0" y="9620.0" />
+      <point x="0.0" y="4712.0" />
+      <point x="50.25160256410254" y="4712.0" />
+      <point x="50.25160256410254" y="3487.0" />
+      <point x="5353.757864126241" y="3487.0" />
+      <point x="-193.66666666666697" y="333.5" />
+    </edge>
+    <edge source="Controller.WorkTypeCtr" target="DB.WorkTypeDB">
+      <point x="-78.5" y="-123.5" />
+      <point x="11861.804781140781" y="3427.0" />
+      <point x="9499.062204255732" y="3427.0" />
+      <point x="140.41666666666697" y="310.5" />
+    </edge>
+    <edge source="DB.WorkTypeDB" target="Model.WorkType">
+      <point x="67.39999999999964" y="-310.5" />
+      <point x="9426.045537589065" y="2366.0" />
+      <point x="10148.379781140782" y="2366.0" />
+      <point x="10148.379781140782" y="391.0" />
+      <point x="4053.6486220046477" y="391.0" />
+      <point x="83.02272727272793" y="145.5" />
+    </edge>
+    <edge source="GUI.ViewWorkTask" target="GUI.Components.ComponentsConfigure">
+      <point x="73.35416666666606" y="-310.5" />
+      <point x="517.6057692307686" y="5637.0" />
+      <point x="524.4391025641025" y="5637.0" />
+      <point x="524.4391025641025" y="3497.0" />
+      <point x="5381.424530792908" y="3497.0" />
+      <point x="-166.0" y="333.5" />
+    </edge>
+    <edge source="GUI.MainScreen" target="GUI.DBStatus.StatusThread">
+      <point x="132.10256410256443" y="-728.5" />
+      <point x="7221.709163538766" y="8043.0" />
+      <point x="12913.637043785171" y="8043.0" />
+      <point x="0.0" y="177.5" />
+    </edge>
+    <edge source="Model.WorkTask" target="Model.WorkType">
+      <point x="91.75" y="-145.5" />
+      <point x="1024.9212454212447" y="361.0" />
+      <point x="3900.3758947319197" y="361.0" />
+      <point x="-70.25" y="145.5" />
+    </edge>
+    <edge source="GUI.ViewWorkTask" target="Model.WorkSite">
+      <point x="-31.4375" y="-310.5" />
+      <point x="412.81410256410254" y="2066.0" />
+      <point x="7041.600894731921" y="2066.0" />
+      <point x="-205.27499999999964" y="211.5" />
+    </edge>
+    <edge source="Controller.WorkTypeCtr" target="DB.DataAccessException">
+      <point x="-26.16666666666606" y="-123.5" />
+      <point x="11914.138114474117" y="1976.0" />
+      <point x="8690.60982330335" y="1976.0" />
+      <point x="66.0" y="47.5" />
+    </edge>
+    <edge source="GUI.DBStatus.StatusThread" target="GUI.DBStatus.Status">
+      <point x="-96.66666666666666" y="-177.5" />
+      <point x="12816.970377118505" y="6732.0" />
+      <point x="12433.02871045184" y="6732.0" />
+      <point x="-41.25" y="102.5" />
+    </edge>
+    <edge source="GUI.WorkersScreen" target="DB.DataAccessException">
+      <point x="196.0" y="-189.5" />
+      <point x="6033.460573265324" y="5477.0" />
+      <point x="6701.87589473192" y="5477.0" />
+      <point x="6701.87589473192" y="2296.0" />
+      <point x="8583.752680446207" y="2296.0" />
+      <point x="-40.85714285714312" y="47.5" />
+    </edge>
+    <edge source="GUI.CreateWorkSite" target="DB.DataAccessException">
+      <point x="-47.15909090909099" y="-530.5" />
+      <point x="10783.633314387915" y="6672.0" />
+      <point x="10603.829781140783" y="6672.0" />
+      <point x="10603.829781140783" y="2026.0" />
+      <point x="8665.466966160493" y="2026.0" />
+      <point x="40.85714285714312" y="47.5" />
+    </edge>
+    <edge source="GUI.ViewWorkTask" target="Model.WorkType">
+      <point x="-199.10416666666606" y="-310.5" />
+      <point x="245.14743589743648" y="5617.0" />
+      <point x="105.25160256410254" y="5617.0" />
+      <point x="105.25160256410254" y="331.0" />
+      <point x="3862.0577129137378" y="331.0" />
+      <point x="-108.56818181818198" y="145.5" />
+    </edge>
+    <edge source="GUI.MainScreen" target="Model.SeasonalWorker">
+      <point x="-156.87179487179492" y="-728.5" />
+      <point x="6932.734804564407" y="8073.0" />
+      <point x="12.81410256410254" y="8073.0" />
+      <point x="12.81410256410254" y="4722.0" />
+      <point x="72.25160256410254" y="4722.0" />
+      <point x="72.25160256410254" y="1263.0" />
+      <point x="4023.092561398587" y="1263.0" />
+      <point x="-356.53333333333285" y="156.5" />
+    </edge>
+    <edge source="GUI.WorkSiteDashboard" target="Controller.WorkSiteCtrIF">
+      <point x="-65.14285714285688" y="-243.5" />
+      <point x="8810.002680446207" y="5627.0" />
+      <point x="8918.28839473192" y="5627.0" />
+      <point x="8918.28839473192" y="4662.0" />
+      <point x="7182.450280754883" y="4662.0" />
+      <point x="56.20000000000073" y="81.5" />
+    </edge>
+    <edge source="GUI.CreateWorkSite" target="GUI.Components.ComponentsConfigure">
+      <point x="-103.75" y="-530.5" />
+      <point x="10727.042405297005" y="6702.0" />
+      <point x="9146.645537589065" y="6702.0" />
+      <point x="9146.645537589065" y="3467.0" />
+      <point x="5685.757864126241" y="3467.0" />
+      <point x="138.33333333333303" y="333.5" />
+    </edge>
+    <edge source="DB.ProduceDB" target="DB.ProduceDBIF">
+      <point x="-59.0" y="-277.5" />
+      <point x="0.0" y="81.5" />
+    </edge>
+    <edge source="GUI.MainScreen" target="GUI.EmployeeDatabaseScreen">
+      <point x="16.512820512820326" y="-728.5" />
+      <point x="7106.119419949022" y="7863.0" />
+      <point x="6987.050001874777" y="7863.0" />
+      <point x="-178.75" y="299.5" />
+    </edge>
+    <edge source="GUI.EmployeeDatabaseScreen" target="DB.DataAccessException">
+      <point x="195.0" y="-299.5" />
+      <point x="7360.800001874777" y="6732.0" />
+      <point x="7550.050001874777" y="6732.0" />
+      <point x="7550.050001874777" y="5607.0" />
+      <point x="8263.603739589367" y="5607.0" />
+      <point x="8263.603739589367" y="3537.0" />
+      <point x="8579.64313789774" y="3537.0" />
+      <point x="8579.64313789774" y="2356.0" />
+      <point x="8621.466966160493" y="2356.0" />
+      <point x="-3.142857142856883" y="47.5" />
+    </edge>
+    <edge source="GUI.ViewWorkTask" target="Model.SeasonalWorker">
+      <point x="-73.35416666666606" y="-310.5" />
+      <point x="370.8974358974365" y="5627.0" />
+      <point x="390.81410256410254" y="5627.0" />
+      <point x="390.81410256410254" y="2046.0" />
+      <point x="3433.6623168498163" y="2046.0" />
+      <point x="3433.6623168498163" y="1293.0" />
+      <point x="4175.892561398587" y="1293.0" />
+      <point x="-203.73333333333358" y="156.5" />
+    </edge>
+    <edge source="GUI.Components.StatusDialog" target="GUI.Components.AnimatedIcon">
+      <point x="43.5" y="-134.5" />
+      <point x="5988.585573265324" y="3547.0" />
+      <point x="6023.212370541748" y="3547.0" />
+      <point x="72.25" y="485.5" />
+    </edge>
+    <edge source="Controller.DataModel.WorkTaskDataModel" target="Controller.WorkTaskCtrIF">
+      <point x="-39.875" y="-177.5" />
+      <point x="3312.2248168498163" y="5427.0" />
+      <point x="3341.0998168498163" y="5427.0" />
+      <point x="3341.0998168498163" y="4512.0" />
+      <point x="1546.8498168498163" y="4512.0" />
+      <point x="91.75" y="103.5" />
+    </edge>
+    <edge source="DB.SeasonalWorkerDB" target="Model.SeasonalWorker">
+      <point x="0.0" y="-343.5" />
+      <point x="4811.0439065986575" y="3477.0" />
+      <point x="4775.843906598657" y="3477.0" />
+      <point x="4775.843906598657" y="1323.0" />
+      <point x="4583.359228065254" y="1323.0" />
+      <point x="203.73333333333358" y="156.5" />
+    </edge>
+    <edge source="GUI.RegisterWorkTask" target="DB.DataAccessException">
+      <point x="73.35416666666606" y="-442.5" />
+      <point x="3931.731406598656" y="5367.0" />
+      <point x="3862.543906598657" y="5367.0" />
+      <point x="3862.543906598657" y="2246.0" />
+      <point x="8552.324109017634" y="2246.0" />
+      <point x="-72.28571428571468" y="47.5" />
+    </edge>
+    <edge source="GUI.PendingTasks" target="DB.DataAccessException">
+      <point x="-31.375" y="-287.5" />
+      <point x="1076.3413521834545" y="6642.0" />
+      <point x="1243.8141025641025" y="6642.0" />
+      <point x="1243.8141025641025" y="2196.0" />
+      <point x="8520.895537589064" y="2196.0" />
+      <point x="-103.71428571428532" y="47.5" />
+    </edge>
+    <edge source="GUI.MainScreen" target="GUI.CreateWorkSite">
+      <point x="90.8205128205127" y="-728.5" />
+      <point x="7180.427112256713" y="7993.0" />
+      <point x="10675.167405297005" y="7993.0" />
+      <point x="-155.625" y="530.5" />
+    </edge>
+    <edge source="GUI.ViewWorkTask" target="Controller.WorkSiteCtr">
+      <point x="241.02083333333394" y="-310.5" />
+      <point x="685.2724358974365" y="5487.0" />
+      <point x="7188.375280754883" y="5487.0" />
+      <point x="-105.375" y="123.5" />
+    </edge>
+    <edge source="GUI.Dashboard" target="Controller.WorkTaskCtrIF">
+      <point x="-119.25" y="-178.5" />
+      <point x="3223.484209326311" y="6692.0" />
+      <point x="2081.0998168498163" y="6692.0" />
+      <point x="2081.0998168498163" y="4542.0" />
+      <point x="1485.6831501831502" y="4542.0" />
+      <point x="30.58333333333394" y="103.5" />
+    </edge>
+    <edge source="Controller.WorkSiteCtr" target="Controller.WorkSiteCtrIF">
+      <point x="-117.08333333333303" y="-123.5" />
+      <point x="7176.66694742155" y="4732.0" />
+      <point x="7126.250280754883" y="4732.0" />
+      <point x="0.0" y="81.5" />
+    </edge>
+    <edge source="GUI.WorkTaskWorkSiteComboBoxRenderer" target="Model.WorkSite">
+      <point x="0.0" y="-47.5" />
+      <point x="3020.5998168498163" y="4522.0" />
+      <point x="1660.0998168498163" y="4522.0" />
+      <point x="1660.0998168498163" y="2096.0" />
+      <point x="7114.05089473192" y="2096.0" />
+      <point x="-132.82499999999982" y="211.5" />
+    </edge>
+    <edge source="GUI.MainScreen" target="GUI.WorkSiteDashboard">
+      <point x="82.56410256410254" y="-728.5" />
+      <point x="7172.170702000303" y="7983.0" />
+      <point x="9336.720806781806" y="7983.0" />
+      <point x="9336.720806781806" y="6762.0" />
+      <point x="9046.145537589064" y="6762.0" />
+      <point x="171.0" y="243.5" />
+    </edge>
+    <edge source="DB.ClientDB" target="DB.DBConnection">
+      <point x="140.0" y="-244.5" />
+      <point x="14308.299652935653" y="4702.0" />
+      <point x="14192.299652935653" y="4702.0" />
+      <point x="14192.299652935653" y="1836.0" />
+      <point x="10442.454781140783" y="1836.0" />
+      <point x="92.25" y="199.5" />
+    </edge>
+    <edge source="GUI.ProduceCheckList" target="DB.DataAccessException">
+      <point x="-111.64999999999964" y="-244.5" />
+      <point x="12078.647649845778" y="5627.0" />
+      <point x="11772.804781140781" y="5627.0" />
+      <point x="11772.804781140781" y="1986.0" />
+      <point x="8684.324109017634" y="1986.0" />
+      <point x="59.714285714285325" y="47.5" />
+    </edge>
+    <edge source="GUI.Dashboard" target="DB.DataAccessException">
+      <point x="13.25" y="-178.5" />
+      <point x="3355.984209326311" y="6642.0" />
+      <point x="3544.0998168498163" y="6642.0" />
+      <point x="3544.0998168498163" y="3477.0" />
+      <point x="3749.2456501831493" y="3477.0" />
+      <point x="3749.2456501831493" y="2226.0" />
+      <point x="8539.752680446207" y="2226.0" />
+      <point x="-84.85714285714312" y="47.5" />
+    </edge>
+    <edge source="Controller.EmployeeCtr" target="DB.EmployeeDBIF">
+      <point x="-63.0" y="-112.5" />
+      <point x="7339.550001874777" y="5557.0" />
+      <point x="7857.208614088217" y="5557.0" />
+      <point x="-63.0" y="70.5" />
+    </edge>
+    <edge source="GUI.MainScreen" target="Controller.SeasonalWorkerCtr">
+      <point x="-49.53846153846189" y="-728.5" />
+      <point x="7040.068137897739" y="7943.0" />
+      <point x="5033.300316855068" y="7943.0" />
+      <point x="5033.300316855068" y="5467.0" />
+      <point x="5368.085573265324" y="5467.0" />
+      <point x="40.875" y="123.5" />
+    </edge>
+    <edge source="DB.ClientDB" target="DB.ClientDBIF">
+      <point x="-60.0" y="-244.5" />
+      <point x="14108.299652935653" y="4582.0" />
+      <point x="13915.049652935653" y="4582.0" />
+      <point x="72.25" y="70.5" />
+    </edge>
+    <edge source="GUI.Components.BackgroundWorker" target="GUI.Components.BackgroundOperation">
+      <point x="44.125" y="-26.5" />
+      <point x="8688.65744235097" y="4712.0" />
+      <point x="8680.53244235097" y="4712.0" />
+      <point x="0.0" y="26.5" />
+    </edge>
+    <edge source="GUI.MainScreen" target="GUI.LoginScreen">
+      <point x="-33.02564102564065" y="-728.5" />
+      <point x="7056.580958410561" y="7923.0" />
+      <point x="5808.956022937048" y="7923.0" />
+      <point x="-106.125" y="189.5" />
+    </edge>
+    <edge source="GUI.Components.BackgroundWorker" target="DB.DataAccessException">
+      <point x="132.375" y="-26.5" />
+      <point x="8776.90744235097" y="4712.0" />
+      <point x="8785.03244235097" y="4712.0" />
+      <point x="8785.03244235097" y="3527.0" />
+      <point x="8952.434935897436" y="3527.0" />
+      <point x="8952.434935897436" y="2366.0" />
+      <point x="8634.03839473192" y="2366.0" />
+      <point x="9.428571428571558" y="47.5" />
+    </edge>
+    <edge source="GUI.PendingTasks" target="Controller.WorkTaskCtrIF">
+      <point x="31.375" y="-287.5" />
+      <point x="1139.0913521834545" y="6652.0" />
+      <point x="1309.0819597069594" y="6652.0" />
+      <point x="1309.0819597069594" y="4622.0" />
+      <point x="1363.3498168498163" y="4622.0" />
+      <point x="-91.75" y="103.5" />
+    </edge>
+    <edge source="GUI.MainScreen" target="DB.DataAccessException">
+      <point x="156.87179487179492" y="-728.5" />
+      <point x="7246.4783943079965" y="8073.0" />
+      <point x="13051.348582246708" y="8073.0" />
+      <point x="13051.348582246708" y="6732.0" />
+      <point x="13269.849652935656" y="6732.0" />
+      <point x="13269.849652935656" y="1886.0" />
+      <point x="8728.324109017634" y="1886.0" />
+      <point x="103.71428571428532" y="47.5" />
+    </edge>
+    <edge source="DB.WorkTaskDB" target="DB.WorkTypeDB">
+      <point x="163.1111111111113" y="-343.5" />
+      <point x="1212.9252136752139" y="3567.0" />
+      <point x="9274.395537589065" y="3567.0" />
+      <point x="-84.25" y="310.5" />
+    </edge>
+    <edge source="DB.WorkTaskDBIF" target="Model.WorkTask">
+      <point x="0.0" y="-103.5" />
+      <point x="661.8141025641025" y="900.0" />
+      <point x="884.2379120879123" y="900.0" />
+      <point x="-48.933333333332484" y="145.5" />
+    </edge>
+    <edge source="GUI.CreateWorkSite" target="Controller.WorkSiteCtrIF">
+      <point x="-122.61363636363649" y="-530.5" />
+      <point x="10708.178768933369" y="6712.0" />
+      <point x="9135.645537589065" y="6712.0" />
+      <point x="9135.645537589065" y="4632.0" />
+      <point x="7238.650280754882" y="4632.0" />
+      <point x="112.39999999999964" y="81.5" />
+    </edge>
+    <edge source="Controller.ClientCtr" target="Controller.ClientCtrIF">
+      <point x="-120.41666666666697" y="-112.5" />
+      <point x="13811.924652935653" y="5637.0" />
+      <point x="13557.924652935653" y="5637.0" />
+      <point x="36.125" y="70.5" />
+    </edge>
+    <edge source="GUI.MainScreen" target="GUI.Components.StatusDialog">
+      <point x="-41.282051282050816" y="-728.5" />
+      <point x="7048.324548154151" y="7933.0" />
+      <point x="5512.210573265324" y="7933.0" />
+      <point x="5512.210573265324" y="4692.0" />
+      <point x="5896.75223993199" y="4692.0" />
+      <point x="-48.33333333333394" y="134.5" />
+    </edge>
+    <edge source="Controller.ClientCtrIF" target="Model.Client">
+      <point x="0.0" y="-70.5" />
+      <point x="13521.799652935653" y="3577.0" />
+      <point x="13572.932986268988" y="3577.0" />
+      <point x="-63.733333333333576" y="211.5" />
+    </edge>
+    <edge source="GUI.Components.StatusDialog" target="GUI.Components.RotatedIcon">
+      <point x="130.5" y="-134.5" />
+      <point x="6075.585573265324" y="3547.0" />
+      <point x="6259.962370541748" y="3547.0" />
+      <point x="0.0" y="156.5" />
+    </edge>
+    <edge source="GUI.CreateClient" target="DB.DataAccessException">
+      <point x="111.14999999999964" y="-244.5" />
+      <point x="13704.715248913377" y="6762.0" />
+      <point x="14356.085367221367" y="6762.0" />
+      <point x="14356.085367221367" y="1806.0" />
+      <point x="8753.466966160493" y="1806.0" />
+      <point x="128.85714285714312" y="47.5" />
+    </edge>
+    <edge source="Model.WorkSite" target="Model.WorkType">
+      <point x="181.125" y="-211.5" />
+      <point x="7428.00089473192" y="1343.0" />
+      <point x="7651.62589473192" y="1343.0" />
+      <point x="7651.62589473192" y="421.0" />
+      <point x="4015.3304401864657" y="421.0" />
+      <point x="44.70454545454595" y="145.5" />
+    </edge>
+    <edge source="GUI.RegisterWorkTask" target="GUI.Dashboard">
+      <point x="-41.91666666666606" y="442.5" />
+      <point x="3816.460573265324" y="6682.0" />
+      <point x="3461.984209326311" y="6682.0" />
+      <point x="119.25" y="-178.5" />
+    </edge>
+    <edge source="DB.WorkTypeDB" target="DB.DBConnection">
+      <point x="134.80000000000018" y="-310.5" />
+      <point x="9493.445537589065" y="2396.0" />
+      <point x="10298.954781140783" y="2396.0" />
+      <point x="-51.25" y="199.5" />
+    </edge>
+    <edge source="GUI.CreateWorkSite" target="GUI.JTextFieldHintUI">
+      <point x="-198.06818181818198" y="-530.5" />
+      <point x="10632.724223478825" y="6752.0" />
+      <point x="7719.250001874778" y="6752.0" />
+      <point x="42.200000000000045" y="134.5" />
+    </edge>
+    <edge source="GUI.CreateWorkSite" target="GUI.WorkSiteClientComboBoxRenderer">
+      <point x="122.61363636363603" y="-530.5" />
+      <point x="10953.40604166064" y="6702.0" />
+      <point x="11449.579781140783" y="6702.0" />
+      <point x="0.0" y="47.5" />
+    </edge>
+    <edge source="GUI.CreateClient" target="GUI.Components.StatusDialog">
+      <point x="-37.05000000000018" y="-244.5" />
+      <point x="13556.515248913376" y="6582.0" />
+      <point x="13305.974652935656" y="6582.0" />
+      <point x="13305.974652935656" y="4612.0" />
+      <point x="6109.4189065986575" y="4612.0" />
+      <point x="164.33333333333394" y="134.5" />
+    </edge>
+    <edge source="DB.EmployeeDB" target="Model.Employee">
+      <point x="-57.0" y="-244.5" />
+      <point x="8010.708614088217" y="4702.0" />
+      <point x="8099.21088244651" y="4702.0" />
+      <point x="8099.21088244651" y="3547.0" />
+      <point x="7995.021114088217" y="3547.0" />
+      <point x="128.8125" y="90.5" />
+    </edge>
+    <edge source="GUI.ClientScreen" target="GUI.MainScreen">
+      <point x="-226.67857142857156" y="-309.5" />
+      <point x="13291.077153675282" y="9610.0" />
+      <point x="6968.856599436202" y="9610.0" />
+      <point x="-120.75" y="728.5" />
+    </edge>
+    <edge source="GUI.PendingTasks" target="GUI.Components.ComponentsConfigure">
+      <point x="94.125" y="-287.5" />
+      <point x="1201.8413521834545" y="6662.0" />
+      <point x="1671.0998168498163" y="6662.0" />
+      <point x="1671.0998168498163" y="3507.0" />
+      <point x="5409.091197459575" y="3507.0" />
+      <point x="-138.33333333333303" y="333.5" />
+    </edge>
+    <edge source="Controller.SeasonalWorkerCtrIF" target="Model.SeasonalWorker">
+      <point x="0.0" y="-81.5" />
+      <point x="4107.2939065986575" y="1333.0" />
+      <point x="4379.62589473192" y="1333.0" />
+      <point x="0.0" y="156.5" />
+    </edge>
+    <edge source="GUI.ClientScreen" target="Controller.ClientCtr">
+      <point x="103.03571428571468" y="-309.5" />
+      <point x="13620.791439389568" y="9580.0" />
+      <point x="14030.098582246708" y="9580.0" />
+      <point x="14030.098582246708" y="6752.0" />
+      <point x="14028.674652935653" y="6752.0" />
+      <point x="96.33333333333303" y="112.5" />
+    </edge>
+    <edge source="DB.WorkSiteDB" target="DB.WorkTypeDB">
+      <point x="-105.625" y="-409.5" />
+      <point x="9652.895537589065" y="3557.0" />
+      <point x="9386.728870922398" y="3557.0" />
+      <point x="28.08333333333303" y="310.5" />
+    </edge>
+    <edge source="GUI.WorkSiteDashboard" target="GUI.MainScreen">
+      <point x="57.0" y="243.5" />
+      <point x="8932.145537589064" y="6762.0" />
+      <point x="8879.273742717269" y="6762.0" />
+      <point x="8879.273742717269" y="7973.0" />
+      <point x="7163.914291743893" y="7973.0" />
+      <point x="74.30769230769238" y="-728.5" />
+    </edge>
+    <edge source="GUI.EmployeeDatabaseScreen" target="GUI.JTextFieldHintUI">
+      <point x="325.0" y="-299.5" />
+      <point x="7490.800001874777" y="6762.0" />
+      <point x="7634.850001874777" y="6762.0" />
+      <point x="-42.200000000000045" y="134.5" />
+    </edge>
+    <edge source="Controller.SeasonalWorkerCtr" target="Controller.SeasonalWorkerCtrIF">
+      <point x="-136.25" y="-123.5" />
+      <point x="5190.960573265324" y="4622.0" />
+      <point x="4172.693906598657" y="4622.0" />
+      <point x="65.39999999999964" y="81.5" />
+    </edge>
+    <edge source="Controller.WorkTaskCtr" target="Model.WorkTask">
+      <point x="-91.75" y="-145.5" />
+      <point x="1795.3498168498163" y="4592.0" />
+      <point x="855.8141025641025" y="4592.0" />
+      <point x="855.8141025641025" y="910.0" />
+      <point x="908.7045787545776" y="910.0" />
+      <point x="-24.46666666666715" y="145.5" />
+    </edge>
+    <edge source="GUI.RegisterWorkTask" target="GUI.Components.StatusDialog">
+      <point x="136.22916666666606" y="-442.5" />
+      <point x="3994.606406598656" y="5337.0" />
+      <point x="3944.343906598657" y="5337.0" />
+      <point x="3944.343906598657" y="4672.0" />
+      <point x="5858.085573265324" y="4672.0" />
+      <point x="-87.0" y="134.5" />
+    </edge>
+    <edge source="GUI.RegisterWorkTask" target="GUI.Components.ComponentsConfigure">
+      <point x="94.3125" y="-442.5" />
+      <point x="3952.68973993199" y="5357.0" />
+      <point x="3873.543906598657" y="5357.0" />
+      <point x="3873.543906598657" y="3527.0" />
+      <point x="5464.424530792908" y="3527.0" />
+      <point x="-83.0" y="333.5" />
+    </edge>
+    <edge source="GUI.RegisterWorkTask" target="Model.WorkSite">
+      <point x="10.47916666666606" y="-442.5" />
+      <point x="3868.856406598656" y="5397.0" />
+      <point x="3829.543906598657" y="5397.0" />
+      <point x="3829.543906598657" y="2126.0" />
+      <point x="7186.50089473192" y="2126.0" />
+      <point x="-60.375" y="211.5" />
+    </edge>
+    <edge source="GUI.WorkTaskWorkTypeComboBoxRenderer" target="Model.WorkType">
+      <point x="0.0" y="-47.5" />
+      <point x="2396.5998168498163" y="4532.0" />
+      <point x="1649.0998168498163" y="4532.0" />
+      <point x="1649.0998168498163" y="391.0" />
+      <point x="3938.6940765501017" y="391.0" />
+      <point x="-31.931818181818016" y="145.5" />
+    </edge>
+    <edge source="GUI.ViewWorkTask" target="GUI.WorkTaskWorkSiteComboBoxRenderer">
+      <point x="199.10416666666606" y="-310.5" />
+      <point x="643.3557692307686" y="5407.0" />
+      <point x="2871.0998168498163" y="5407.0" />
+      <point x="-149.5" y="47.5" />
+    </edge>
+    <edge source="GUI.Dashboard" target="Controller.WorkTaskCtr">
+      <point x="-145.75" y="-178.5" />
+      <point x="3196.984209326311" y="6702.0" />
+      <point x="1887.0998168498163" y="6702.0" />
+      <point x="0.0" y="145.5" />
+    </edge>
+    <edge source="Controller.ClientCtr" target="DB.ClientDBIF">
+      <point x="-72.25" y="-112.5" />
+      <point x="13860.091319602321" y="5627.0" />
+      <point x="13770.549652935653" y="5627.0" />
+      <point x="-72.25" y="70.5" />
+    </edge>
+    <edge source="GUI.WorkSiteDashboard" target="Model.WorkSite">
+      <point x="65.14285714285688" y="-243.5" />
+      <point x="8940.28839473192" y="3477.0" />
+      <point x="8513.92438789774" y="3477.0" />
+      <point x="8513.92438789774" y="2136.0" />
+      <point x="7283.100894731921" y="2136.0" />
+      <point x="36.225000000000364" y="211.5" />
+    </edge>
+    <edge source="GUI.Dashboard" target="GUI.MainScreen">
+      <point x="39.75" y="178.5" />
+      <point x="3382.484209326311" y="8003.0" />
+      <point x="6990.529676359278" y="8003.0" />
+      <point x="-99.07692307692287" y="-728.5" />
+    </edge>
+    <edge source="GUI.RegisterWorkTask" target="GUI.MainScreen">
+      <point x="209.58333333333394" y="442.5" />
+      <point x="4067.960573265324" y="6712.0" />
+      <point x="3856.5853311211827" y="6712.0" />
+      <point x="3856.5853311211827" y="7973.0" />
+      <point x="7015.298907128508" y="7973.0" />
+      <point x="-74.30769230769238" y="-728.5" />
+    </edge>
+    <edge source="DB.WorkSiteProduceDB" target="DB.WorkSiteProduceDBIF">
+      <point x="-161.5999999999999" y="-277.5" />
+      <point x="10957.129781140782" y="5637.0" />
+      <point x="10961.329781140783" y="5637.0" />
+      <point x="101.0" y="81.5" />
+    </edge>
+    <edge source="GUI.RegisterWorkTask" target="Model.WorkType">
+      <point x="-94.3125" y="-442.5" />
+      <point x="3764.06473993199" y="5397.0" />
+      <point x="3727.2456501831493" y="5397.0" />
+      <point x="3727.2456501831493" y="421.0" />
+      <point x="3977.0122583682837" y="421.0" />
+      <point x="6.386363636363967" y="145.5" />
+    </edge>
+    <edge source="GUI.ViewWorkTask" target="GUI.WorkTaskWorkTypeComboBoxRenderer">
+      <point x="178.14583333333394" y="-310.5" />
+      <point x="622.3974358974365" y="5397.0" />
+      <point x="2244.0998168498163" y="5397.0" />
+      <point x="-152.5" y="47.5" />
+    </edge>
+    <edge source="GUI.ProduceCheckList" target="Model.WorkType">
+      <point x="143.55000000000018" y="-244.5" />
+      <point x="12333.847649845777" y="5627.0" />
+      <point x="13143.304781140781" y="5627.0" />
+      <point x="13143.304781140781" y="351.0" />
+      <point x="4104.739531095556" y="351.0" />
+      <point x="134.11363636363603" y="145.5" />
+    </edge>
+    <edge source="GUI.CreateWorkSite" target="Controller.ClientCtrIF">
+      <point x="179.20454545454504" y="-530.5" />
+      <point x="11009.99695075155" y="6732.0" />
+      <point x="12360.297649845776" y="6732.0" />
+      <point x="12360.297649845776" y="5637.0" />
+      <point x="13413.424652935653" y="5637.0" />
+      <point x="-108.375" y="70.5" />
+    </edge>
+    <edge source="Controller.WorkTaskCtr" target="DB.DataAccessException">
+      <point x="91.75" y="-145.5" />
+      <point x="1978.8498168498163" y="4562.0" />
+      <point x="1261.0998168498163" y="4562.0" />
+      <point x="1261.0998168498163" y="3477.0" />
+      <point x="3433.6623168498163" y="3477.0" />
+      <point x="3433.6623168498163" y="2216.0" />
+      <point x="8533.466966160493" y="2216.0" />
+      <point x="-91.14285714285688" y="47.5" />
+    </edge>
+    <edge source="DB.SeasonalWorkerDB" target="DB.DBConnection">
+      <point x="162.79999999999927" y="-343.5" />
+      <point x="4973.843906598657" y="3477.0" />
+      <point x="5138.297733516483" y="3477.0" />
+      <point x="5138.297733516483" y="2386.0" />
+      <point x="10278.454781140783" y="2386.0" />
+      <point x="-71.75" y="199.5" />
+    </edge>
+    <edge source="Controller.WorkTaskCtr" target="DB.WorkTaskDBIF">
+      <point x="-152.91666666666606" y="-145.5" />
+      <point x="1734.1831501831502" y="4602.0" />
+      <point x="570.0641025641025" y="4602.0" />
+      <point x="-91.75" y="103.5" />
+    </edge>
+    <edge source="GUI.Components.StatusDialog" target="GUI.Components.ComponentsConfigure">
+      <point x="-130.5" y="-134.5" />
+      <point x="5814.585573265324" y="3537.0" />
+      <point x="5575.091197459575" y="3537.0" />
+      <point x="27.66666666666697" y="333.5" />
+    </edge>
+    <edge source="Controller.WorkTypeCtr" target="Controller.WorkTypeCtrIF">
+      <point x="78.5" y="-123.5" />
+      <point x="12018.804781140781" y="3507.0" />
+      <point x="11936.138114474117" y="3507.0" />
+      <point x="0.0" y="81.5" />
+    </edge>
+    <edge source="GUI.PendingTasks" target="GUI.MainScreen">
+      <point x="125.5" y="287.5" />
+      <point x="1233.2163521834545" y="8043.0" />
+      <point x="6957.504035333637" y="8043.0" />
+      <point x="-132.10256410256443" y="-728.5" />
+    </edge>
+    <edge source="GUI.ProduceCheckList" target="Model.Produce">
+      <point x="-15.949999999999818" y="-244.5" />
+      <point x="12174.347649845777" y="5597.0" />
+      <point x="12107.804781140781" y="5597.0" />
+      <point x="12107.804781140781" y="3497.0" />
+      <point x="12797.804781140781" y="3497.0" />
+      <point x="-76.66666666666606" y="80.5" />
+    </edge>
+    <edge source="GUI.ViewWorkTask" target="Controller.WorkSiteCtrIF">
+      <point x="220.0625" y="-310.5" />
+      <point x="664.3141025641025" y="5437.0" />
+      <point x="3955.343906598657" y="5437.0" />
+      <point x="3955.343906598657" y="4722.0" />
+      <point x="7013.850280754883" y="4722.0" />
+      <point x="-112.39999999999964" y="81.5" />
+    </edge>
+    <edge source="GUI.CreateClient" target="GUI.Components.ComponentsConfigure">
+      <point x="-12.350000000000364" y="-244.5" />
+      <point x="13581.215248913377" y="6572.0" />
+      <point x="13366.799652935653" y="6572.0" />
+      <point x="13366.799652935653" y="3417.0" />
+      <point x="5741.091197459575" y="3417.0" />
+      <point x="193.66666666666697" y="333.5" />
+    </edge>
+    <edge source="DB.SeasonalWorkerDB" target="DB.DataAccessException">
+      <point x="81.39999999999964" y="-343.5" />
+      <point x="4892.443906598657" y="3477.0" />
+      <point x="4871.163209706959" y="3477.0" />
+      <point x="4871.163209706959" y="2256.0" />
+      <point x="8558.60982330335" y="2256.0" />
+      <point x="-66.0" y="47.5" />
+    </edge>
+    <edge source="GUI.ViewWorkTask" target="DB.DataAccessException">
+      <point x="31.4375" y="-310.5" />
+      <point x="475.68910256410254" y="5637.0" />
+      <point x="467.81410256410254" y="5637.0" />
+      <point x="467.81410256410254" y="2166.0" />
+      <point x="8502.03839473192" y="2166.0" />
+      <point x="-122.57142857142844" y="47.5" />
+    </edge>
+    <edge source="GUI.WorkersScreen" target="GUI.Components.StatusDialog">
+      <point x="28.0" y="-189.5" />
+      <point x="5865.460573265324" y="5447.0" />
+      <point x="5918.420703875081" y="5447.0" />
+      <point x="5918.420703875081" y="4712.0" />
+      <point x="5935.4189065986575" y="4712.0" />
+      <point x="-9.66666666666606" y="134.5" />
+    </edge>
+    <edge source="Model.Employee" target="Model.Person">
+      <point x="-171.75" y="-90.5" />
+      <point x="7694.458614088217" y="2146.0" />
+      <point x="7946.257144731921" y="2146.0" />
+      <point x="7946.257144731921" y="910.0" />
+      <point x="7436.00089473192" y="910.0" />
+      <point x="68.375" y="189.5" />
+    </edge>
+    <edge source="GUI.MainScreen" target="GUI.Dashboard">
+      <point x="-115.5897435897432" y="-728.5" />
+      <point x="6974.0168558464575" y="8023.0" />
+      <point x="3223.484209326311" y="8023.0" />
+      <point x="-119.25" y="178.5" />
+    </edge>
+    <edge source="Controller.SeasonalWorkerCtr" target="DB.DataAccessException">
+      <point x="81.75" y="-123.5" />
+      <point x="5408.960573265324" y="4582.0" />
+      <point x="5036.0439065986575" y="4582.0" />
+      <point x="5036.0439065986575" y="2266.0" />
+      <point x="8564.895537589064" y="2266.0" />
+      <point x="-59.714285714285325" y="47.5" />
+    </edge>
+    <edge source="GUI.CheckBoxListCellRenderer" target="Model.Produce">
+      <point x="0.0" y="-26.5" />
+      <point x="12425.304781140781" y="3517.0" />
+      <point x="12859.138114474114" y="3517.0" />
+      <point x="-15.333333333333485" y="80.5" />
+    </edge>
+    <edge source="Controller.WorkSiteCtrIF" target="Model.WorkSite">
+      <point x="0.0" y="-81.5" />
+      <point x="7126.250280754883" y="2146.0" />
+      <point x="7234.8008947319195" y="2146.0" />
+      <point x="-12.075000000000728" y="211.5" />
+    </edge>
+    <edge source="GUI.PendingTasks" target="GUI.Components.StatusDialog">
+      <point x="219.625" y="-287.5" />
+      <point x="1327.3413521834545" y="6682.0" />
+      <point x="1693.0998168498163" y="6682.0" />
+      <point x="1693.0998168498163" y="4652.0" />
+      <point x="5819.4189065986575" y="4652.0" />
+      <point x="-125.66666666666606" y="134.5" />
+    </edge>
+    <edge source="GUI.RegisterWorkTask" target="Controller.WorkSiteCtr">
+      <point x="220.0625" y="-442.5" />
+      <point x="4078.43973993199" y="5497.0" />
+      <point x="7258.625280754883" y="5497.0" />
+      <point x="-35.125" y="123.5" />
+    </edge>
+    <edge source="Model.SeasonalWorker" target="Model.Person">
+      <point x="286.5" y="-156.5" />
+      <point x="4666.12589473192" y="910.0" />
+      <point x="7299.25089473192" y="910.0" />
+      <point x="-68.375" y="189.5" />
+    </edge>
+    <edge source="GUI.MainScreen" target="GUI.ClientScreen">
+      <point x="120.75" y="728.5" />
+      <point x="7210.356599436202" y="9580.0" />
+      <point x="13414.720010818139" y="9580.0" />
+      <point x="-103.03571428571468" y="-309.5" />
+    </edge>
+    <edge source="GUI.ProduceCheckList" target="GUI.CheckBoxListCellRenderer">
+      <point x="47.850000000000364" y="-244.5" />
+      <point x="12238.147649845778" y="5597.0" />
+      <point x="12425.304781140781" y="5597.0" />
+      <point x="0.0" y="26.5" />
+    </edge>
+    <edge source="GUI.MainScreen" target="GUI.Components.BackgroundWorker">
+      <point x="49.53846153846189" y="-728.5" />
+      <point x="7139.145060974663" y="7943.0" />
+      <point x="8615.115775684302" y="7943.0" />
+      <point x="-29.41666666666697" y="26.5" />
+    </edge>
+    <edge source="GUI.ViewEmployee" target="Model.Employee">
+      <point x="0.0" y="-442.5" />
+      <point x="7479.958614088217" y="3527.0" />
+      <point x="7565.646114088217" y="3527.0" />
+      <point x="-300.5625" y="90.5" />
+    </edge>
+    <edge source="DB.WorkTaskDB" target="DB.WorkTaskDBIF">
+      <point x="-163.1111111111113" y="-343.5" />
+      <point x="886.7029914529912" y="3447.0" />
+      <point x="753.5641025641025" y="3447.0" />
+      <point x="91.75" y="103.5" />
+    </edge>
+    <edge source="DB.ClientDBIF" target="Model.Client">
+      <point x="0.0" y="-70.5" />
+      <point x="13842.799652935653" y="3557.0" />
+      <point x="13668.532986268987" y="3557.0" />
+      <point x="31.866666666666788" y="211.5" />
+    </edge>
+    <edge source="DB.SeasonalWorkerDBIF" target="Model.SeasonalWorker">
+      <point x="0.0" y="-103.5" />
+      <point x="4383.0439065986575" y="1343.0" />
+      <point x="4430.559228065253" y="1343.0" />
+      <point x="50.933333333332484" y="156.5" />
+    </edge>
+    <edge source="Controller.DataModel.WorkTaskDataModel" target="Model.WorkTask">
+      <point x="39.875" y="-177.5" />
+      <point x="3391.9748168498163" y="5427.0" />
+      <point x="3363.0998168498163" y="5427.0" />
+      <point x="3363.0998168498163" y="900.0" />
+      <point x="1006.5712454212444" y="900.0" />
+      <point x="73.39999999999964" y="145.5" />
+    </edge>
+    <edge source="GUI.EmployeeDatabaseScreen" target="GUI.Components.StatusDialog">
+      <point x="-325.0" y="-299.5" />
+      <point x="6840.800001874777" y="6682.0" />
+      <point x="6071.960573265324" y="6682.0" />
+      <point x="6071.960573265324" y="4712.0" />
+      <point x="5954.75223993199" y="4712.0" />
+      <point x="9.66666666666606" y="134.5" />
+    </edge>
+    <edge source="GUI.ProduceCheckList" target="DB.ProduceDB">
+      <point x="79.75" y="-244.5" />
+      <point x="12270.047649845776" y="5607.0" />
+      <point x="12875.054781140781" y="5607.0" />
+      <point x="-73.75" y="277.5" />
+    </edge>
+    <edge source="DB.ClientDB" target="Model.Client">
+      <point x="20.0" y="-244.5" />
+      <point x="14188.299652935653" y="4732.0" />
+      <point x="14159.299652935653" y="4732.0" />
+      <point x="14159.299652935653" y="3527.0" />
+      <point x="13764.132986268989" y="3527.0" />
+      <point x="127.46666666666715" y="211.5" />
+    </edge>
+    <edge source="DB.ProduceDB" target="DB.DataAccessException">
+      <point x="-118.0" y="-277.5" />
+      <point x="12830.804781140781" y="4732.0" />
+      <point x="12731.804781140781" y="4732.0" />
+      <point x="12731.804781140781" y="1956.0" />
+      <point x="8703.181251874777" y="1956.0" />
+      <point x="78.57142857142844" y="47.5" />
+    </edge>
+    <edge source="Controller.WorkTaskCtrIF" target="Model.WorkTask">
+      <point x="0.0" y="-103.5" />
+      <point x="1455.0998168498163" y="910.0" />
+      <point x="982.1045787545772" y="910.0" />
+      <point x="48.933333333332484" y="145.5" />
+    </edge>
+    <edge source="DB.ProduceDBIF" target="Model.Produce">
+      <point x="0.0" y="-81.5" />
+      <point x="15.333333333333485" y="80.5" />
+    </edge>
+    <edge source="Controller.WorkTypeCtrIF" target="Model.WorkType">
+      <point x="0.0" y="-81.5" />
+      <point x="11936.138114474117" y="371.0" />
+      <point x="4079.1940765501017" y="371.0" />
+      <point x="108.56818181818198" y="145.5" />
+    </edge>
+    <edge source="DB.WorkSiteProduceDB" target="Model.WorkSiteProduce">
+      <point x="-80.80000000000018" y="-277.5" />
+      <point x="11037.929781140781" y="5637.0" />
+      <point x="11072.829781140783" y="5637.0" />
+      <point x="11072.829781140783" y="4732.0" />
+      <point x="10972.079781140783" y="4732.0" />
+      <point x="-40.399999999999636" y="69.5" />
+    </edge>
+    <edge source="GUI.ProduceCheckList" target="Controller.WorkTypeCtr">
+      <point x="-79.75" y="-244.5" />
+      <point x="12110.547649845776" y="5617.0" />
+      <point x="11861.804781140781" y="5617.0" />
+      <point x="-78.5" y="123.5" />
+    </edge>
+    <edge source="GUI.LoginScreen" target="GUI.JTextFieldHintUI">
+      <point x="70.75" y="-189.5" />
+      <point x="5985.831022937048" y="6752.0" />
+      <point x="7592.650001874777" y="6752.0" />
+      <point x="-84.40000000000009" y="134.5" />
+    </edge>
+    <edge source="GUI.ClientScreen" target="GUI.CreateClient">
+      <point x="-20.607142857143117" y="-309.5" />
+      <point x="13497.148582246711" y="9610.0" />
+      <point x="13546.89858224671" y="9610.0" />
+      <point x="13546.89858224671" y="8073.0" />
+      <point x="13511.231915580043" y="8073.0" />
+      <point x="-82.33333333333303" y="244.5" />
+    </edge>
+    <edge source="DB.WorkSiteProduceDB" target="DB.DBConnection">
+      <point x="161.60000000000036" y="-277.5" />
+      <point x="11280.329781140783" y="5627.0" />
+      <point x="11156.079781140783" y="5627.0" />
+      <point x="11156.079781140783" y="1996.0" />
+      <point x="10360.454781140783" y="1996.0" />
+      <point x="10.25" y="199.5" />
+    </edge>
+    <edge source="GUI.CreateWorkSite" target="GUI.ProduceCheckList">
+      <point x="160.340909090909" y="-530.5" />
+      <point x="10991.133314387915" y="6722.0" />
+      <point x="12190.297649845776" y="6722.0" />
+      <point x="0.0" y="244.5" />
+    </edge>
+    <edge source="DB.WorkSiteProduceDBIF" target="Model.WorkSiteProduce">
+      <point x="0.0" y="-81.5" />
+      <point x="10860.329781140783" y="4732.0" />
+      <point x="10931.679781140781" y="4732.0" />
+      <point x="-80.80000000000018" y="69.5" />
+    </edge>
+    <edge source="GUI.ClientScreen" target="Controller.ClientCtrIF">
+      <point x="144.25" y="-309.5" />
+      <point x="13662.005725103852" y="9590.0" />
+      <point x="14367.085367221367" y="9590.0" />
+      <point x="14367.085367221367" y="5597.0" />
+      <point x="13630.174652935653" y="5597.0" />
+      <point x="108.375" y="70.5" />
+    </edge>
+    <edge source="GUI.MainScreen" target="Controller.SeasonalWorkerCtrIF">
+      <point x="-66.05128205128221" y="-728.5" />
+      <point x="7023.555317384918" y="7963.0" />
+      <point x="4129.03348993199" y="7963.0" />
+      <point x="4129.03348993199" y="4622.0" />
+      <point x="4107.2939065986575" y="4622.0" />
+      <point x="0.0" y="81.5" />
+    </edge>
+    <edge source="GUI.PendingTasks" target="GUI.Components.BackgroundWorker">
+      <point x="470.625" y="-287.5" />
+      <point x="1578.3413521834545" y="6722.0" />
+      <point x="7539.050001874777" y="6722.0" />
+      <point x="7539.050001874777" y="5637.0" />
+      <point x="8556.28244235097" y="5637.0" />
+      <point x="-88.25" y="26.5" />
+    </edge>
+    <edge source="GUI.ClientScreen" target="GUI.Components.BackgroundWorker">
+      <point x="-61.82142857142844" y="-309.5" />
+      <point x="13455.934296532425" y="9620.0" />
+      <point x="13459.565248913375" y="9620.0" />
+      <point x="13459.565248913375" y="6712.0" />
+      <point x="13198.304781140781" y="6712.0" />
+      <point x="13198.304781140781" y="5437.0" />
+      <point x="8732.78244235097" y="5437.0" />
+      <point x="88.25" y="26.5" />
+    </edge>
+    <edge source="GUI.PendingTasks" target="Controller.SeasonalWorkerCtr">
+      <point x="407.875" y="-287.5" />
+      <point x="1515.5913521834545" y="6712.0" />
+      <point x="1984.0998168498163" y="6712.0" />
+      <point x="1984.0998168498163" y="5447.0" />
+      <point x="5204.585573265324" y="5447.0" />
+      <point x="-122.625" y="123.5" />
+    </edge>
+    <edge source="GUI.ViewWorkTask" target="GUI.Components.StatusDialog">
+      <point x="136.22916666666606" y="-310.5" />
+      <point x="580.4807692307686" y="5377.0" />
+      <point x="877.8141025641025" y="5377.0" />
+      <point x="877.8141025641025" y="4642.0" />
+      <point x="5800.085573265324" y="4642.0" />
+      <point x="-145.0" y="134.5" />
+    </edge>
+    <edge source="GUI.Dashboard" target="Controller.DataModel.WorkTaskDataModel">
+      <point x="-66.25" y="-178.5" />
+      <point x="3276.484209326311" y="6612.0" />
+      <point x="3431.8498168498163" y="6612.0" />
+      <point x="79.75" y="177.5" />
+    </edge>
+    <edge source="GUI.RegisterWorkTask" target="GUI.WorkTaskWorkSiteComboBoxRenderer">
+      <point x="-199.10416666666606" y="-442.5" />
+      <point x="3659.273073265324" y="5357.0" />
+      <point x="3170.0998168498163" y="5357.0" />
+      <point x="149.5" y="47.5" />
+    </edge>
+    <edge source="DB.WorkSiteDB" target="DB.WorkSiteDBIF">
+      <point x="-21.125" y="-409.5" />
+      <point x="9737.395537589065" y="3577.0" />
+      <point x="9728.145537589065" y="3577.0" />
+      <point x="0.0" y="125.5" />
+    </edge>
+    <edge source="GUI.CreateClient" target="Model.Client">
+      <point x="61.75" y="-244.5" />
+      <point x="13655.315248913375" y="6732.0" />
+      <point x="13687.799652935653" y="6732.0" />
+      <point x="13687.799652935653" y="3567.0" />
+      <point x="13636.666319602322" y="3567.0" />
+      <point x="0.0" y="211.5" />
+    </edge>
+    <edge source="GUI.RegisterWorkTask" target="GUI.WorkTaskWorkTypeComboBoxRenderer">
+      <point x="-220.0625" y="-442.5" />
+      <point x="3638.31473993199" y="5367.0" />
+      <point x="2549.0998168498163" y="5367.0" />
+      <point x="152.5" y="47.5" />
+    </edge>
+    <edge source="Controller.SeasonalWorkerCtr" target="DB.SeasonalWorkerDB">
+      <point x="27.25" y="-123.5" />
+      <point x="5354.460573265324" y="4592.0" />
+      <point x="4811.0439065986575" y="4592.0" />
+      <point x="0.0" y="343.5" />
+    </edge>
+    <edge source="GUI.RegisterWorkTask" target="Controller.SeasonalWorkerCtr">
+      <point x="178.14583333333394" y="-442.5" />
+      <point x="4036.523073265324" y="5457.0" />
+      <point x="5286.335573265324" y="5457.0" />
+      <point x="-40.875" y="123.5" />
+    </edge>
+    <edge source="Controller.ClientCtr" target="Model.Client">
+      <point x="-24.08333333333303" y="-112.5" />
+      <point x="13908.257986268987" y="5607.0" />
+      <point x="13997.799652935653" y="5607.0" />
+      <point x="13997.799652935653" y="3547.0" />
+      <point x="13700.399652935655" y="3547.0" />
+      <point x="63.733333333333576" y="211.5" />
+    </edge>
+    <edge source="DB.EmployeeDBIF" target="Model.Employee">
+      <point x="0.0" y="-70.5" />
+      <point x="7920.208614088217" y="3547.0" />
+      <point x="7909.146114088217" y="3547.0" />
+      <point x="42.9375" y="90.5" />
+    </edge>
+    <edge source="GUI.RegisterWorkTask" target="Controller.WorkSiteCtrIF">
+      <point x="199.10416666666606" y="-442.5" />
+      <point x="4057.481406598656" y="5477.0" />
+      <point x="5501.210573265324" y="5477.0" />
+      <point x="5501.210573265324" y="4732.0" />
+      <point x="7070.050280754882" y="4732.0" />
+      <point x="-56.20000000000073" y="81.5" />
+    </edge>
+    <edge source="GUI.CreateClient" target="Controller.ClientCtr">
+      <point x="86.44999999999982" y="-244.5" />
+      <point x="13680.015248913376" y="6752.0" />
+      <point x="13932.341319602321" y="6752.0" />
+      <point x="0.0" y="112.5" />
+    </edge>
+    <edge source="DB.ClientDB" target="DB.DataAccessException">
+      <point x="100.0" y="-244.5" />
+      <point x="14268.299652935653" y="4712.0" />
+      <point x="14181.299652935653" y="4712.0" />
+      <point x="14181.299652935653" y="1846.0" />
+      <point x="8734.60982330335" y="1846.0" />
+      <point x="110.0" y="47.5" />
+    </edge>
+    <edge source="GUI.WorkSiteDashboard" target="GUI.Components.BackgroundWorker">
+      <point x="-130.28571428571468" y="-243.5" />
+      <point x="8744.85982330335" y="5447.0" />
+      <point x="8673.949109017636" y="5447.0" />
+      <point x="29.41666666666697" y="26.5" />
+    </edge>
+    <edge source="Controller.WorkSiteCtr" target="DB.DataAccessException">
+      <point x="-23.41666666666697" y="-123.5" />
+      <point x="7270.333614088216" y="4732.0" />
+      <point x="7288.250280754883" y="4732.0" />
+      <point x="7288.250280754883" y="2306.0" />
+      <point x="8590.03839473192" y="2306.0" />
+      <point x="-34.57142857142844" y="47.5" />
+    </edge>
+    <edge source="GUI.RegisterWorkTask" target="Controller.WorkTaskCtrIF">
+      <point x="-178.14583333333394" y="-442.5" />
+      <point x="3680.231406598656" y="5347.0" />
+      <point x="3352.0998168498163" y="5347.0" />
+      <point x="3352.0998168498163" y="4502.0" />
+      <point x="1608.0164835164824" y="4502.0" />
+      <point x="152.91666666666606" y="103.5" />
+    </edge>
+    <edge source="Controller.SeasonalWorkerCtr" target="Model.SeasonalWorker">
+      <point x="-27.25" y="-123.5" />
+      <point x="5299.960573265324" y="4602.0" />
+      <point x="4597.0439065986575" y="4602.0" />
+      <point x="4597.0439065986575" y="1343.0" />
+      <point x="4481.492561398587" y="1343.0" />
+      <point x="101.86666666666679" y="156.5" />
+    </edge>
+    <edge source="GUI.CreateWorkSite" target="Model.WorkSiteProduce">
+      <point x="103.75" y="-530.5" />
+      <point x="10934.542405297005" y="6692.0" />
+      <point x="11342.22978114078" y="6692.0" />
+      <point x="11342.22978114078" y="4702.0" />
+      <point x="11093.279781140782" y="4702.0" />
+      <point x="80.80000000000018" y="69.5" />
+    </edge>
+    <edge source="DB.WorkTypeDB" target="DB.WorkTypeDBIF">
+      <point x="0.0" y="-310.5" />
+      <point x="9358.645537589065" y="2356.0" />
+      <point x="9969.379781140782" y="2356.0" />
+      <point x="0.0" y="92.5" />
+    </edge>
+    <edge source="GUI.PendingTasks" target="Controller.SeasonalWorkerCtrIF">
+      <point x="156.875" y="-287.5" />
+      <point x="1264.5913521834545" y="6672.0" />
+      <point x="1682.0998168498163" y="6672.0" />
+      <point x="1682.0998168498163" y="4612.0" />
+      <point x="3976.4939065986578" y="4612.0" />
+      <point x="-130.79999999999927" y="81.5" />
+    </edge>
+    <edge source="DB.SeasonalWorkerDB" target="DB.SeasonalWorkerDBIF">
+      <point x="-162.79999999999927" y="-343.5" />
+      <point x="4648.243906598658" y="3477.0" />
+      <point x="4484.7939065986575" y="3477.0" />
+      <point x="101.75" y="103.5" />
+    </edge>
+    <edge source="DB.WorkTaskDB" target="DB.DataAccessException">
+      <point x="40.777777777777374" y="-343.5" />
+      <point x="1090.59188034188" y="3467.0" />
+      <point x="1156.2029914529912" y="3467.0" />
+      <point x="1156.2029914529912" y="2186.0" />
+      <point x="8514.60982330335" y="2186.0" />
+      <point x="-110.0" y="47.5" />
+    </edge>
+    <edge source="DB.WorkSiteDB" target="Model.WorkType">
+      <point x="147.875" y="-409.5" />
+      <point x="9906.395537589065" y="3577.0" />
+      <point x="10592.829781140783" y="3577.0" />
+      <point x="10592.829781140783" y="381.0" />
+      <point x="4066.421349277374" y="381.0" />
+      <point x="95.79545454545405" y="145.5" />
+    </edge>
+    <edge source="DB.WorkTypeDBIF" target="Model.WorkType">
+      <point x="0.0" y="-92.5" />
+      <point x="9969.379781140782" y="401.0" />
+      <point x="4040.8758947319197" y="401.0" />
+      <point x="70.25" y="145.5" />
+    </edge>
+    <edge source="DB.EmployeeDB" target="DB.DBConnection">
+      <point x="114.0" y="-244.5" />
+      <point x="8181.708614088217" y="4712.0" />
+      <point x="8149.708614088217" y="4712.0" />
+      <point x="8149.708614088217" y="3577.0" />
+      <point x="9537.645537589065" y="3577.0" />
+      <point x="9537.645537589065" y="2406.0" />
+      <point x="10319.454781140783" y="2406.0" />
+      <point x="-30.75" y="199.5" />
+    </edge>
+    <edge source="Controller.EmployeeCtr" target="Model.Employee">
+      <point x="21.0" y="-112.5" />
+      <point x="7423.550001874777" y="5577.0" />
+      <point x="8220.708614088217" y="5577.0" />
+      <point x="8220.708614088217" y="3497.0" />
+      <point x="8166.771114088217" y="3497.0" />
+      <point x="300.5625" y="90.5" />
+    </edge>
+    <edge source="GUI.PendingTasks" target="GUI.ViewWorkTask">
+      <point x="-219.625" y="-287.5" />
+      <point x="888.0913521834545" y="6722.0" />
+      <point x="276.5849358974365" y="6722.0" />
+      <point x="-167.66666666666606" y="310.5" />
+    </edge>
+    <edge source="DB.WorkSiteDB" target="Model.WorkSite">
+      <point x="-63.375" y="-409.5" />
+      <point x="9695.145537589065" y="3547.0" />
+      <point x="9548.645537589065" y="3547.0" />
+      <point x="9548.645537589065" y="2066.0" />
+      <point x="7355.5508947319195" y="2066.0" />
+      <point x="108.67499999999927" y="211.5" />
+    </edge>
+    <edge source="GUI.CreateWorkSite" target="GUI.MainScreen">
+      <point x="155.625" y="530.5" />
+      <point x="10986.417405297005" y="8023.0" />
+      <point x="7205.196343025944" y="8023.0" />
+      <point x="115.5897435897432" y="-728.5" />
+    </edge>
+    <edge source="GUI.CreateWorkSite" target="Model.WorkSite">
+      <point x="-66.02272727272793" y="-530.5" />
+      <point x="10764.769678024277" y="6682.0" />
+      <point x="9179.645537589065" y="6682.0" />
+      <point x="9179.645537589065" y="2096.0" />
+      <point x="7331.40089473192" y="2096.0" />
+      <point x="84.52499999999964" y="211.5" />
+    </edge>
+    <edge source="Controller.EmployeeCtr" target="DB.EmployeeDB">
+      <point x="-21.0" y="-112.5" />
+      <point x="7381.550001874777" y="5567.0" />
+      <point x="8067.708614088217" y="5567.0" />
+      <point x="0.0" y="244.5" />
+    </edge>
+    <edge source="GUI.RegisterWorkTask" target="Controller.SeasonalWorkerCtrIF">
+      <point x="115.27083333333394" y="-442.5" />
+      <point x="3973.648073265324" y="5347.0" />
+      <point x="3933.343906598657" y="5347.0" />
+      <point x="3933.343906598657" y="4622.0" />
+      <point x="4041.8939065986574" y="4622.0" />
+      <point x="-65.39999999999964" y="81.5" />
+    </edge>
+    <edge source="GUI.WorkSiteDashboard" target="DB.DataAccessException">
+      <point x="130.28571428571468" y="-243.5" />
+      <point x="9005.43125187478" y="5637.0" />
+      <point x="8951.28839473192" y="5637.0" />
+      <point x="8951.28839473192" y="3537.0" />
+      <point x="9114.109823303352" y="3537.0" />
+      <point x="9114.109823303352" y="2116.0" />
+      <point x="8640.324109017634" y="2116.0" />
+      <point x="15.714285714285325" y="47.5" />
+    </edge>
+    <edge source="GUI.EmployeeDatabaseScreen" target="GUI.Components.ComponentsConfigure">
+      <point x="-195.0" y="-299.5" />
+      <point x="6970.800001874777" y="6712.0" />
+      <point x="6975.201644693895" y="6712.0" />
+      <point x="6975.250280754883" y="3527.0" />
+      <point x="5602.757864126241" y="3527.0" />
+      <point x="55.33333333333303" y="333.5" />
+    </edge>
+    <edge source="GUI.EmployeeDatabaseScreen" target="Model.Employee">
+      <point x="65.0" y="-299.5" />
+      <point x="7230.800001874777" y="6682.0" />
+      <point x="7148.87589473192" y="6682.0" />
+      <point x="7148.87589473192" y="5547.0" />
+      <point x="7783.708614088217" y="5547.0" />
+      <point x="7783.708614088217" y="3547.0" />
+      <point x="7823.271114088217" y="3547.0" />
+      <point x="-42.9375" y="90.5" />
+    </edge>
+    <edge source="DB.WorkSiteDBIF" target="Model.WorkSite">
+      <point x="0.0" y="-125.5" />
+      <point x="9728.145537589065" y="2056.0" />
+      <point x="7379.700894731921" y="2056.0" />
+      <point x="132.82500000000073" y="211.5" />
+    </edge>
+    <edge source="GUI.DBStatus.StatusThread" target="DB.DataAccessException">
+      <point x="-19.33333333333303" y="-177.5" />
+      <point x="12894.303710451837" y="6682.0" />
+      <point x="13154.304781140781" y="6682.0" />
+      <point x="13154.304781140781" y="1936.0" />
+      <point x="8709.466966160493" y="1936.0" />
+      <point x="84.85714285714312" y="47.5" />
+    </edge>
+    <edge source="DB.WorkSiteProduceDB" target="DB.DataAccessException">
+      <point x="80.80000000000018" y="-277.5" />
+      <point x="11199.529781140782" y="5637.0" />
+      <point x="11145.079781140783" y="5637.0" />
+      <point x="11145.079781140783" y="2006.0" />
+      <point x="8678.03839473192" y="2006.0" />
+      <point x="53.42857142857156" y="47.5" />
+    </edge>
+    <edge source="Controller.WorkSiteCtr" target="DB.WorkSiteDB">
+      <point x="117.08333333333303" y="-123.5" />
+      <point x="7410.833614088216" y="4732.0" />
+      <point x="9716.270537589065" y="4732.0" />
+      <point x="-42.25" y="409.5" />
+    </edge>
+    <edge source="GUI.RegisterWorkTask" target="GUI.Components.BackgroundWorker">
+      <point x="241.02083333333394" y="-442.5" />
+      <point x="4099.398073265324" y="5627.0" />
+      <point x="8497.449109017636" y="5627.0" />
+      <point x="-147.08333333333303" y="26.5" />
+    </edge>
+    <edge source="GUI.WorkersScreen" target="Controller.SeasonalWorkerCtr">
+      <point x="-196.0" y="-189.5" />
+      <point x="5641.460573265324" y="5467.0" />
+      <point x="5449.835573265324" y="5467.0" />
+      <point x="122.625" y="123.5" />
+    </edge>
+    <edge source="DB.WorkTaskDB" target="Model.WorkType">
+      <point x="0.0" y="-343.5" />
+      <point x="1049.8141025641025" y="3447.0" />
+      <point x="1138.1712454212447" y="3447.0" />
+      <point x="1138.1712454212447" y="381.0" />
+      <point x="3925.921349277374" y="381.0" />
+      <point x="-44.70454545454595" y="145.5" />
+    </edge>
+    <edge source="GUI.WorkersScreen" target="Controller.SeasonalWorkerCtrIF">
+      <point x="-140.0" y="-189.5" />
+      <point x="5697.460573265324" y="5457.0" />
+      <point x="5632.837370541748" y="5457.0" />
+      <point x="5632.837370541748" y="4562.0" />
+      <point x="4238.093906598657" y="4562.0" />
+      <point x="130.79999999999927" y="81.5" />
+    </edge>
+    <edge source="DB.WorkSiteDB" target="DB.DBConnection">
+      <point x="105.625" y="-409.5" />
+      <point x="9864.145537589065" y="3567.0" />
+      <point x="10486.402793040295" y="3567.0" />
+      <point x="10486.402793040295" y="2406.0" />
+      <point x="10339.954781140783" y="2406.0" />
+      <point x="-10.25" y="199.5" />
+    </edge>
+    <edge source="DB.ClientDB" target="Model.WorkSite">
+      <point x="60.0" y="-244.5" />
+      <point x="14228.299652935653" y="4722.0" />
+      <point x="14170.299652935653" y="4722.0" />
+      <point x="14170.299652935653" y="1856.0" />
+      <point x="7476.3008947319195" y="1856.0" />
+      <point x="229.42499999999927" y="211.5" />
+    </edge>
+    <edge source="Controller.SeasonalWorkerCtr" target="DB.SeasonalWorkerDBIF">
+      <point x="-81.75" y="-123.5" />
+      <point x="5245.460573265324" y="4612.0" />
+      <point x="4281.2939065986575" y="4612.0" />
+      <point x="-101.75" y="103.5" />
+    </edge>
+    <edge source="Controller.DataModel.WorkTaskDataModel" target="Controller.WorkTaskCtr">
+      <point x="-119.625" y="-177.5" />
+      <point x="3232.4748168498163" y="5387.0" />
+      <point x="1960.499816849816" y="5387.0" />
+      <point x="73.39999999999964" y="145.5" />
+    </edge>
+    <edge source="GUI.CreateClient" target="GUI.JTextFieldHintUI">
+      <point x="-111.14999999999964" y="-244.5" />
+      <point x="13482.415248913378" y="6612.0" />
+      <point x="7761.450001874778" y="6612.0" />
+      <point x="84.40000000000009" y="134.5" />
+    </edge>
+    <edge source="Model.SeasonalWorker" target="Model.WorkTask">
+      <point x="-286.5" y="-156.5" />
+      <point x="4093.1258947319197" y="870.0" />
+      <point x="1079.971245421244" y="870.0" />
+      <point x="146.79999999999927" y="145.5" />
+    </edge>
+    <edge source="DB.ClientDB" target="DB.WorkSiteDB">
+      <point x="-100.0" y="-244.5" />
+      <point x="14068.299652935653" y="4592.0" />
+      <point x="9885.270537589065" y="4592.0" />
+      <point x="126.75" y="409.5" />
+    </edge>
+    <edge source="GUI.MainScreen" target="GUI.PendingTasks">
+      <point x="-140.3589743589746" y="-728.5" />
+      <point x="6949.247625077227" y="8053.0" />
+      <point x="982.2163521834545" y="8053.0" />
+      <point x="-125.5" y="287.5" />
+    </edge>
+    <edge source="Model.WorkSite" target="Model.SeasonalWorker">
+      <point x="-181.125" y="-211.5" />
+      <point x="7065.75089473192" y="1303.0" />
+      <point x="4685.225894731921" y="1303.0" />
+      <point x="305.60000000000036" y="156.5" />
+    </edge>
+    <edge source="GUI.EmployeeDatabaseScreen" target="Controller.EmployeeCtr">
+      <point x="130.0" y="-299.5" />
+      <point x="7295.800001874777" y="6712.0" />
+      <point x="7402.550001874777" y="6712.0" />
+      <point x="0.0" y="112.5" />
+    </edge>
+    <edge source="GUI.LoginScreen" target="GUI.Components.ComponentsConfigure">
+      <point x="-70.75" y="-189.5" />
+      <point x="5844.331022937048" y="6712.0" />
+      <point x="5153.210573265324" y="6712.0" />
+      <point x="5153.210573265324" y="3547.0" />
+      <point x="5519.757864126241" y="3547.0" />
+      <point x="-27.66666666666697" y="333.5" />
+    </edge>
+    <edge source="Controller.ClientCtr" target="DB.DataAccessException">
+      <point x="72.25" y="-112.5" />
+      <point x="14004.591319602321" y="5627.0" />
+      <point x="14338.799652935653" y="5627.0" />
+      <point x="14338.799652935653" y="1826.0" />
+      <point x="8740.895537589064" y="1826.0" />
+      <point x="116.28571428571377" y="47.5" />
+    </edge>
+    <edge source="Controller.WorkTaskCtr" target="Controller.WorkTaskCtrIF">
+      <point x="152.91666666666606" y="-145.5" />
+      <point x="2040.0164835164824" y="4552.0" />
+      <point x="1424.5164835164824" y="4552.0" />
+      <point x="-30.58333333333394" y="103.5" />
+    </edge>
+    <edge source="DB.WorkSiteDB" target="DB.DataAccessException">
+      <point x="63.375" y="-409.5" />
+      <point x="9821.895537589065" y="3557.0" />
+      <point x="10196.56350732601" y="3557.0" />
+      <point x="10196.56350732601" y="2036.0" />
+      <point x="8659.181251874777" y="2036.0" />
+      <point x="34.57142857142844" y="47.5" />
+    </edge>
+    <edge source="GUI.Dashboard" target="Model.SeasonalWorker">
+      <point x="-39.75" y="-178.5" />
+      <point x="3302.984209326311" y="6622.0" />
+      <point x="3522.0998168498163" y="6622.0" />
+      <point x="3522.0998168498163" y="1303.0" />
+      <point x="4226.825894731921" y="1303.0" />
+      <point x="-152.79999999999927" y="156.5" />
+    </edge>
+    <edge source="DB.EmployeeDB" target="DB.EmployeeDBIF">
+      <point x="-114.0" y="-244.5" />
+      <point x="7953.708614088217" y="4712.0" />
+      <point x="7983.208614088217" y="4712.0" />
+      <point x="63.0" y="70.5" />
+    </edge>
+    <edge source="DB.WorkTaskDB" target="Model.WorkTask">
+      <point x="-122.33333333333394" y="-343.5" />
+      <point x="927.4807692307686" y="3447.0" />
+      <point x="939.9045787545783" y="3447.0" />
+      <point x="939.9045787545783" y="910.0" />
+      <point x="933.1712454212447" y="910.0" />
+      <point x="0.0" y="145.5" />
+    </edge>
+    <edge source="GUI.RegisterWorkTask" target="Model.SeasonalWorker">
+      <point x="-52.39583333333394" y="-442.5" />
+      <point x="3805.981406598656" y="5427.0" />
+      <point x="3796.543906598657" y="5427.0" />
+      <point x="3796.543906598657" y="1323.0" />
+      <point x="4328.692561398588" y="1323.0" />
+      <point x="-50.933333333332484" y="156.5" />
+    </edge>
+    <edge source="Controller.EmployeeCtr" target="Controller.EmployeeCtrIF">
+      <point x="-105.0" y="-112.5" />
+      <point x="7297.550001874777" y="5537.0" />
+      <point x="7710.208614088217" y="5537.0" />
+      <point x="63.0" y="70.5" />
+    </edge>
+    <edge source="GUI.CreateWorkSite" target="GUI.Components.StatusDialog">
+      <point x="-141.47727272727298" y="-530.5" />
+      <point x="10689.315132569733" y="6722.0" />
+      <point x="9124.645537589065" y="6722.0" />
+      <point x="9124.645537589065" y="4642.0" />
+      <point x="6070.75223993199" y="4642.0" />
+      <point x="125.66666666666606" y="134.5" />
+    </edge>
+    <edge source="DB.ProduceDB" target="DB.DBConnection">
+      <point x="118.0" y="-277.5" />
+      <point x="13066.804781140781" y="4732.0" />
+      <point x="13069.804781140781" y="4732.0" />
+      <point x="13069.804781140781" y="1946.0" />
+      <point x="10380.954781140783" y="1946.0" />
+      <point x="30.75" y="199.5" />
+    </edge>
+    <edge source="GUI.CreateWorkSite" target="Model.Client">
+      <point x="9.431818181818016" y="-530.5" />
+      <point x="10840.224223478825" y="6642.0" />
+      <point x="10636.829781140783" y="6642.0" />
+      <point x="10636.829781140783" y="3537.0" />
+      <point x="13445.466319602321" y="3537.0" />
+      <point x="-191.19999999999982" y="211.5" />
+    </edge>
+    <edge source="GUI.EmployeeDatabaseScreen" target="GUI.ViewEmployee">
+      <point x="-65.0" y="-299.5" />
+      <point x="7100.800001874777" y="6702.0" />
+      <point x="7001.37589473192" y="6702.0" />
+      <point x="7001.37589473192" y="5517.0" />
+      <point x="7485.458614088217" y="5517.0" />
+      <point x="7485.458614088217" y="4712.0" />
+      <point x="7542.458614088217" y="4712.0" />
+      <point x="62.5" y="442.5" />
+    </edge>
+    <edge source="GUI.WorkSiteClientComboBoxRenderer" target="Model.Client">
+      <point x="0.0" y="-47.5" />
+      <point x="11449.579781140783" y="3557.0" />
+      <point x="13509.199652935655" y="3557.0" />
+      <point x="-127.46666666666624" y="211.5" />
+    </edge>
+    <edge source="GUI.ViewWorkTask" target="Controller.WorkTaskCtrIF">
+      <point x="94.3125" y="-310.5" />
+      <point x="538.5641025641025" y="5357.0" />
+      <point x="855.8141025641025" y="5357.0" />
+      <point x="855.8141025641025" y="4622.0" />
+      <point x="1302.1831501831502" y="4622.0" />
+      <point x="-152.91666666666606" y="103.5" />
+    </edge>
+    <edge source="GUI.PendingTasks" target="Model.SeasonalWorker">
+      <point x="-345.125" y="-287.5" />
+      <point x="762.5913521834545" y="6742.0" />
+      <point x="72.25160256410254" y="6742.0" />
+      <point x="72.25160256410254" y="4732.0" />
+      <point x="160.25160256410254" y="4732.0" />
+      <point x="160.25160256410254" y="1273.0" />
+      <point x="4074.0258947319194" y="1273.0" />
+      <point x="-305.60000000000036" y="156.5" />
+    </edge>
+    <edge source="Controller.EmployeeCtrIF" target="Model.Employee">
+      <point x="0.0" y="-70.5" />
+      <point x="7647.208614088217" y="3547.0" />
+      <point x="7737.396114088217" y="3547.0" />
+      <point x="-128.8125" y="90.5" />
+    </edge>
+    <edge source="GUI.Components.BackgroundWorker" target="GUI.Components.StatusDialog">
+      <point x="-44.125" y="-26.5" />
+      <point x="8600.40744235097" y="4672.0" />
+      <point x="6032.085573265324" y="4672.0" />
+      <point x="87.0" y="134.5" />
+    </edge>
+    <edge source="Controller.WorkSiteCtr" target="Model.WorkSite">
+      <point x="-70.25" y="-123.5" />
+      <point x="7223.500280754883" y="4722.0" />
+      <point x="7277.250280754883" y="4722.0" />
+      <point x="7277.250280754883" y="2146.0" />
+      <point x="7258.950894731921" y="2146.0" />
+      <point x="12.075000000000728" y="211.5" />
+    </edge>
+    <edge source="Controller.ClientCtr" target="DB.ClientDB">
+      <point x="24.08333333333303" y="-112.5" />
+      <point x="13956.424652935653" y="5617.0" />
+      <point x="14168.299652935653" y="5617.0" />
+      <point x="0.0" y="244.5" />
+    </edge>
+    <edge source="DB.EmployeeDB" target="DB.DataAccessException">
+      <point x="57.0" y="-244.5" />
+      <point x="8124.708614088217" y="4712.0" />
+      <point x="8138.708614088217" y="4712.0" />
+      <point x="8138.708614088217" y="3507.0" />
+      <point x="8531.995816469167" y="3507.0" />
+      <point x="8531.995816469167" y="2326.0" />
+      <point x="8602.60982330335" y="2326.0" />
+      <point x="-22.0" y="47.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="7200.5" y="5129.499999999999" />
   <SelectedNodes />
-  <Categories />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+  </Categories>
   <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
 </Diagram>
 

@@ -14,41 +14,38 @@ import java.awt.*;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
+/**
+ * A view extending JFrame. Allows for adding of new clients into the Herbal Time database.
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0 (29.05.2020)
+ *
+ * Date: 29.05.2020
+ */
 public class CreateClient extends JFrame {
 
-    private JLabel clientCVR;
     private JTextField clientCVRField;
-    private JLabel clientEmail;
     private JTextField clientEmailField;
-    private JPanel clientInformationContainer;
-    private JLabel clientName;
     private JTextField clientNameField;
-    private JLabel clientPhone;
     private JTextField clientPhoneField;
-    private JLabel country;
     private JTextField countryField;
-    private JLabel dateEnd;
     private DateTimePicker dateEndPicker;
-    private JLabel dateStart;
     private DateTimePicker dateStartPicker;
-    private JLabel exitBtn;
-    private JLabel frameTitle;
-    private JButton cancelBtn;
-    private JButton createBtn;
-    private JPanel mainContainer;
-    private JLabel maximizeBtn;
-    private JLabel minimizeBtn;
-    private JLabel profilePicture;
-    private JLabel streetName;
     private JTextField streetNameField;
     private JTextField streetNoField;
-    private JPanel topBar;
-    private JLabel zipCode;
     private JTextField zipCodeField;
 
-    private ClientCtrIF clientController;
+    private final ClientCtrIF clientController;
     private static ClientScreen clientScreen;
 
+    /**
+     * Constructor for the CreateClient  screen
+     * @param clientScreen ClientScreen instance required for navigation through the views
+     */
     public CreateClient(ClientScreen clientScreen) {
         CreateClient.clientScreen = clientScreen;
         clientController = new ClientCtr();
@@ -59,6 +56,10 @@ public class CreateClient extends JFrame {
         main(null);
     }
 
+    /**
+     * Main method used to run the class directly, set up for catching errors
+     * @param args Java arguments
+     */
     public static void main(String[] args) {
         try {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -73,6 +74,10 @@ public class CreateClient extends JFrame {
         EventQueue.invokeLater(() -> new CreateClient(clientScreen).setVisible(true));
     }
 
+    /**
+     * Setup all the labels for JTextFields
+     * @param labels One or more labels to be added
+     */
     private void configureLabel(JLabel... labels) {
         Arrays.stream(labels).forEach((l) -> {
             l.setFont(new Font("Dialog", Font.BOLD, 12));
@@ -81,11 +86,20 @@ public class CreateClient extends JFrame {
         });
     }
 
+    /**
+     * Used for setting up text fields, and making them all a set color
+     * @param field JTextField to set up
+     * @param string String, placeholder text for JTextField
+     */
     private void configureField(JTextField field, String string) {
         field.setUI(new JTextFieldHintUI(string, Color.GRAY));
     }
 
-    private void createClient() throws DataAccessException {
+    /**
+     * Check if all data is correct, alert the user of errors and finally proceed to insert the new Client into the
+     * database
+     */
+    private void createClient() {
         Client toInsert = new Client();
 
         if (clientCVRField.getText().isEmpty()) {
@@ -193,37 +207,40 @@ public class CreateClient extends JFrame {
         }
     }
 
+    /**
+     * Initialize all components and layouts part of the panel.
+     */
     private void initComponents() {
 
-        mainContainer = new JPanel();
-        topBar = new JPanel();
-        frameTitle = new JLabel();
-        minimizeBtn = new JLabel();
-        maximizeBtn = new JLabel();
-        exitBtn = new JLabel();
-        clientInformationContainer = new JPanel();
-        profilePicture = new JLabel();
-        clientName = new JLabel();
+        JPanel mainContainer = new JPanel();
+        JPanel topBar = new JPanel();
+        JLabel frameTitle = new JLabel();
+        JLabel minimizeBtn = new JLabel();
+        JLabel maximizeBtn = new JLabel();
+        JLabel exitBtn = new JLabel();
+        JPanel clientInformationContainer = new JPanel();
+        JLabel profilePicture = new JLabel();
+        JLabel clientName = new JLabel();
         clientNameField = new JTextField();
-        clientCVR = new JLabel();
+        JLabel clientCVR = new JLabel();
         clientCVRField = new JTextField();
-        clientEmail = new JLabel();
+        JLabel clientEmail = new JLabel();
         clientEmailField = new JTextField();
         clientPhoneField = new JTextField();
-        clientPhone = new JLabel();
-        streetName = new JLabel();
+        JLabel clientPhone = new JLabel();
+        JLabel streetName = new JLabel();
         streetNameField = new JTextField();
         zipCodeField = new JTextField();
-        zipCode = new JLabel();
+        JLabel zipCode = new JLabel();
         countryField = new JTextField();
-        country = new JLabel();
-        dateStart = new JLabel();
+        JLabel country = new JLabel();
+        JLabel dateStart = new JLabel();
         dateStartPicker = new DateTimePicker();
-        dateEnd = new JLabel();
+        JLabel dateEnd = new JLabel();
         dateEndPicker = new DateTimePicker();
         streetNoField = new JTextField();
-        cancelBtn = new JButton();
-        createBtn = new JButton();
+        JButton cancelBtn = new JButton();
+        JButton createBtn = new JButton();
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new Dimension(470, 600));
@@ -281,13 +298,7 @@ public class CreateClient extends JFrame {
         ComponentsConfigure.metroBtnConfig(createBtn);
         createBtn.setIcon(ComponentsConfigure.addIcon);
         createBtn.setText("Create");
-        createBtn.addActionListener(e -> {
-            try {
-                createClient();
-            } catch (DataAccessException dataAccessException) {
-                dataAccessException.printStackTrace();
-            }
-        });
+        createBtn.addActionListener(e -> createClient());
 
         ComponentsConfigure.metroBtnConfig(cancelBtn);
         cancelBtn.setIcon(ComponentsConfigure.trashIcon);

@@ -18,7 +18,7 @@ import java.util.Random;
  * @author Adrian Mihai Dohot
  * @author Damian Hrabąszcz
  * @author Toms Vanders
- * @version 1.0
+ * @version 1.0 (29.05.2020)
  *
  * Date: 29.05.2020
  */
@@ -47,7 +47,7 @@ public class TestWorkType {
     public void testInsertWorkType() throws DataAccessException {
         wt = new WorkType(1, "d"+randomGeneratedNumString,"typeofProduce","hourly",70.00);
         WorkTypeDB wtDB = new WorkTypeDB();
-        wtDB.insertWorkType(1, wt);
+        wtDB.insertWorkType(100, wt);
         System.out.println("Successfully inserted test WorkType");
     }
 

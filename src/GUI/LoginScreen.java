@@ -1,11 +1,24 @@
 package GUI;
 
+import DB.DataAccessException;
 import GUI.Components.ComponentsConfigure;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
+/**
+ * The login screen, displayed at the start of the program
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0 (29.05.2020)
+ *
+ * Date: 29.05.2020
+ */
 public class LoginScreen extends JPanel {
     private final MainScreen mainScreen;
     private JButton exitBtn;
@@ -18,11 +31,19 @@ public class LoginScreen extends JPanel {
     private JPanel userPanel;
     private JTextField userTextField;
 
+    /**
+     * LoginScreen constructor initializing the components
+     *
+     */
     public LoginScreen(MainScreen mainScreen) {
         this.mainScreen = mainScreen;
         initComponents();
     }
 
+    /**
+     * Initialize all components and layouts part of the frame.
+     *
+     */
     private void initComponents() {
 
         loginPanel = new JPanel();
@@ -149,10 +170,18 @@ public class LoginScreen extends JPanel {
         );
     }
 
+    /**
+     * Allows the user into the program
+     * @param evt
+     */
     private void loginBtnActionPerformed(ActionEvent evt) {
         mainScreen.login();
     }
 
+    /**
+     * Exits the program
+     * @param evt
+     */
     private void exitBtnActionPerformed(ActionEvent evt) {
         System.exit(0);
     }

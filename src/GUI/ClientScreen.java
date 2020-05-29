@@ -11,6 +11,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * Application's Clients window, displays all the Clients of CS Works and allows the user to interact with them
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0 (29.05.2020)
+ *
+ * Date: 29.05.2020
+ */
 public class ClientScreen extends JPanel {
 
     private MainScreen mainScreen;
@@ -25,11 +37,18 @@ public class ClientScreen extends JPanel {
     private GroupLayout.ParallelGroup parallelGroup;
     private GroupLayout.SequentialGroup sequentialGroup;
 
+    /**
+     * Constructor for the Client screen
+     * @param mainScreen MainScreen instance required for navigation through the views
+     */
     public ClientScreen(MainScreen mainScreen) {
         initComponents();
         this.mainScreen = mainScreen;
     }
 
+    /**
+     * Initialize all components and layouts part of the panel.
+     */
     private void initComponents() {
 
         clientController = new ClientCtr();
@@ -112,22 +131,49 @@ public class ClientScreen extends JPanel {
         );
     }// </editor-fold>
 
+    /**
+     * ActionListener method for the information button
+     * used to display a view for client details
+     *
+     * Currently not implemented
+     */
     private void infoBtnActionPerformed() {
         // TODO add your handling code here:
     }
 
+    /**
+     * ActionListener method for the message button
+     * used to send a message/email to the selected client.
+     *
+     * Currently not implemented
+     */
     private void msgBtnActionPerformed() {
         // TODO add your handling code here:
     }
 
+    /**
+     * ActionListener method for the settings button
+     * used to configure client information
+     *
+     *Currently not implemented
+     */
     private void settingsBtnActionPerformed() {
         // TODO add your handling code here:
     }
 
+    /**
+     * ActionListener method for the add clients button
+     * used to instantiate a new JFrame of CreateClient
+     */
     private void addBtnActionPerformed() {
         new CreateClient(this).start();
     }
 
+    /**
+     * Configure button dimensions and icon used to reduce duplicate lines of code
+     * @param button JButton to be configured
+     * @param icon ImageIcon to set for the JButton
+     */
     private void configureButton(JButton button, ImageIcon icon){
         button.setBackground(new Color(23, 35, 51));
         button.setMaximumSize(new Dimension(70, 50));
@@ -136,6 +182,11 @@ public class ClientScreen extends JPanel {
         button.setIcon(icon);
     }
 
+    /**
+     * Creates a container using the absolute layout and prepares it for
+     * the dynamically created list of elements to be added to it.
+     * @return JPanel once configured
+     */
     public JPanel createListContainer() {
         JPanel listContainer = new JPanel();
         listContainerLayout = new GroupLayout(listContainer);
@@ -152,6 +203,10 @@ public class ClientScreen extends JPanel {
         return listContainer;
     }
 
+    /**
+     * Takes given JPanel and adds it to the listContainer to be displayed
+     * @param listElement JPanel to be added to the list
+     */
     private void addElementToList(JPanel listElement){
         parallelGroup.addGroup(listContainerLayout.createSequentialGroup()
                 .addComponent(listElement));
@@ -159,6 +214,11 @@ public class ClientScreen extends JPanel {
                 .addComponent(listElement));
     }
 
+    /**
+     * Clears up variables and re-instantiates them to ensure consistency within the views.
+     *
+     * @throws DataAccessException If the database cannot be accessed to return a list of clients
+     */
     public void loadClients() throws DataAccessException {
         clientsList = new ArrayList<>(clientController.findAllClients(false));
         MAX_CLIENTS = clientsList.size();
@@ -166,6 +226,9 @@ public class ClientScreen extends JPanel {
         createElements();
     }
 
+    /**
+     * Creates the elements that are part of the dynamic list and configures them accordingly
+     */
     private void createElements(){
         if(MAX_CLIENTS > 0){
             for(int i = 0; i < MAX_CLIENTS; i++){
@@ -191,6 +254,18 @@ public class ClientScreen extends JPanel {
         scrollableListContainer.repaint();
     }
 
+    /**
+     * Configures the given elements to fit the metro style and appear as an advanced JListItem
+     * @param listElement JPanel to be used as the container
+     * @param profilePicture JLabel to display the client profile picture
+     * @param personName JLabel to display the client name
+     * @param pName String containing the client name
+     * @param infoBtn JButton for information
+     * @param msgBtn JButton for messaging
+     * @param removeBtn JButton for removal
+     * @param currentClient Client object with the client information
+     * @param settingsBtn JButton for settings
+     */
     private void setElementComponents(JPanel listElement, JLabel profilePicture, JLabel personName, String pName, JButton infoBtn, JButton msgBtn, JButton removeBtn, Client currentClient, JButton settingsBtn){
 
         listElement.setBackground(new Color(23, 35, 51));
@@ -224,6 +299,16 @@ public class ClientScreen extends JPanel {
         settingsBtn.addActionListener(evt -> settingsBtnActionPerformed());
     }
 
+    /**
+     * Configures the layout of the given JPanel to fit the various components in a JListItem like fashion
+     * @param listElement JPanel to be used as the container
+     * @param profilePicture JLabel to display the client profile picture
+     * @param personName JLabel to display the client name
+     * @param infoBtn JButton for information
+     * @param msgBtn JButton for messaging
+     * @param removeBtn JButton for removal
+     * @param settingsBtn JButton for settings
+     */
     private void setElementGroupsPosition(JPanel listElement,JLabel profilePicture, JLabel personName, JButton infoBtn, JButton msgBtn, JButton removeBtn, JButton settingsBtn){
         GroupLayout listElementLayout = new GroupLayout(listElement);
         listElement.setLayout(listElementLayout);
@@ -263,6 +348,11 @@ public class ClientScreen extends JPanel {
         );
     }
 
+    /**
+     * Sets the visibility of the panel while also loading the clients through
+     * a background process operation
+     * @param aFlag boolean to define visibility state, true is show , false is invisible
+     */
     @Override
     public void setVisible(boolean aFlag) {
         super.setVisible(aFlag);

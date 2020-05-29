@@ -4,6 +4,7 @@ import DB.DataAccessException;
 import Controller.EmployeeCtr;
 import Controller.EmployeeCtrIF;
 import GUI.Components.ComponentsConfigure;
+import GUI.Components.StatusDialog;
 import Model.Employee;
 
 import javax.swing.*;
@@ -11,6 +12,18 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
+/**
+ * A view extending JPanel. Allows for management of employees registered in Herbal Time database.
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0 (29.05.2020)
+ *
+ * Date: 29.05.2020
+ */
 public class EmployeeDatabaseScreen extends JFrame {
     private static int MAX_EMPLOYEES;
     private JPanel listContainer;
@@ -24,18 +37,27 @@ public class EmployeeDatabaseScreen extends JFrame {
     private ArrayList<Employee> employees;
 
 
+    /**
+     * Constructor of the employee database frame
+     */
     public EmployeeDatabaseScreen() {
         try {
             initComponents();
         } catch (DataAccessException e) {
             System.err.println("Issue obtaining connection.");
 //            e.printStackTrace();
-            // TODO alert user
+            new GUI.Components.StatusDialog(this,true, StatusDialog.WARNING,"Internet connection is required.",
+                    "The system is unable to connect to the internet. " +
+                            "We are sorry for the inconvenience please try again later.");
             // TODO need to discuss loading and also refresh button
             // probably should also return or something
         }
     }
 
+    /**
+     * Main method used to run the class directly, set up for catching errors
+     * @param args Java arguments
+     */
     public static void main(String[] args) {
         try {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -53,10 +75,15 @@ public class EmployeeDatabaseScreen extends JFrame {
         });
     }
 
+
     public void start(){
         main(null);
     }
 
+    /**
+     * Initialize all components and layouts part of the frame.
+     * @throws DataAccessException Thrown if no connection to db is found.
+     */
     private void initComponents() throws DataAccessException {
 
         employeeCtr = new EmployeeCtr();
@@ -163,6 +190,11 @@ public class EmployeeDatabaseScreen extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    /**
+     * Configure buttons of the frame to fit the metro style
+     * @param button JButton to be configured
+     * @param icon ImageIcon to set for the button
+     */
     private void configureButton(JButton button, ImageIcon icon){
         button.setBackground(new Color(23, 35, 51));
         button.setMaximumSize(new Dimension(70, 50));
@@ -171,6 +203,19 @@ public class EmployeeDatabaseScreen extends JFrame {
         button.setIcon(icon);
     }
 
+    /**
+     * Configures the given elements to fit the metro style and appear as an advanced JListItem
+     * @param listElement JPanel to be used as the container
+     * @param profilePicture JLabel to display the client profile picture
+     * @param personName JLabel to display the client name
+     * @param settingsBtn
+     * @param generatedBtn
+     * @param removeBtn
+     * @param msgBtn
+     * @param infoBtn
+     * @param mailBtn
+     * @param generateBtn
+     */
     private void setElementGroupsPosition(JPanel listElement,
                                           JLabel profilePicture,
                                           JLabel personName,
@@ -253,62 +298,34 @@ public class EmployeeDatabaseScreen extends JFrame {
 
         configureButton(settingsBtn,new ImageIcon(getClass().getResource("/icons8_settings_32px_1.png")));
         ComponentsConfigure.metroBtnConfig(settingsBtn);
-        settingsBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                settingsBtnActionPerformed(evt);
-            }
-        });
+        settingsBtn.addActionListener(this::settingsBtnActionPerformed);
 
         configureButton(generatedBtn,new ImageIcon(getClass().getResource("/icons8_add_file_32px.png")));
         ComponentsConfigure.metroBtnConfig(generatedBtn);
-        generatedBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                generatedBtnActionPerformed(evt);
-            }
-        });
+        generatedBtn.addActionListener(this::generatedBtnActionPerformed);
 
         configureButton(infoBtn,new ImageIcon(getClass().getResource("/icons8_information_32px.png")));
         ComponentsConfigure.metroBtnConfig(infoBtn);
-        infoBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                infoBtnActionPerformed(evt,cpr);
-            }
-        });
+        infoBtn.addActionListener(evt -> infoBtnActionPerformed(cpr));
 
         configureButton(mailBtn,new ImageIcon(getClass().getResource("/icons8_secured_letter_32px_3.png")));
         ComponentsConfigure.metroBtnConfig(mailBtn);
-        mailBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mailBtnActionPerformed(evt);
-            }
-        });
+        mailBtn.addActionListener(this::mailBtnActionPerformed);
 
         configureButton(generateBtn,new ImageIcon(getClass().getResource("/icons8_add_file_32px.png")));
         ComponentsConfigure.metroBtnConfig(generateBtn);
-        generateBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                generateBtnActionPerformed(evt);
-            }
-        });
+        generateBtn.addActionListener(this::generateBtnActionPerformed);
 
         configureButton(msgBtn,new ImageIcon(getClass().getResource("/icons8_sent_32px.png")));
         ComponentsConfigure.metroBtnConfig(msgBtn);
-        msgBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                msgBtnActionPerformed(evt);
-            }
-        });
+        msgBtn.addActionListener(this::msgBtnActionPerformed);
 
         configureButton(removeBtn,new ImageIcon(getClass().getResource("/icons8_trash_can_32px.png")));
         ComponentsConfigure.metroBtnConfig(removeBtn);
-        removeBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                removeActionPerformed(evt,cpr);
-            }
-        });
+        removeBtn.addActionListener(evt -> removeActionPerformed(cpr));
     }
 
-    private void removeActionPerformed(ActionEvent evt, String cpr) {
+    private void removeActionPerformed(String cpr) {
         try {
             employeeCtr.deleteEmployee(cpr);
         } catch (DataAccessException e) {
@@ -336,7 +353,13 @@ public class EmployeeDatabaseScreen extends JFrame {
         //  TODO
     }
 
-    private void infoBtnActionPerformed(ActionEvent evt,String cpr) {
+    /**
+     * ActionListener method for the information button
+     * used to display a view for employee details
+     *
+     * @param cpr the cpr number of theemployee
+     */
+    private void infoBtnActionPerformed(String cpr) {
         try {
             new ViewEmployee(employeeCtr.findEmployeeByCPR(cpr)).start();
         } catch (DataAccessException e) {

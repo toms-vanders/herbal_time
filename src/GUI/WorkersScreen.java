@@ -13,6 +13,18 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * A pop-up window to display seasonal workers, along with the options to edit or delete individual entries
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0 (29.05.2020)
+ *
+ * Date: 29.05.2020
+ */
 public class WorkersScreen extends JFrame {
     private static Integer MAX_WORKERS;
     private JPanel listContainer;
@@ -23,6 +35,9 @@ public class WorkersScreen extends JFrame {
 
     private ArrayList<SeasonalWorker> seasonalWorkers;
 
+    /**
+     * Constructor for the Workers screen
+     */
     public WorkersScreen() {
         try {
             initComponents();
@@ -31,12 +46,17 @@ public class WorkersScreen extends JFrame {
 //            e.printStackTrace();
             new GUI.Components.StatusDialog(this,true, StatusDialog.WARNING,"Error connecting",
             "There was an error obtaining connection. Please try again later.");
-            // added the StatusDialog here
             // TODO need to discuss loading and also refresh button
             // probably should also return or something
         }
     }
 
+    /**
+     * Main thread for the frame to initialize the look and feel of the frame as well as
+     * displaying it once everything has been created and added.
+     *
+     * @param args Java arguments array
+     */
     public static void main(String[] args) {
 
         try {
@@ -64,6 +84,11 @@ public class WorkersScreen extends JFrame {
         main(null);
     }
 
+    /**
+     * Initialize all components and layouts part of the frame.
+     *
+     * @throws DataAccessException if controllers cannot be instantiated
+     */
     private void initComponents() throws DataAccessException {
 
         SeasonalWorkerCtrIF seasonalWorkerController;
@@ -149,6 +174,15 @@ public class WorkersScreen extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    /**
+     * Configures the given elements to fit the metro style and appear as an advanced JListItem
+     * @param listElement JPanel to be used as the container
+     * @param profilePicture JLabel to display the client profile picture
+     * @param personName JLabel to display the worker name
+     * @param name String containing the worker name
+     * @param editBtn JButton for editing the worker
+     * @param removeBtn JButton for deleting the worker
+     */
     private void setElementComponents(JPanel listElement, JLabel profilePicture,JLabel personName, String name,JButton editBtn,JButton removeBtn) {
         listElement.setBackground(new Color(23, 35, 51));
         listElement.setMaximumSize(new Dimension(770, 112));
@@ -176,6 +210,11 @@ public class WorkersScreen extends JFrame {
         removeBtn.addActionListener((e -> {}));
     }
 
+    /**
+     * Creates a container using the absolute layout and prepares it for
+     * the dynamically created list of elements to be added to it.
+     * @return JPanel once configured
+     */
     private JPanel createListContainer(){
 
         listContainer = new JPanel();
@@ -204,6 +243,10 @@ public class WorkersScreen extends JFrame {
         return listContainer;
     }
 
+    /**
+     * Takes given JPanel and adds it to the listContainer to be displayed
+     * @param listElement JPanel to be added to the list
+     */
     private void addElementToList(JPanel listElement){
         parallelGroup.addGroup(listContainerLayout.createSequentialGroup()
                 .addComponent(listElement));
@@ -211,6 +254,14 @@ public class WorkersScreen extends JFrame {
                 .addComponent(listElement));
     }
 
+    /**
+     * Configures the layout of the given JPanel to fit the various components in a JListItem like fashion
+     * @param listElement Configures the layout of the given JPanel to fit the various components in a JListItem like fashion
+     * @param profilePicture JLabel to display the worker profile picture
+     * @param personName JLabel to display the worker name
+     * @param editBtn JButton to edit the worker
+     * @param removeBtn JButton to remove the worker
+     */
     private void setElementGroupsPosition(JPanel listElement, JLabel profilePicture, JLabel personName, JButton editBtn, JButton removeBtn) {
 
         GroupLayout listElementLayout = new GroupLayout(listElement);

@@ -15,7 +15,7 @@ import java.util.List;
  * @author Adrian Mihai Dohot
  * @author Damian Hrabąszcz
  * @author Toms Vanders
- * @version 1.0
+ * @version 1.0 (29.05.2020)
  *
  * Date: 29.05.2020
  */
@@ -29,7 +29,7 @@ public class EmployeeCtr implements EmployeeCtrIF {
 
     /**
      * Returns a List of all Employees in the database
-     * @returns a List of all Employees in the database
+     * @return a List of all Employees in the database
      * @throws DataAccessException
      */
     @Override

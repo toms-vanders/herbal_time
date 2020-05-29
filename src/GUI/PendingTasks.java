@@ -1,6 +1,9 @@
 package GUI;
 
-import Controller.*;
+import Controller.SeasonalWorkerCtr;
+import Controller.SeasonalWorkerCtrIF;
+import Controller.WorkTaskCtr;
+import Controller.WorkTaskCtrIF;
 import DB.DataAccessException;
 import GUI.Components.BackgroundWorker;
 import GUI.Components.ComponentsConfigure;
@@ -15,6 +18,18 @@ import java.awt.*;
 import java.sql.Date;
 import java.util.ArrayList;
 
+/**
+ * A view extending JPanel. Allows a team-lead to approve currently pending work tasks
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0 (29.05.2020)
+ *
+ * Date: 29.05.2020
+ */
 public class PendingTasks extends JPanel {
     private final MainScreen mainScreen;
     private JPanel listContainer;

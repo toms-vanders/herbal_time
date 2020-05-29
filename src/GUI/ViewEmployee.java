@@ -8,6 +8,18 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.util.Arrays;
 
+/**
+ * A view extending JFrame. Used for displaying details about a specific employee.
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0 (29.05.2020)
+ *
+ * Date: 29.05.2020
+ */
 public class ViewEmployee extends JFrame {
 
     // TODO a lot of unused components
@@ -47,6 +59,7 @@ public class ViewEmployee extends JFrame {
 
     /**
      * Creates new form ViewEmployee
+     * @param employee specific employee
      */
     public ViewEmployee(Employee employee) {
         this.employee = employee;
@@ -71,6 +84,9 @@ public class ViewEmployee extends JFrame {
         EventQueue.invokeLater(() -> new ViewEmployee(employee).setVisible(true));
     }
 
+    /**
+     * Initialize all components and layouts part of the panel.
+     */
     private void initComponents() {
 
         mainContainer = new JPanel();

@@ -18,7 +18,7 @@ import java.util.List;
  * @author Adrian Mihai Dohot
  * @author Damian Hrabąszcz
  * @author Toms Vanders
- * @version 1.0
+ * @version 1.0 (29.05.2020)
  *
  * Date: 29.05.2020
  */
@@ -49,7 +49,6 @@ public class ProduceDB implements ProduceDBIF {
 
     /**
      * Constructor for ProduceDB
-     * @throws DataAccessException
      */
     public ProduceDB() {
 

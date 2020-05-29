@@ -18,7 +18,7 @@ import java.util.List;
  * @author Adrian Mihai Dohot
  * @author Damian Hrabąszcz
  * @author Toms Vanders
- * @version 1.0
+ * @version 1.0 (29.05.2020)
  *
  * Date: 29.05.2020
  */
@@ -73,7 +73,6 @@ public class WorkSiteDB implements WorkSiteDBIF {
 
     /**
      * Constructor of WorkSiteDB
-     * @throws DataAccessException
      */
     public WorkSiteDB() {
 

@@ -295,6 +295,6 @@ CREATE TABLE WorkTask (
         cpr
     )
     ON UPDATE CASCADE
-    ON DELETE CASCADE,
+    ON DELETE NO ACTION,
 );
 GO

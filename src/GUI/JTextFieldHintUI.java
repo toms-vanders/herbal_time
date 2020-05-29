@@ -10,6 +10,11 @@ public class JTextFieldHintUI extends BasicTextFieldUI implements FocusListener 
     private final String hint;
     private final Color  hintColor;
 
+    /**
+     * Constructor for hint field
+     * @param hint String of the hint to be displayed
+     * @param hintColor Color of the hint to be displayed
+     */
     public JTextFieldHintUI(String hint, Color hintColor) {
         this.hint = hint;
         this.hintColor = hintColor;

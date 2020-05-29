@@ -8,8 +8,16 @@ package GUI;
 import javax.swing.*;
 
 /**
+ * Currently not in use, planned feature of the program.
  *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0 (29.05.2020)
  *
+ * Date: 29.05.2020
  */
 public class PaymentSlipsScreen extends javax.swing.JFrame {
     private javax.swing.JButton jButton10;

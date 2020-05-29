@@ -11,6 +11,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * A Status thread, used to check on the database connection every 5 seconds
+ * and update the status bar in the application's MainScreen instance.
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0 (29.05.2020)
+ *
+ * Date: 29.05.2020
+ */
 public class StatusThread extends Thread {
     private DBConnection dbConnection;
     private static final String checkTables = "SELECT * FROM INFORMATION_SCHEMA.TABLES";
@@ -47,6 +60,12 @@ public class StatusThread extends Thread {
         }
     }
 
+    /**
+     * Fetches the icon to be displayed.
+     *
+     * @param status Choose icon depending on the status
+     * @return Image of the icon to be displayed
+     */
     private ImageIcon getIcon(Status status) {
         if (status == Status.WORKING) {
             connectionStatus.set(true);
@@ -60,11 +79,15 @@ public class StatusThread extends Thread {
         }
     }
 
-
+    /**
+     * Tries to connect with database and test connection.
+     * Changes application's MainScreen status bar.
+     *
+     * @throws DataAccessException
+     */
     public void checkDBConnection() throws DataAccessException {
         Connection con;
 
-//        System.out.println("Checking DB connection status:");
         dbConnection = DBConnection.getInstance();
         DBConnection.connect();
         con = dbConnection.getConnection();
@@ -73,7 +96,7 @@ public class StatusThread extends Thread {
             if (this.status != Status.NO_CONNECTION) {
                 this.status = Status.NO_CONNECTION;
             }
-//            System.out.println("Current connection status: " + this.status);
+
             statusLabel.setText(status.toString().replaceAll("_", " "));
             statusIcon.setIcon(getIcon(status));
             return;
@@ -95,7 +118,6 @@ public class StatusThread extends Thread {
         } catch (SQLException e) {
             if (this.status != Status.NO_CONNECTION) {
                 this.status = Status.NO_CONNECTION;
-//                System.out.println("Current connection status: " + this.status);
                 statusLabel.setText(status.toString().replaceAll("_", " "));
                 statusIcon.setIcon(getIcon(status));
             }
@@ -107,14 +129,12 @@ public class StatusThread extends Thread {
             if (rs.next()) {
                 if (this.status != Status.WORKING) {
                     this.status = Status.WORKING;
-//                    System.out.println("Current connection status: " + this.status);
                     statusLabel.setText(status.toString().replaceAll("_", " "));
                     statusIcon.setIcon(getIcon(status));
                 }
             } else {
                 if (this.status != Status.UNABLE_TO_READ) {
                     this.status = Status.UNABLE_TO_READ;
-//                    System.out.println("Current connection status: " + this.status);
                     statusLabel.setText(status.toString().replaceAll("_", " "));
                     statusIcon.setIcon(getIcon(status));
                 }
@@ -122,7 +142,6 @@ public class StatusThread extends Thread {
         } catch (SQLException e) {
             if (this.status != Status.UNKNOWN_ERROR) {
                 this.status = Status.UNKNOWN_ERROR;
-//                System.out.println("Current connection status: " + this.status);
                 statusLabel.setText(status.toString().replaceAll("_", " "));
                 statusIcon.setIcon(getIcon(status));
             }
@@ -137,7 +156,6 @@ public class StatusThread extends Thread {
             // System.out.println("Acquired connection: " + con.toString());
         }
 
-//        System.out.println("Current connection status: " + this.status);
         statusLabel.setText(status.toString().replaceAll("_", " "));
         statusIcon.setIcon(getIcon(status));
         dbConnection.disconnect();

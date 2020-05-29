@@ -19,7 +19,7 @@ import java.util.Random;
  * @author Adrian Mihai Dohot
  * @author Damian Hrabąszcz
  * @author Toms Vanders
- * @version 1.0
+ * @version 1.0 (29.05.2020)
  *
  * Date: 29.05.2020
  */
@@ -50,7 +50,7 @@ public class TestSeasonalWorker {
         SeasonalWorker testSWleader = new SeasonalWorker(randomGeneratedCPRString, "firstName",
                 "lastName", dob, 'f', "test@gmail.com", "000", "testStreet",
                 "0", "9000", "DK", "Denmark", "123456789", "12345678910", "99161721446", "12312193581230971231", false);
-        swDB.insertSeasonalWorker(testSWleader, 1, SeasonalWorker.class);
+        swDB.insertSeasonalWorker(testSWleader, 100, SeasonalWorker.class);
         System.out.println("Successfully inserted Seasonal Worker");
     }
 

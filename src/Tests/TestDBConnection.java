@@ -10,7 +10,7 @@ import org.junit.jupiter.api.*;
  * @author Adrian Mihai Dohot
  * @author Damian Hrabąszcz
  * @author Toms Vanders
- * @version 1.0
+ * @version 1.0 (29.05.2020)
  *
  * Date: 29.05.2020
  */
@@ -23,6 +23,5 @@ public class TestDBConnection {
         System.out.println("Initiating DB Connection");
         dbConnection = DBConnection.getInstance();
         System.out.println(dbConnection.toString());
-        dbConnection.disconnect();
     }
 }

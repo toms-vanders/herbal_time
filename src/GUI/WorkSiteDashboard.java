@@ -15,6 +15,18 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
+/**
+ * A view extending JPanel. Allows for management of work sites registered in Herbal Time database.
+ *
+ * @author Daniel Zoltan Ban
+ * @author Mikuláš Dobrodej
+ * @author Adrian Mihai Dohot
+ * @author Damian Hrabąszcz
+ * @author Toms Vanders
+ * @version 1.0 (29.05.2020)
+ *
+ * Date: 29.05.2020
+ */
 public class WorkSiteDashboard extends JPanel {
     private static int MAX_SITES;
     private final MainScreen mainScreen;
@@ -28,6 +40,10 @@ public class WorkSiteDashboard extends JPanel {
 
     private ArrayList<WorkSite> workSites;
 
+    /**
+     * Constructor for the WorkSiteDashboard screen
+     * @param mainScreen MainScreen instance required for navigation through the views
+     */
     public WorkSiteDashboard(MainScreen mainScreen) {
         this.mainScreen = mainScreen;
         try {
@@ -35,12 +51,18 @@ public class WorkSiteDashboard extends JPanel {
         } catch (DataAccessException e) {
             System.err.println("Issue obtaining connection.");
 //            e.printStackTrace();
+
             // Alert the user here with e.g JDialog saying there was an issue connecting to the database.
-            // TODO
+            // TODO - alert the user
             // Add a refresh button. (in this case should reload dashboard)
         }
     }
-    
+
+    /**
+     * Initialize all components and layouts part of the panel.
+     *
+     * @throws DataAccessException If the database cannot be accessed
+     */
     private void initComponents() throws DataAccessException {
 
         workSitesCtr = new WorkSiteCtr();
@@ -165,6 +187,15 @@ public class WorkSiteDashboard extends JPanel {
         add(mainContainer, new AbsoluteConstraints(0, 110, 1000, 610));
     }
 
+    /**
+     * Configures the given elements to fit the metro style and appear as an advanced JListItem
+     * @param listElement JPanel to be used as the container
+     * @param workSiteName JLabel to display the work site name
+     * @param name String containing the work site name
+     * @param viewBtn JButton to display a single work site
+     * @param editBtn JButton for editing
+     * @param removeBtn JButton for removal
+     */
     private void setElementComponents(JPanel listElement, JLabel workSiteName,String name, JButton viewBtn,JButton editBtn,JButton removeBtn){
         listElement.setBackground(new Color(23, 35, 51));
         listElement.setMaximumSize(new java.awt.Dimension(650, 60));
@@ -187,7 +218,15 @@ public class WorkSiteDashboard extends JPanel {
         removeBtn.setIcon(new ImageIcon(getClass().getResource("/icons8_trash_can_32px.png"))); // NOI18N
         removeBtn.setText("Remove");
     }
-    
+
+    /**
+     * Configures the layout of the given JPanel to fit the various components in a JListItem like fashion
+     * @param listElement JPanel to be used as the container
+     * @param workSiteName JLabel to display the work site name
+     * @param viewBtn JButton to display a single work site
+     * @param editBtn JButton for editing
+     * @param removeBtn JButton for removal
+     */
     private void setElementGroupsPosition(JPanel listElement, JLabel workSiteName, JButton viewBtn,JButton editBtn,JButton removeBtn){
         javax.swing.GroupLayout listElementLayout = new javax.swing.GroupLayout(listElement);
         listElement.setLayout(listElementLayout);
@@ -218,6 +257,10 @@ public class WorkSiteDashboard extends JPanel {
         );
     }
 
+    /**
+     * Takes given JPanel and adds it to the listContainer to be displayed
+     * @param elementToAdd JPanel to be added to the list
+     */
     private void addElementToList(JPanel elementToAdd){
         parallelGroup.addGroup(listContainerLayout.createSequentialGroup()
                 .addComponent(elementToAdd));
@@ -225,7 +268,13 @@ public class WorkSiteDashboard extends JPanel {
                 .addComponent(elementToAdd));
     }
 
-    private JPanel createListContainer(){
+    /**
+     * Creates a container using the absolute layout and prepares it for
+     * the dynamically created list of elements to be added to it.
+     *
+     * @return JPanel once configured
+     */
+    private JPanel createListContainer() {
 
         listContainer = new JPanel();
         listContainerLayout = new GroupLayout(listContainer);
@@ -241,7 +290,10 @@ public class WorkSiteDashboard extends JPanel {
         return listContainer;
     }
 
-    private void createElements(){
+    /**
+     * Creates the elements that are part of the dynamic list and configures them accordingly.
+     */
+    private void createElements() {
         for(int i = 0; i < MAX_SITES; i++){
             JPanel elementToAdd = new JPanel();
             JLabel workSiteName = new JLabel();
@@ -259,6 +311,11 @@ public class WorkSiteDashboard extends JPanel {
         listContainer.repaint();
     }
 
+    /**
+     * Clears up variables and re-instantiates them to ensure consistency within the views.
+     *
+     * @throws DataAccessException If the database cannot be accessed to return a list of clients
+     */
     private void loadWorkSites() throws DataAccessException {
         if(!(workSites == null)){
             if(!workSites.isEmpty()){
