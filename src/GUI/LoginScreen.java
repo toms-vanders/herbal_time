@@ -172,7 +172,7 @@ public class LoginScreen extends JPanel {
 
     /**
      * Allows the user into the program
-     * @param evt
+     * @param evt ActionEvent
      */
     private void loginBtnActionPerformed(ActionEvent evt) {
         mainScreen.login();
@@ -180,7 +180,7 @@ public class LoginScreen extends JPanel {
 
     /**
      * Exits the program
-     * @param evt
+     * @param evt ActionEvent
      */
     private void exitBtnActionPerformed(ActionEvent evt) {
         System.exit(0);

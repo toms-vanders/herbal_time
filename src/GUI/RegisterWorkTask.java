@@ -278,6 +278,11 @@ public class RegisterWorkTask extends JPanel {
         subDashboard.add(registerTaskPane,RegisterTask);
     }
 
+    /**
+     * Attempt to create and insert the new work task into the database.
+     * @param evt ActionEvent triggered by pressing the Register WorkTask button
+     * @throws DataAccessException
+     */
     private void registerBtnActionPerformed(ActionEvent evt) throws DataAccessException {
         try {
             WorkType currentWorkType = (WorkType) produceList.getSelectedItem();
@@ -339,6 +344,12 @@ public class RegisterWorkTask extends JPanel {
 
     }
 
+    /**
+     * Setup labels individually
+     * @param label JLabel to be setup
+     * @param labelText String text to go into the JLabel
+     * @param icon Image to be used in the JLabel
+     */
     private void configureLabel(JLabel label, String labelText, ImageIcon icon) {
         label.setIcon(icon);
         label.setText(labelText);
@@ -347,24 +358,46 @@ public class RegisterWorkTask extends JPanel {
         label.setForeground(new Color(249, 249, 249));
     }
 
+    /**
+     * Currently unused
+     * @return empty WorkSite object
+     */
     private WorkSite getWorkLocation() {
         return new WorkSite();
+
     }
 
+    /**
+     * Create a combo box for choosing worksites
+     * @param workSites List of WorkSites to choose from
+     * @return The set up combo box containing the worksites
+     */
     private DefaultComboBoxModel<WorkSite> getLocationComboBoxModel(List<WorkSite> workSites) {
         WorkSite[] comboBoxModel = workSites.toArray(new WorkSite[0]);
         return new DefaultComboBoxModel<>(comboBoxModel);
     }
 
+    /**
+     * Create a combo box for choosing worktypes
+     * @param workTypes List of WorkTypes to choose from
+     * @return The set up combo box containing the worktypes
+     */
     private DefaultComboBoxModel<WorkType> getProduceComboBoxModel(List<WorkType> workTypes) {
         WorkType[] comboBoxModel = workTypes.toArray(new WorkType[0]);
         return new DefaultComboBoxModel<>(comboBoxModel);
     }
 
+    /**
+     * Call the updateProduceList function
+     * @param evt
+     */
     private void locationListActionPerformed(java.awt.event.ActionEvent evt) {
         updateProduceList();
     }
 
+    /**
+     *  Update the Produce list with newly fetched Produce from the database
+     */
     private void updateProduceList() {
         if (locationList.getItemCount() > 0) {
             WorkSite selectedWorkSite = (WorkSite) locationList.getSelectedItem();
@@ -380,6 +413,10 @@ public class RegisterWorkTask extends JPanel {
         }
     }
 
+    /**
+     * Enables or disables the Quantity Row in the form based on the selected WorkType
+     * @param e action triggered on the produceList ComboBox
+     */
     private void configureQuantity(ActionEvent e) {
         if (((WorkType) produceList.getSelectedItem()).getSalaryType().equalsIgnoreCase("hourly".trim())) {
             quantitySpinner.setEnabled(false);

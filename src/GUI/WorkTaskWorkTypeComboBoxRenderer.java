@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Used when registering a new work task, enables a good way to display work types.
+ * Used when registering a new work task, to render a custom WorkType combobox for choosing WorkTypes
  *
  * @author Daniel Zoltan Ban
  * @author Mikuláš Dobrodej

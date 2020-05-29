@@ -335,6 +335,13 @@ public class ViewEmployee extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    /**
+     * Setup all the labels for JTextFields
+     * @param label JLabel to be added/**
+     *      * Setup all the labels for JTextFields
+     *      * @param label JLabel to be added
+     *      * @param text String, place holder text for JLabel
+     */
     private void configureLabel(JLabel ...label){
         Arrays.stream(label).forEach((l) -> {
             l.setFont(new Font("Dialog", Font.BOLD, 24));

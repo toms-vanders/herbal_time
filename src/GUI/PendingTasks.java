@@ -44,11 +44,20 @@ public class PendingTasks extends JPanel {
     private SeasonalWorkerCtrIF seasonalWorkerController;
     private ArrayList<WorkTask> pendingTasks;
 
+    /**
+     * Constructor of the panel.
+     *
+     * @param mainScreen MainScreen instance used for navigation
+     * @throws DataAccessException Thrown if there is no connection
+     */
     public PendingTasks(MainScreen mainScreen) throws DataAccessException {
         this.mainScreen = mainScreen;
         initComponents();
     }
 
+    /**
+     * Initialize all components and layouts part of the panel.
+     */
     private void initComponents() {
 
         workTaskController = new WorkTaskCtr();
@@ -107,6 +116,12 @@ public class PendingTasks extends JPanel {
         add(topBar, new AbsoluteConstraints(0, 0, -1, -1));
     }
 
+    /**
+     * ActionListener method used to remove a work task from the system.
+     *
+     * @param workTaskID Integer of the work task ID to be removed
+     * @throws DataAccessException Thrown if there is no internet connection
+     */
     private void removeBtnActionPerformed(Integer workTaskID) throws DataAccessException {
         try{
             if(workTaskController.deleteWorkTask(workTaskID)){
@@ -119,6 +134,11 @@ public class PendingTasks extends JPanel {
         }
     }
 
+    /**
+     * ActionListener method used to approve a work task in the system.
+     *
+     * @param workTaskID Integer of the work task ID to be approved
+     */
     private void approveBtnActionPerformed(Integer workTaskID) {
         ArrayList<Integer> idList = new ArrayList<>();
         idList.add(workTaskID);
@@ -135,12 +155,41 @@ public class PendingTasks extends JPanel {
         },"Approved","Work task is being processed");
     }
 
+    /**
+     * Configure JLabels to fit the metro style of the system.
+     *
+     * @param label JLabel to be configured
+     * @param text String of text to be displayed inside the JLabel
+     */
     private void configureLabel(JLabel label, String text) {
         label.setFont(new Font("Dialog", Font.BOLD, 24));
         label.setForeground(Color.white);
         label.setText(text);
     }
 
+    /**
+     * Configures the given elements to fit the metro style and appear as an advanced JListItem.
+     *
+     * @param listElement JPanel to be used as the container
+     * @param currentTask WorkTask object from which to retrieve information
+     * @param currentWorker SeasonalWorker object from which to retrieve information
+     * @param profilePicture JLabel to display the worker profile picture
+     * @param personName JLabel to display the worker name
+     * @param nameValue String of the workers name
+     * @param approveBtn JButton for approval
+     * @param viewBtn JButton for viewing
+     * @param removeBtn JButton for removing
+     * @param workTaskNumberLabel JLabel of the work task number
+     * @param taskNum Integer of the task number
+     * @param hoursLabel JLabel of the hours
+     * @param hourNum double type of the hours value
+     * @param quantityLabel JLabel of the quantity
+     * @param quantityNum double type of the quantity value
+     * @param dateLabel JLabel of the date
+     * @param dateValue Date value
+     * @param workTypeLabel JLabel of the work type
+     * @param workTypeValue String of the work type value
+     */
     private void setElementComponents(JPanel listElement,
                                       WorkTask currentTask,
                                       SeasonalWorker currentWorker,
@@ -202,6 +251,12 @@ public class PendingTasks extends JPanel {
 
     }
 
+    /**
+     * Creates a container using the absolute layout and prepares it for
+     * the dynamically created list of elements to be added to it.
+     *
+     * @return JPanel once configured
+     */
     private JPanel createListContainer() {
 
         listContainer = new JPanel();
@@ -219,6 +274,11 @@ public class PendingTasks extends JPanel {
         return listContainer;
     }
 
+    /**
+     * Takes given JPanel and adds it to the listContainer to be displayed.
+     *
+     * @param listElement JPanel to be added to the list
+     */
     private void addElementToList(JPanel listElement){
         parallelGroup.addGroup(listContainerLayout.createSequentialGroup()
                 .addComponent(listElement));
@@ -226,6 +286,21 @@ public class PendingTasks extends JPanel {
                 .addComponent(listElement));
     }
 
+    /**
+     * Configures the layout of the given JPanel to fit the various components in a JListItem like fashion.
+     *
+     * @param listElement JPanel to be used as the container
+     * @param profilePicture JLabel to display the worker profile picture
+     * @param personName JLabel to display the worker name
+     * @param approveBtn JButton for approval
+     * @param viewBtn JButton for viewing
+     * @param removeBtn JButton for removing
+     * @param workTaskNumberLabel JLabel of the work task number
+     * @param hoursLabel JLabel of the hours
+     * @param quantityLabel JLabel of the quantity
+     * @param dateLabel JLabel of the date
+     * @param workTypeLabel JLabel of the work type
+     */
     private void setElementGroupsPosition(JPanel listElement,
                                           JLabel profilePicture,
                                           JLabel personName,
@@ -294,6 +369,11 @@ public class PendingTasks extends JPanel {
         );
     }
 
+    /**
+     * Creates the elements that are part of the dynamic list and configures them accordingly.
+     *
+     * @throws DataAccessException Thrown if there is no connection
+     */
     private void createElements() throws DataAccessException {
         if(MAX_TASKS > 0){
             for(int i = 0; i < MAX_TASKS; i++){
@@ -353,6 +433,12 @@ public class PendingTasks extends JPanel {
         listContainer.repaint();
     }
 
+    /**
+     * Sets the visibility of the panel while also loading the tasks through
+     * a background process operation.
+     *
+     * @param aFlag boolean to define visibility state, true is show, false is invisible
+     */
     @Override
     public void setVisible(boolean aFlag) {
         super.setVisible(aFlag);
@@ -377,6 +463,11 @@ public class PendingTasks extends JPanel {
         ,"Loading tasks","Loading pending tasks from the database, please wait.");
     }
 
+    /**
+     * Clears up variables and re-instantiates them to ensure consistency within the views.
+     *
+     * @throws DataAccessException If the database cannot be accessed to return a list of tasks
+     */
     void loadPendingTasks() throws DataAccessException {
         if(!(pendingTasks == null)){
             if(!pendingTasks.isEmpty()){

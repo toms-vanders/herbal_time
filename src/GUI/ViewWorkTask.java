@@ -372,8 +372,8 @@ public class ViewWorkTask extends JFrame {
 
     /**
      * Setup all the labels for JTextFields
-     * @param label
-     * @param text
+     * @param label JLabel to be added
+     * @param text String, place holder text for JLabel
      */
     private void configureLabel(JLabel label, String text){
         label.setFont(new Font("Dialog", Font.BOLD, 24));
@@ -382,11 +382,23 @@ public class ViewWorkTask extends JFrame {
         label.setFocusable(false);
     }
 
+    /**
+     * Returns specialized ComboBox model for the Location ComboBox.
+     *
+     * @param workSites list of WorkSite objects
+     * @return a new model for ComboBox based on the given work sites
+     */
     private DefaultComboBoxModel<WorkSite> getLocationComboBoxModel(java.util.List<WorkSite> workSites) {
         WorkSite[] comboBoxModel = workSites.toArray(new WorkSite[0]);
         return new DefaultComboBoxModel<>(comboBoxModel);
     }
 
+    /**
+     * Returns specialized ComboBox model for the Produce ComboBox.
+     *
+     * @param workTypes list of WorkType objects
+     * @return a new model for ComboBox based on the given work types
+     */
     private DefaultComboBoxModel<WorkType> getProduceComboBoxModel(List<WorkType> workTypes) {
         WorkType[] comboBoxModel = workTypes.toArray(new WorkType[0]);
         return new DefaultComboBoxModel<>(comboBoxModel);
@@ -396,6 +408,9 @@ public class ViewWorkTask extends JFrame {
         updateProduceList();
     }
 
+    /**
+     * Updates the Produce ComboBox.
+     */
     private void updateProduceList() {
         if (locationList.getItemCount() > 0) {
             WorkSite selectedWorkSite = (WorkSite) locationList.getSelectedItem();
@@ -414,6 +429,11 @@ public class ViewWorkTask extends JFrame {
         }
     }
 
+
+    /**
+     * Enables or disables the Quantity Row in the form based on the selected WorkType
+     * @param e action triggered on the produceList ComboBox
+     */
     private void configureQuantity(ActionEvent e) {
         try{
             WorkType currentType = (WorkType) produceList.getSelectedItem();
@@ -440,6 +460,11 @@ public class ViewWorkTask extends JFrame {
         }
     }
 
+    /**
+     * Fetches ID of viewed task and changes it to "APPROVED".
+     *
+     * @throws DataAccessException if the database cannot be accessed
+     */
     private void approveWorkTask() throws DataAccessException {
         ArrayList<Integer> idList = new ArrayList<>();
         idList.add(currentTask.getWorkTaskID());
@@ -449,6 +474,12 @@ public class ViewWorkTask extends JFrame {
             this.dispose();
         }
     }
+
+    /**
+     * Saves changed made on the WorkTask fields
+     *
+     * @throws DataAccessException if the database cannot be accessed
+     */
     private void saveChanges() throws DataAccessException {
         double quantity = Double.valueOf((Integer)quantitySpinner.getValue());
         Date dateStart = Date.valueOf(startDatePicker.getDateTimePermissive().toLocalDate());

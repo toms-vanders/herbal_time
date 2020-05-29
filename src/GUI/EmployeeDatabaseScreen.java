@@ -208,13 +208,13 @@ public class EmployeeDatabaseScreen extends JFrame {
      * @param listElement JPanel to be used as the container
      * @param profilePicture JLabel to display the client profile picture
      * @param personName JLabel to display the client name
-     * @param settingsBtn
-     * @param generatedBtn
-     * @param removeBtn
-     * @param msgBtn
-     * @param infoBtn
-     * @param mailBtn
-     * @param generateBtn
+     * @param settingsBtn JButton for settings
+     * @param generatedBtn JButton to view generated payment slips
+     * @param removeBtn JButton for removal
+     * @param msgBtn JButton for messaging
+     * @param infoBtn JButton for information
+     * @param mailBtn JButton for emailing
+     * @param generateBtn JButton to generate a payment slip
      */
     private void setElementGroupsPosition(JPanel listElement,
                                           JLabel profilePicture,
@@ -273,6 +273,21 @@ public class EmployeeDatabaseScreen extends JFrame {
         );
     }
 
+    /**
+     * Configures the layout of the given JPanel to fit the various components in a JListItem like fashion
+     * @param listElement JPanel to be used as the container
+     * @param profilePicture JLabel to display the client profile picture
+     * @param personName JLabel to display the client name
+     * @param name String of the employees name
+     * @param cpr String of the employees CPR
+     * @param settingsBtn JButton for settings
+     * @param generatedBtn JButton to view generated payment slips
+     * @param removeBtn JButton for removal
+     * @param msgBtn JButton for messaging
+     * @param infoBtn JButton for information
+     * @param mailBtn JButton for emailing
+     * @param generateBtn JButton to generate a payment slip
+     */
     private void setElementComponents(JPanel listElement,
                                       JLabel profilePicture,
                                       JLabel personName,
@@ -325,6 +340,10 @@ public class EmployeeDatabaseScreen extends JFrame {
         removeBtn.addActionListener(evt -> removeActionPerformed(cpr));
     }
 
+    /**
+     * ActionListener method used to remove employees from the system
+     * @param cpr CPR of the employee to be removed
+     */
     private void removeActionPerformed(String cpr) {
         try {
             employeeCtr.deleteEmployee(cpr);
@@ -333,18 +352,43 @@ public class EmployeeDatabaseScreen extends JFrame {
         }
     }
 
+    /**
+     * ActionListener method for the message button
+     * used to send a message to the selected employee.
+     *
+     * Currently not implemented
+     */
     private void msgBtnActionPerformed(ActionEvent evt) {
         //  TODO
     }
 
+    /**
+     * ActionListener method for the generate payment slip button
+     * used to create new payment slip for the selected employee.
+     *
+     * Currently not implemented
+     * @param evt ActionEvent parameter from the listener
+     */
     private void generateBtnActionPerformed(ActionEvent evt) {
         //  TODO
     }
 
+    /**
+     * ActionListener method for the message button
+     * used to send a email to the selected employee.
+     *
+     * Currently not implemented
+     */
     private void mailBtnActionPerformed(ActionEvent evt) {
         //  TODO
     }
 
+    /**
+     * ActionListener method for the settings button
+     * used to configure employee information
+     *
+     *Currently not implemented
+     */
     private void settingsBtnActionPerformed(ActionEvent evt) {
         //  TODO
     }
@@ -357,7 +401,7 @@ public class EmployeeDatabaseScreen extends JFrame {
      * ActionListener method for the information button
      * used to display a view for employee details
      *
-     * @param cpr the cpr number of theemployee
+     * @param cpr the cpr number of the employee
      */
     private void infoBtnActionPerformed(String cpr) {
         try {
@@ -367,6 +411,11 @@ public class EmployeeDatabaseScreen extends JFrame {
         }
     }
 
+    /**
+     * Creates a container using the absolute layout and prepares it for
+     * the dynamically created list of elements to be added to it.
+     * @return JPanel once configured
+     */
     private JPanel createListContainer() {
         listContainer = new JPanel();
         listContainerLayout = new GroupLayout(listContainer);
@@ -401,6 +450,10 @@ public class EmployeeDatabaseScreen extends JFrame {
         return listContainer;
     }
 
+    /**
+     * Takes given JPanel and adds it to the listContainer to be displayed
+     * @param listElement JPanel to be added to the list
+     */
     private void addElementToList(JPanel listElement) {
         parallelGroup.addGroup(listContainerLayout.createSequentialGroup()
                 .addComponent(listElement));
